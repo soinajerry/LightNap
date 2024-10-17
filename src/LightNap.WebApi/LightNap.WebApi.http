@@ -1,0 +1,185 @@
+@_hostAddress = https://localhost:7266
+
+### Get a new bearer token. You will need to call login or register first so the
+### server can set the refresh token required by this call.
+# @name GetToken
+GET {{_hostAddress}}/api/identity/refresh-token
+
+# This will set the token based on the response to the login request. If you're using a tool that
+# does not yet support parsing responses, then you can set the token here manually.
+#@_token = LiteralTokenDataWithoutContainingQuotes
+@_token = {{GetToken.response.body.result}}
+
+### Log in a test user if there's already an account.
+# @name LogInTestUser
+POST {{_hostAddress}}/api/identity/login
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "Us3rP@ssword",
+  "rememberMe": false,
+  "deviceId": "VS REST Client"
+}
+
+### Log in an admin user.
+# @name LogInAdmin
+POST {{_hostAddress}}/api/identity/login
+Content-Type: application/json
+
+{
+  "email": "admin@admin.com",
+  "password": "A2m!nPassword",
+  "rememberMe": false,
+  "deviceId": "VS REST Client"
+}
+
+### Register an account.
+# @name Register
+POST {{_hostAddress}}/api/identity/register
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "Us3rP@ssword",
+  "userName": "Test",
+  "rememberMe": false,
+  "deviceId": "VS REST Client"
+}
+
+### Sets a new password based on the code retrieved from email.
+# @name VerifyCode
+POST {{_hostAddress}}/api/identity/verify-code
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "Us3rP@ssword",
+  "rememberMe": false,
+  "deviceId": "VS REST Client"
+}
+
+### Get the profile of the logged-in user.
+# @name LogOut
+GET {{_hostAddress}}/api/identity/logout
+
+### Request a password reset email.
+# @name ResetPassword
+POST {{_hostAddress}}/api/identity/reset-password
+Content-Type: application/json
+
+{
+  "email": "test@test.com"
+}
+
+### Sets a new password based on the code retrieved from email.
+# @name NewPassword
+POST {{_hostAddress}}/api/identity/new-password
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "Us3rP@ssword",
+  "token": "",
+}
+
+### Changes the user password.
+# @name ChangePassword
+POST {{_hostAddress}}/api/identity/change-password
+Content-Type: application/json
+Authorization: Bearer {{_token}}
+
+{
+  "currentPassword": "Us3rP@ssword",
+  "newPassword": "Us3rP@ssword",
+  "confirmNewPassword": "Us3rP@ssword"
+}
+
+### Get the profile of the logged-in user.
+# @name GetLoggedInProfile
+GET {{_hostAddress}}/api/profile
+Authorization: Bearer {{_token}}
+
+### Update the logged in user's profile.
+# @name UpdateLoggedInProfile
+PUT {{_hostAddress}}/api/profile
+Content-Type: application/json
+Authorization: Bearer {{_token}}
+
+{
+}
+
+### Get the devices (refresh tokens) of the logged-in user.
+# @name GetDevices
+GET {{_hostAddress}}/api/devices
+Authorization: Bearer {{_token}}
+
+### Revoke a refresh token.
+# @name RemoveDevice
+@_deviceToDelete = 663777ce-aabe-4171-a2bf-8f4641d472eb
+DELETE  {{_hostAddress}}/api/devices/{{_deviceToDelete}}
+Authorization: Bearer {{_token}}
+
+#
+### Admin user methods.
+#
+@_adminUserMethodsUserId = 4887de44-202c-49f0-84a7-19483fc7d47c
+
+### Admin get user.
+# @name AdminGetUser
+GET {{_hostAddress}}/api/administrator/users/{{_adminUserMethodsUserId}}
+Authorization: Bearer {{_token}}
+
+### Admin update user.
+# @name AdminUpdateUser
+PUT {{_hostAddress}}/api/administrator/users/{{_adminUserMethodsUserId}}
+Authorization: Bearer {{_token}}
+Content-Type: application/json
+
+{
+}
+
+### Admin delete user.
+# @name AdminDeleteUser
+DELETE {{_hostAddress}}/api/administrator/users/{{_adminUserMethodsUserId}}
+Authorization: Bearer {{_token}}
+Content-Type: application/json
+
+{
+}
+
+### Admin search users.
+# @name AdminSearchUsers
+POST {{_hostAddress}}/api/administrator/users/search
+Authorization: Bearer {{_token}}
+Content-Type: application/json
+
+{
+}
+
+#
+### Admin role methods.
+#
+@_adminRoleMethodsRole = Administrator
+@_adminRoleMethodsUserId = 1af5f79f-4fa7-4b3d-aa10-44175a40ff2c
+
+### Admin get users in role.
+# @name AdminGetUsersInRole
+GET {{_hostAddress}}/api/administrator/roles/{{_adminRoleMethodsRole}}
+Authorization: Bearer {{_token}}
+
+### Admin get user's roles.
+# @name AdminUserRoles
+GET {{_hostAddress}}/api/administrator/users/{{_adminRoleMethodsUserId}}/roles
+Authorization: Bearer {{_token}}
+
+### Admin add user to role.
+# @name AdminAddUserToRole
+POST {{_hostAddress}}/api/administrator/roles/{{_adminRoleMethodsRole}}/{{_adminRoleMethodsUserId}}
+Authorization: Bearer {{_token}}
+
+### Admin remove user from role.
+# @name AdminAddUserToRole
+DELETE {{_hostAddress}}/api/administrator/roles/{{_adminRoleMethodsRole}}/{{_adminRoleMethodsUserId}}
+Authorization: Bearer {{_token}}
+
