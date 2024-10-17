@@ -43,7 +43,7 @@ LightNap is a starter kit web application designed to provide a robust starting 
      ```
    - Run the application:
      ```bash
-     dotnet run
+     dotnet run --project LightNap.WebApi
      ```
 
 3. **Frontend Setup:**
