@@ -1,6 +1,6 @@
 ﻿namespace LightNap.Core.Identity.Dto.Response
 {
-    public class LoginResponseDto
+    public class LoginResultDto
     {
         public bool TwoFactorRequired { get; set; }
         public string? BearerToken { get; set; }

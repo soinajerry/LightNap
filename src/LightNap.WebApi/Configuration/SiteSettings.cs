@@ -4,5 +4,6 @@
     {
         public bool RequireTwoFactorForNewUsers { get; set; }
         public required string SiteUrlRootForEmails { get; set; }
+        public bool UseSameSiteStrictCookies { get; set; }
     }
 }

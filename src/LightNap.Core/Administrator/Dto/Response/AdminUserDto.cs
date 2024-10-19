@@ -1,4 +1,4 @@
-﻿namespace LightNap.Core.Identity.Dto.Response
+﻿namespace LightNap.Core.Administrator.Dto.Response
 {
     public class AdminUserDto
     {

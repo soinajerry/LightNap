@@ -1,4 +1,4 @@
-﻿namespace LightNap.Core.Identity.Dto.Request
+﻿namespace LightNap.Core.Administrator.Dto.Request
 {
     public class UpdateAdminUserDto
     {

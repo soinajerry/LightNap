@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace LightNap.Core
+namespace LightNap.Core.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
@@ -19,15 +19,17 @@ namespace LightNap.Core
             base.OnModelCreating(builder);
 
             builder.Entity<RefreshToken>()
-            .HasOne(rt => rt.User)
-            .WithMany(u => u.RefreshTokens)
-            .HasForeignKey(rt => rt.UserId)
-            .IsRequired();
-
+                .HasOne(rt => rt.User)
+                .WithMany(u => u.RefreshTokens)
+                .HasForeignKey(rt => rt.UserId)
+                .IsRequired();
         }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {
+            configurationBuilder
+                .Properties<DateTime>()
+                .HaveConversion(typeof(UtcValueConverter));
         }
     }
 }

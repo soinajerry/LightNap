@@ -1,7 +1,7 @@
-using LightNap.Core;
 using LightNap.Core.Api;
+using LightNap.Core.Data;
 using LightNap.Core.Extensions;
-using LightNap.Core.Identity.Dto.Response;
+using LightNap.Core.Profile.Dto.Response;
 using LightNap.WebApi.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +26,10 @@ namespace LightNap.WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<ApiResponseDto<IList<DeviceDto>>>> GetDevices()
         {
-            var tokens = await this._db.RefreshTokens.Where(token => token.UserId == this.User.GetUserId() && !token.IsRevoked && token.Expires > DateTime.UtcNow).ToListAsync();
+            var tokens = await this._db.RefreshTokens
+                .Where(token => token.UserId == this.User.GetUserId() && !token.IsRevoked && token.Expires > DateTime.UtcNow)
+                .OrderByDescending(device => device.Expires)
+                .ToListAsync();
 
             return ApiResponseDto<IList<DeviceDto>>.CreateSuccess(tokens.ToDtoList());
         }

@@ -170,7 +170,7 @@ namespace LightNap.DataProviders.SqlServer.Migrations
                     IpAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Expires = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsRevoked = table.Column<bool>(type: "bit", nullable: false),
-                    DeviceId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Details = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>

@@ -1,5 +1,5 @@
 ﻿using LightNap.Core.Identity;
-using LightNap.Core.Identity.Dto.Response;
+using LightNap.Core.Profile.Dto.Response;
 
 namespace LightNap.Core.Extensions
 {
@@ -10,7 +10,7 @@ namespace LightNap.Core.Extensions
             return tokens.Select(token =>
                 new DeviceDto()
                 {
-                    DeviceId = token.DeviceId,
+                    Details = token.Details,
                     Id = token.Id,
                     LastSeen = new DateTimeOffset(token.LastSeen).ToUnixTimeMilliseconds(),
                     IpAddress = token.IpAddress,

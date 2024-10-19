@@ -1,5 +1,4 @@
-﻿
-using LightNap.Core;
+﻿using LightNap.Core.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

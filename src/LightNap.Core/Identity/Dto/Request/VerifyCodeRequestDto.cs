@@ -12,6 +12,6 @@ namespace LightNap.Core.Identity.Dto.Request
         public required string Code { get; set; }
 
         public bool RememberMe { get; set; }
-        public string? DeviceId { get; set; }
+        public required string DeviceDetails { get; set; }
     }
 }

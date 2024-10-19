@@ -1,6 +1,6 @@
-﻿namespace LightNap.Core.Identity.Dto.Response
+﻿namespace LightNap.Core.Profile.Dto.Response
 {
-    public class LoggedInUserDto
+    public class ProfileDto
     {
         public required string Id { get; set; }
         public required string Email { get; set; }

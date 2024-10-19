@@ -1,14 +1,16 @@
-﻿using LightNap.Core.Identity;
-using LightNap.Core.Identity.Dto.Request;
-using LightNap.Core.Identity.Dto.Response;
+﻿using LightNap.Core.Administrator.Dto.Request;
+using LightNap.Core.Administrator.Dto.Response;
+using LightNap.Core.Identity;
+using LightNap.Core.Profile.Dto.Request;
+using LightNap.Core.Profile.Dto.Response;
 
 namespace LightNap.Core.Extensions
 {
     public static class ApplicationUserExtensions
     {
-        public static LoggedInUserDto ToLoggedInUserDto(this ApplicationUser user)
+        public static ProfileDto ToLoggedInUserDto(this ApplicationUser user)
         {
-            return new LoggedInUserDto()
+            return new ProfileDto()
             {
                 Email = user.Email!,
                 Id = user.Id,
@@ -16,20 +18,11 @@ namespace LightNap.Core.Extensions
             };
         }
 
-        public static void UpdateLoggedInUser(this ApplicationUser user, UpdateLoggedInUserDto dto)
+        public static void UpdateLoggedInUser(this ApplicationUser user, UpdateProfileDto dto)
         {
             user.LastModifiedDate = DateTime.UtcNow;
 
             // Update other fields from the DTO.
-        }
-
-        public static PublicUserDto ToPublicUserDto(this ApplicationUser user)
-        {
-            return new PublicUserDto()
-            {
-                Id = user.Id,
-                UserName = user.UserName!
-            };
         }
 
         public static AdminUserDto ToAdminUserDto(this ApplicationUser user)

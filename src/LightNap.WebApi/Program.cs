@@ -1,4 +1,5 @@
 using LightNap.Core;
+using LightNap.Core.Data;
 using LightNap.Core.Extensions;
 using LightNap.Core.Identity;
 using LightNap.Migrations.SqlServer.Extensions;
@@ -51,7 +52,7 @@ app.UseHttpsRedirection();
 
 app.UseCors(builder =>
     builder
-        .WithOrigins("https://localhost:4200")
+        .WithOrigins("https://localhost:4200", "http://localhost:4200")
         .AllowAnyHeader()
         .AllowAnyMethod()
         .AllowCredentials());

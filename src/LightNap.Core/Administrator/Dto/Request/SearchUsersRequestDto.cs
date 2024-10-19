@@ -1,6 +1,6 @@
 ﻿using LightNap.Core.Api;
 
-namespace LightNap.Core.Identity.Dto.Request
+namespace LightNap.Core.Administrator.Dto.Request
 {
     public class SearchUsersRequestDto : PaginationRequestBase
     {

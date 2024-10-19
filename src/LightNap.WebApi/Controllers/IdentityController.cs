@@ -1,13 +1,11 @@
-using LightNap.Core;
 using LightNap.Core.Api;
+using LightNap.Core.Data;
 using LightNap.Core.Identity;
 using LightNap.Core.Identity.Dto.Request;
 using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Interfaces;
 using LightNap.WebApi.Configuration;
-using LightNap.WebApi.Extensions;
 using LightNap.WebApi.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -42,7 +40,7 @@ namespace LightNap.WebApi.Controllers
             this._db = db;
         }
 
-        private async Task<ApiResponseDto<LoginResponseDto>> HandleUserLoginAsync(ApplicationUser user, bool rememberMe, string? deviceId)
+        private async Task<ApiResponseDto<LoginResultDto>> HandleUserLoginAsync(ApplicationUser user, bool rememberMe, string deviceDetails)
         {
             if (user.TwoFactorEnabled)
             {
@@ -55,16 +53,16 @@ namespace LightNap.WebApi.Controllers
                 catch (Exception e)
                 {
                     this._logger.LogError(e, $"An error occurred while sending a 2FA code to '{user.Email}'.");
-                    return ApiResponseDto<LoginResponseDto>.CreateError("An unexpected error occurred while sending the 2FA code.");
+                    return ApiResponseDto<LoginResultDto>.CreateError("An unexpected error occurred while sending the 2FA code.");
                 }
 
-                return ApiResponseDto<LoginResponseDto>.CreateSuccess(new LoginResponseDto() { TwoFactorRequired = true });
+                return ApiResponseDto<LoginResultDto>.CreateSuccess(new LoginResultDto() { TwoFactorRequired = true });
             }
 
-            await this.CreateRefreshTokenAsync(user, rememberMe, deviceId);
+            await this.CreateRefreshTokenAsync(user, rememberMe, deviceDetails);
 
-            return ApiResponseDto<LoginResponseDto>.CreateSuccess(
-                new LoginResponseDto()
+            return ApiResponseDto<LoginResultDto>.CreateSuccess(
+                new LoginResultDto()
                 {
                     BearerToken = await this._tokenService.GenerateAccessTokenAsync(user)
                 });
@@ -92,7 +90,7 @@ namespace LightNap.WebApi.Controllers
             return refreshToken.User;
         }
 
-        private async Task CreateRefreshTokenAsync(ApplicationUser user, bool rememberMe, string? deviceId)
+        private async Task CreateRefreshTokenAsync(ApplicationUser user, bool rememberMe, string deviceDetails)
         {
             DateTime expires = DateTime.UtcNow.AddDays(30);
             string refreshToken = this._tokenService.GenerateRefreshToken();
@@ -105,7 +103,7 @@ namespace LightNap.WebApi.Controllers
                     Expires = expires,
                     LastSeen = DateTime.UtcNow,
                     IpAddress = this.Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown",
-                    DeviceId = deviceId ?? "Unknown",
+                    Details = deviceDetails,
                     UserId = user.Id
                 });
             await this._db.SaveChangesAsync();
@@ -119,7 +117,7 @@ namespace LightNap.WebApi.Controllers
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Strict,
+                SameSite = this._siteSettings.UseSameSiteStrictCookies ? SameSiteMode.Strict : SameSiteMode.None,
             };
 
             if (rememberMe)
@@ -131,14 +129,14 @@ namespace LightNap.WebApi.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<ApiResponseDto<LoginResponseDto>>> LogIn([FromBody] LoginRequestDto requestDto)
+        public async Task<ActionResult<ApiResponseDto<LoginResultDto>>> LogIn([FromBody] LoginRequestDto requestDto)
         {
             if (string.IsNullOrEmpty(requestDto.Email) || string.IsNullOrEmpty(requestDto.Password)) { return this.BadRequest(); }
 
             ApplicationUser? user = await this._userManager.FindByEmailAsync(requestDto.Email);
             if (user == null)
             {
-                return ApiResponseDto<LoginResponseDto>.CreateError("Invalid email/password combination.");
+                return ApiResponseDto<LoginResultDto>.CreateError("Invalid email/password combination.");
             }
 
             var signInResult = await this._signInManager.CheckPasswordSignInAsync(user, requestDto.Password, false);
@@ -146,27 +144,27 @@ namespace LightNap.WebApi.Controllers
             {
                 if (signInResult.IsLockedOut)
                 {
-                    return ApiResponseDto<LoginResponseDto>.CreateError("This account is locked.");
+                    return ApiResponseDto<LoginResultDto>.CreateError("This account is locked.");
                 }
                 if (signInResult.IsNotAllowed)
                 {
-                    return ApiResponseDto<LoginResponseDto>.CreateError("This account is not allowed to log in.");
+                    return ApiResponseDto<LoginResultDto>.CreateError("This account is not allowed to log in.");
                 }
-                return ApiResponseDto<LoginResponseDto>.CreateError("Invalid email/password combination.");
+                return ApiResponseDto<LoginResultDto>.CreateError("Invalid email/password combination.");
             }
 
-            return await this.HandleUserLoginAsync(user, requestDto.RememberMe, requestDto.DeviceId);
+            return await this.HandleUserLoginAsync(user, requestDto.RememberMe, requestDto.DeviceDetails);
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<ApiResponseDto<LoginResponseDto>>> Register([FromBody] RegisterRequestDto requestDto)
+        public async Task<ActionResult<ApiResponseDto<LoginResultDto>>> Register([FromBody] RegisterRequestDto requestDto)
         {
             if (string.IsNullOrEmpty(requestDto.Email) || string.IsNullOrEmpty(requestDto.Password)) { return this.BadRequest(); }
 
             var userExists = await this._userManager.FindByEmailAsync(requestDto.Email);
             if (userExists != null)
             {
-                return ApiResponseDto<LoginResponseDto>.CreateError("This email is already in use.");
+                return ApiResponseDto<LoginResultDto>.CreateError("This email is already in use.");
             }
 
             ApplicationUser user = new()
@@ -180,8 +178,8 @@ namespace LightNap.WebApi.Controllers
             var result = await this._userManager.CreateAsync(user, requestDto.Password);
             if (!result.Succeeded)
             {
-                if (result.Errors.Any()) { return ApiResponseDto<LoginResponseDto>.CreateError(result.Errors.Select(item => item.Description).ToArray()); }
-                return ApiResponseDto<LoginResponseDto>.CreateError("Unable to create user.");
+                if (result.Errors.Any()) { return ApiResponseDto<LoginResultDto>.CreateError(result.Errors.Select(item => item.Description).ToArray()); }
+                return ApiResponseDto<LoginResultDto>.CreateError("Unable to create user.");
             }
 
             if (!user.TwoFactorEnabled)
@@ -189,13 +187,23 @@ namespace LightNap.WebApi.Controllers
                 await this._emailService.SendRegistrationEmailAsync(user);
             }
 
-            return await this.HandleUserLoginAsync(user, requestDto.RememberMe, requestDto.DeviceId);
+            return await this.HandleUserLoginAsync(user, requestDto.RememberMe, requestDto.DeviceDetails);
         }
 
         [HttpGet("logout")]
-        public ActionResult<ApiResponseDto<bool>> LogOut()
+        public async Task<ActionResult<ApiResponseDto<bool>>> LogOut()
         {
-            this.Response.Cookies.Delete(Constants.Cookies.RefreshToken);
+            string? refreshTokenCookie = this.Request.Cookies[Constants.Cookies.RefreshToken];
+            if (refreshTokenCookie is not null)
+            {
+                RefreshToken? refreshToken = await this._db.RefreshTokens.FirstOrDefaultAsync(token => token.Token == refreshTokenCookie);
+                if (refreshToken is not null)
+                {
+                    this._db.RefreshTokens.Remove(refreshToken);
+                    await this._db.SaveChangesAsync();
+                }
+                this.Response.Cookies.Delete(Constants.Cookies.RefreshToken);
+            }
             return ApiResponseDto<bool>.CreateSuccess(true);
         }
 
@@ -244,6 +252,8 @@ namespace LightNap.WebApi.Controllers
                 return ApiResponseDto<string>.CreateError("Unable to set new password.");
             }
 
+            await this.CreateRefreshTokenAsync(user, requestDto.RememberMe, requestDto.DeviceDetails);
+
             return ApiResponseDto<string>.CreateSuccess(await this._tokenService.GenerateAccessTokenAsync(user));
         }
 
@@ -266,7 +276,7 @@ namespace LightNap.WebApi.Controllers
                 await this._emailService.SendRegistrationEmailAsync(user);
             }
 
-            await this.CreateRefreshTokenAsync(user, requestDto.RememberMe, requestDto.DeviceId);
+            await this.CreateRefreshTokenAsync(user, requestDto.RememberMe, requestDto.DeviceDetails);
 
             return ApiResponseDto<string>.CreateSuccess(await this._tokenService.GenerateAccessTokenAsync(user));
         }
@@ -281,25 +291,6 @@ namespace LightNap.WebApi.Controllers
             if (!await this._signInManager.CanSignInAsync(user)) { return ApiResponseDto<string>.CreateError("This account may not sign in."); }
 
             return ApiResponseDto<string>.CreateSuccess(await this._tokenService.GenerateAccessTokenAsync(user));
-        }
-
-        [Authorize]
-        [HttpPost("change-password")]
-        public async Task<ActionResult<ApiResponseDto<bool>>> ChangePassword(ChangePasswordRequestDto requestDto)
-        {
-            if (requestDto.NewPassword != requestDto.ConfirmNewPassword) { return ApiResponseDto<bool>.CreateError("New password does not match confirmation password."); }
-
-            ApplicationUser? user = await this._userManager.FindByIdAsync(this.User.GetUserId());
-            if (user is null) { return this.BadRequest(); }
-
-            var result = await this._userManager.ChangePasswordAsync(user, requestDto.CurrentPassword, requestDto.NewPassword);
-            if (!result.Succeeded)
-            {
-                if (result.Errors.Any()) { return ApiResponseDto<bool>.CreateError(result.Errors.Select(item => item.Description).ToArray()); }
-                return ApiResponseDto<bool>.CreateError("Unable to change password.");
-            }
-
-            return ApiResponseDto<bool>.CreateSuccess(true);
         }
     }
 }
