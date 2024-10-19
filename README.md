@@ -1,6 +1,6 @@
 # LightNap
 
-LightNap is a starter kit web application designed to provide a robust starting point for Single Page Applications (SPA) using a stack of .NET Core Web API, Angular, and PrimeNG. It includes built-in support for .NET Core Identity, JWT token management, and administrative features for managing identity, offering a solid foundation to be extended for any application scenario.
+LightNap (**light**weight .**N**ET Core/**A**ngular/**P**rimeNG) is a full stack starter kit designed to provide a boost to Single Page Applications (SPA). It includes built-in support for .NET Core Identity, JWT token management, and administrative features for managing identity, offering a solid foundation to be extended for any application scenario.
 
 ## Features
 
@@ -47,9 +47,9 @@ LightNap is a starter kit web application designed to provide a robust starting 
      ```
 
 3. **Frontend Setup:**
-   - Navigate to the `LightNap.Angular` directory:
+   - Navigate to the `lightnap-ng` directory:
      ```bash
-     cd LightNap.Angular
+     cd lightnap-ng
      ```
    - Install Angular dependencies:
      ```bash
@@ -66,7 +66,7 @@ LightNap is a starter kit web application designed to provide a robust starting 
 
 ## Project Structure
 
-- `LightNap.Angular`: Angular project with PrimeNG components based on the [sakai-ng](https://github.com/primefaces/sakai-ng) template.
+- `lightnap-ng`: Angular project with PrimeNG components based on the [sakai-ng](https://github.com/primefaces/sakai-ng) template.
 - `LightNap.Core`: .NET shared library for common server-side components.
 - `LightNap.DataProviders.SqlServer`: SQL Server data provider implementation including migrations and utilities.
 - `LightNap.MaintenanceService`: .NET Core console project to run maintenance tasks.
