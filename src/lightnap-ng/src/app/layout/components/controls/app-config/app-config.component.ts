@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
-import { LayoutService } from '../service/app.layout.service';
-import { MenuService } from '../service/app.menu.service';
+import { LayoutService } from '../../../services/layout.service';
+import { MenuService } from '../../../services/menu.service';
 import { SidebarModule } from 'primeng/sidebar';
 
 @Component({
     selector: 'app-config',
     standalone: true,
-    templateUrl: './app.config.component.html',
+    templateUrl: './app-config.component.html',
     imports: [SidebarModule]
 })
 export class AppConfigComponent {

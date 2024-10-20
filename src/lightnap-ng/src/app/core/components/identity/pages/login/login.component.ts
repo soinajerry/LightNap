@@ -3,27 +3,29 @@ import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { ROUTE_HELPER, RoutePipe } from "@core";
 import { IdentityService } from "@core/services/identity.service";
-import { BlockUIModule } from "primeng/blockui";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
-import { AppConfigComponent } from "src/app/layout/config/app.config.component";
-import { LayoutService } from "src/app/layout/service/app.layout.service";
+import { FocusContentLayout } from "src/app/layout/components/controls/focus-content-layout/focus-content-layout.component";
+import { LayoutService } from "src/app/layout/services/layout.service";
+import { ErrorListComponent } from "../../../controls/error-list/error-list.component";
+import { BlockUIModule } from "primeng/blockui";
 
 @Component({
   standalone: true,
   templateUrl: "./login.component.html",
   imports: [
     ReactiveFormsModule,
-    AppConfigComponent,
     RouterModule,
     ButtonModule,
     InputTextModule,
     CheckboxModule,
-    BlockUIModule,
     RoutePipe,
     PasswordModule,
+    FocusContentLayout,
+    ErrorListComponent,
+    BlockUIModule
   ],
 })
 export class LoginComponent {
@@ -39,15 +41,16 @@ export class LoginComponent {
   });
 
   errors: Array<string> = [];
+  blockUi = false;
 
   logIn() {
-    const value = this.form.value;
+    this.blockUi = true;
 
     this.#identityService
       .logIn({
-        email: value.email,
-        password: value.password,
-        rememberMe: value.rememberMe,
+        email: this.form.value.email,
+        password: this.form.value.password,
+        rememberMe: this.form.value.rememberMe,
         deviceDetails: navigator.userAgent,
       })
       .subscribe({
@@ -59,11 +62,12 @@ export class LoginComponent {
               this.errors = ["An unexpected error occurred."];
             }
           } else if (response.result.twoFactorRequired) {
-            this.#routeHelper.navigate("verify-code", value.email);
+            this.#routeHelper.navigate("verify-code", this.form.value.email);
           } else {
             this.#routeHelper.navigate("home");
           }
         },
+        complete: () => (this.blockUi = false),
       });
   }
 }

@@ -3,14 +3,16 @@ import { Component, Input, inject } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { ROUTE_HELPER, RoutePipe } from "@core";
+import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
 import { IdentityService } from "@core/services/identity.service";
 import { BlockUIModule } from "primeng/blockui";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { PasswordModule } from "primeng/password";
 import { take } from "rxjs";
-import { AppConfigComponent } from "src/app/layout/config/app.config.component";
-import { LayoutService } from "src/app/layout/service/app.layout.service";
+import { AppConfigComponent } from "src/app/layout/components/controls/app-config/app-config.component";
+import { FocusContentLayout } from "src/app/layout/components/controls/focus-content-layout/focus-content-layout.component";
+import { LayoutService } from "src/app/layout/services/layout.service";
 
 @Component({
   standalone: true,
@@ -23,7 +25,9 @@ import { LayoutService } from "src/app/layout/service/app.layout.service";
     CheckboxModule,
     AppConfigComponent,
     BlockUIModule,
-    RoutePipe
+    RoutePipe,
+    ErrorListComponent,
+    FocusContentLayout
 ],
 })
 export class NewPasswordComponent {
@@ -35,8 +39,7 @@ export class NewPasswordComponent {
   @Input() email = "";
   @Input() token = "";
 
-  isSettingPassword: boolean = false;
-  rememberMe: boolean = false;
+  blockUi: boolean = false;
   errors: Array<string> = [];
 
   form = this.#fb.nonNullable.group({
@@ -53,7 +56,7 @@ export class NewPasswordComponent {
   }
 
   newPassword() {
-    this.isSettingPassword = true;
+    this.blockUi = true;
     this.#identityService
       .newPassword({
         email: this.email,
@@ -65,7 +68,6 @@ export class NewPasswordComponent {
       .pipe(take(1))
       .subscribe({
         next: response => {
-          this.isSettingPassword = false;
           if (response?.result) {
             this.#routeHelper.navigate("home");
           } else if (response?.errorMessages?.length) {
@@ -74,6 +76,7 @@ export class NewPasswordComponent {
             this.errors = ["An unexpected error occurred."];
           }
         },
+        complete: () => (this.blockUi = false),
       });
   }
 }

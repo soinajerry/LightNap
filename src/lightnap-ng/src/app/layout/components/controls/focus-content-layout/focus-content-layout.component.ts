@@ -1,13 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { LayoutService } from 'src/app/layout/services/layout.service';
 
 @Component({
-    selector: 'app-privacy-policy',
+    selector: 'focus-content-layout',
     standalone: true,
-    templateUrl: './privacy-policy.component.html',
-    imports: [RouterModule]
+    templateUrl: './focus-content-layout.component.html',
+    imports: [CommonModule]
 })
-export class PrivacyPolicyComponent {
+export class FocusContentLayout {
     layoutService = inject(LayoutService);
 }

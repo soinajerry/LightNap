@@ -7,13 +7,26 @@ import { BlockUIModule } from "primeng/blockui";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputTextModule } from "primeng/inputtext";
-import { AppConfigComponent } from "src/app/layout/config/app.config.component";
-import { LayoutService } from "src/app/layout/service/app.layout.service";
+import { AppConfigComponent } from "src/app/layout/components/controls/app-config/app-config.component";
+import { FocusContentLayout } from "src/app/layout/components/controls/focus-content-layout/focus-content-layout.component";
+import { LayoutService } from "src/app/layout/services/layout.service";
+import { ErrorListComponent } from "../../../controls/error-list/error-list.component";
 
 @Component({
   standalone: true,
   templateUrl: "./verify-code.component.html",
-  imports: [ReactiveFormsModule, AppConfigComponent, RouterModule, ButtonModule, InputTextModule, CheckboxModule, BlockUIModule, RoutePipe],
+  imports: [
+    ReactiveFormsModule,
+    AppConfigComponent,
+    RouterModule,
+    ButtonModule,
+    InputTextModule,
+    CheckboxModule,
+    BlockUIModule,
+    RoutePipe,
+    FocusContentLayout,
+    ErrorListComponent,
+  ],
 })
 export class VerifyCodeComponent {
   #identityService = inject(IdentityService);
@@ -34,7 +47,7 @@ export class VerifyCodeComponent {
     rememberMe: this.#fb.control(false),
   });
 
-  isVerifyingCode = false;
+  blockUi = false;
   errors: Array<string> = [];
 
   constructor() {
@@ -84,7 +97,7 @@ export class VerifyCodeComponent {
     const value = this.form.value;
     const code = `${value.code1}${value.code2}${value.code3}${value.code4}${value.code5}${value.code6}`;
 
-    this.isVerifyingCode = true;
+    this.blockUi = true;
     this.#identityService
       .verifyCode({
         code,
@@ -95,7 +108,6 @@ export class VerifyCodeComponent {
       .subscribe({
         next: response => {
           if (!response?.result) {
-            this.isVerifyingCode = false;
             if (response?.errorMessages?.length) {
               this.errors = response.errorMessages;
             } else {
@@ -107,6 +119,7 @@ export class VerifyCodeComponent {
 
           this.#routeHelper.navigate("home");
         },
+        complete: () => (this.blockUi = false),
       });
   }
 }

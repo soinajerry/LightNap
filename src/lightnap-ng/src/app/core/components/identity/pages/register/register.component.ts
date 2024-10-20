@@ -8,8 +8,11 @@ import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
-import { AppConfigComponent } from "src/app/layout/config/app.config.component";
-import { LayoutService } from "src/app/layout/service/app.layout.service";
+import { AppConfigComponent } from "src/app/layout/components/controls/app-config/app-config.component";
+import { LayoutService } from "src/app/layout/services/layout.service";
+import { ErrorListComponent } from "../../../controls/error-list/error-list.component";
+import { FocusContentLayout } from "../../../../../layout/components/controls/focus-content-layout/focus-content-layout.component";
+import { BlockUIModule } from "primeng/blockui";
 
 @Component({
   standalone: true,
@@ -22,7 +25,10 @@ import { LayoutService } from "src/app/layout/service/app.layout.service";
     PasswordModule,
     CheckboxModule,
     AppConfigComponent,
-    RoutePipe
+    RoutePipe,
+    ErrorListComponent,
+    FocusContentLayout,
+    BlockUIModule
 ],
 })
 export class RegisterComponent {
@@ -40,6 +46,7 @@ export class RegisterComponent {
     rememberMe: this.#fb.control(true),
   });
 
+  blockUi = false;
   errors: Array<string> = [];
 
   constructor() {
@@ -50,6 +57,8 @@ export class RegisterComponent {
   }
 
   register() {
+    this.blockUi = true;
+
     this.#identityService.register({
         email: this.form.value.email,
         password: this.form.value.password,
@@ -71,6 +80,7 @@ export class RegisterComponent {
           this.#routeHelper.navigate("home");
         }
       },
+      complete: () => (this.blockUi = false),
     });
   }
 }

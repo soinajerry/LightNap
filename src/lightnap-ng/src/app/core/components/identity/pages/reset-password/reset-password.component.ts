@@ -1,4 +1,3 @@
-
 import { Component, inject } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
@@ -9,13 +8,14 @@ import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
 import { take } from "rxjs";
-import { AppConfigComponent } from "src/app/layout/config/app.config.component";
-import { LayoutService } from "src/app/layout/service/app.layout.service";
+import { FocusContentLayout } from "src/app/layout/components/controls/focus-content-layout/focus-content-layout.component";
+import { LayoutService } from "src/app/layout/services/layout.service";
+import { ErrorListComponent } from "../../../controls/error-list/error-list.component";
 
 @Component({
   standalone: true,
   templateUrl: "./reset-password.component.html",
-  imports: [ReactiveFormsModule, RouterModule, ButtonModule, PasswordModule, InputTextModule, AppConfigComponent, BlockUIModule, RoutePipe],
+  imports: [ReactiveFormsModule, RouterModule, ButtonModule, PasswordModule, InputTextModule, RoutePipe, FocusContentLayout, BlockUIModule, ErrorListComponent],
 })
 export class ResetPasswordComponent {
   #identityService = inject(IdentityService);
@@ -24,20 +24,19 @@ export class ResetPasswordComponent {
   layoutService = inject(LayoutService);
 
   form = this.#fb.nonNullable.group({
-    email: this.#fb.control("", [Validators.required, Validators.email])
+    email: this.#fb.control("", [Validators.required, Validators.email]),
   });
 
-  isResettingPassword = false;
+  blockUi = false;
   errors: Array<string> = [];
 
   resetPassword() {
-    this.isResettingPassword = true;
+    this.blockUi = true;
     this.#identityService
-      .resetPassword({email: this.form.value.email})
+      .resetPassword({ email: this.form.value.email })
       .pipe(take(1))
       .subscribe({
         next: response => {
-          this.isResettingPassword = false;
           if (response.result) {
             this.#routeHelper.getRoute("reset-instructions-sent");
           } else {
@@ -48,6 +47,7 @@ export class ResetPasswordComponent {
             }
           }
         },
+        complete: () => (this.blockUi = false),
       });
   }
 }

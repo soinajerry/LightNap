@@ -1,18 +1,18 @@
-import { ChangeDetectorRef, Component, Host, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
-import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, HostBinding, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
+import { RippleModule } from 'primeng/ripple';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { MenuService } from './service/app.menu.service';
-import { LayoutService } from './service/app.layout.service';
-import { RippleModule } from 'primeng/ripple';
-import { CommonModule } from '@angular/common';
+import { LayoutService } from 'src/app/layout/services/layout.service';
+import { MenuService } from 'src/app/layout/services/menu.service';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
-    selector: '[app-menuitem]',
+    selector: '[app-menu-item]',
     standalone: true,
-    templateUrl: "./app.menuitem.component.html",
+    templateUrl: "./app-menu-item.component.html",
     animations: [
         trigger('children', [
             state('collapsed', style({
@@ -26,26 +26,24 @@ import { CommonModule } from '@angular/common';
     ],
     imports: [CommonModule, RouterLink, RippleModule]
 })
-export class AppMenuitemComponent implements OnInit, OnDestroy {
+export class AppMenuItemComponent implements OnInit, OnDestroy {
+    #cd = inject(ChangeDetectorRef);
+    #menuService = inject(MenuService);
+    layoutService = inject(LayoutService);
+    router = inject(Router);
 
     @Input() item: any;
-
     @Input() index!: number;
-
     @Input() @HostBinding('class.layout-root-menuitem') root!: boolean;
-
     @Input() parentKey!: string;
 
     active = false;
-
     menuSourceSubscription: Subscription;
-
     menuResetSubscription: Subscription;
-
     key: string = "";
 
-    constructor(public layoutService: LayoutService, private cd: ChangeDetectorRef, public router: Router, private menuService: MenuService) {
-        this.menuSourceSubscription = this.menuService.menuSource$.subscribe(value => {
+    constructor() {
+        this.menuSourceSubscription = this.#menuService.menuSource$.subscribe(value => {
             Promise.resolve(null).then(() => {
                 if (value.routeEvent) {
                     this.active = (value.key === this.key || value.key.startsWith(this.key + '-')) ? true : false;
@@ -58,7 +56,7 @@ export class AppMenuitemComponent implements OnInit, OnDestroy {
             });
         });
 
-        this.menuResetSubscription = this.menuService.resetSource$.subscribe(() => {
+        this.menuResetSubscription = this.#menuService.resetSource$.subscribe(() => {
             this.active = false;
         });
 
@@ -82,7 +80,7 @@ export class AppMenuitemComponent implements OnInit, OnDestroy {
         let activeRoute = this.router.isActive(this.item.routerLink[0], { paths: 'exact', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'ignored' });
 
         if (activeRoute) {
-            this.menuService.onMenuStateChange({ key: this.key, routeEvent: true });
+            this.#menuService.onMenuStateChange({ key: this.key, routeEvent: true });
         }
     }
 
@@ -103,7 +101,7 @@ export class AppMenuitemComponent implements OnInit, OnDestroy {
             this.active = !this.active;
         }
 
-        this.menuService.onMenuStateChange({ key: this.key });
+        this.#menuService.onMenuStateChange({ key: this.key });
     }
 
     get submenuAnimation() {

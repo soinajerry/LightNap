@@ -1,99 +1,81 @@
-<div class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
-  <div class="flex flex-column align-items-center justify-content-center">
-    <img
-      src="assets/layout/images/{{ layoutService.config().colorScheme === 'light' ? 'logo-dark' : 'logo-white' }}.svg"
-      alt="LightNap logo"
-      class="mb-5 w-6rem flex-shrink-0"
+<focus-content-layout>
+  <span title>Register</span>
+  <span subtitle>Let's get started!'</span>
+
+  <form [formGroup]="form" (ngSubmit)="register()" autocomplete="off">
+    <label for="userName" class="block text-900 text-xl font-medium mb-2">UserName</label>
+    <input
+      id="userName"
+      type="text"
+      placeholder="UserName"
+      pInputText
+      formControlName="userName"
+      class="w-full md:w-30rem mb-5"
+      style="padding: 1rem"
     />
-    <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
-      <div class="w-full surface-card py-8 px-5 sm:px-8" style="border-radius: 53px">
-        <div class="text-center mb-5">
-          <div class="text-900 text-3xl font-medium mb-3">Register</div>
-          <span class="text-600 font-medium">Let's get started</span>
-        </div>
 
-        <div>
-          <form [formGroup]="form" (ngSubmit)="register()" autocomplete="off">
-            <label for="userName" class="block text-900 text-xl font-medium mb-2">UserName</label>
-            <input
-              id="userName"
-              type="text"
-              placeholder="UserName"
-              pInputText
-              formControlName="userName"
-              class="w-full md:w-30rem mb-5"
-              style="padding: 1rem"
-            />
+    <label for="email" class="block text-900 text-xl font-medium mb-2">Email</label>
+    <input
+      id="email"
+      type="text"
+      placeholder="Email address"
+      pInputText
+      formControlName="email"
+      class="w-full md:w-30rem mb-5"
+      style="padding: 1rem"
+    />
 
-            <label for="email" class="block text-900 text-xl font-medium mb-2">Email</label>
-            <input
-              id="email"
-              type="text"
-              placeholder="Email address"
-              pInputText
-              formControlName="email"
-              class="w-full md:w-30rem mb-5"
-              style="padding: 1rem"
-            />
+    <label for="password" class="block text-900 font-medium text-xl mb-2">Password</label>
+    <p-password
+      formControlName="password"
+      styleClass="mb-5"
+      inputStyleClass="w-full p-3 md:w-30rem"
+      [inputStyle]="{ paddingLeft: '2.5rem' }"
+      placeholder="Password"
+      [toggleMask]="true"
+    />
 
-            <label for="password" class="block text-900 font-medium text-xl mb-2">Password</label>
-            <p-password
-              formControlName="password"
-              styleClass="mb-5"
-              inputStyleClass="w-full p-3 md:w-30rem"
-              [inputStyle]="{ paddingLeft: '2.5rem' }"
-              placeholder="Password"
-              [toggleMask]="true"
-            />
+    <label for="confirmPassword" class="block text-900 font-medium text-xl mb-2">Confirm Password</label>
+    <p-password
+      formControlName="confirmPassword"
+      styleClass="mb-5"
+      inputStyleClass="w-full p-3 md:w-30rem"
+      [inputStyle]="{ paddingLeft: '2.5rem' }"
+      placeholder="Confirm Password"
+      [toggleMask]="true"
+      [feedback]="false"
+    />
 
-            <label for="confirmPassword" class="block text-900 font-medium text-xl mb-2">Confirm Password</label>
-            <p-password
-              formControlName="confirmPassword"
-              styleClass="mb-5"
-              inputStyleClass="w-full p-3 md:w-30rem"
-              [inputStyle]="{ paddingLeft: '2.5rem' }"
-              placeholder="Confirm Password"
-              [toggleMask]="true"
-              [feedback]="false"
-            />
-
-            <div class="flex align-items-center justify-content-between mb-5 gap-5">
-              <div class="flex align-items-center">
-                <p-checkbox name="checkbox" formControlName="rememberMe" styleClass="mr-2" [binary]="true" label="Remember me" />
-              </div>
-              <a
-                class="font-medium no-underline ml-2 text-right cursor-pointer"
-                style="color: var(--primary-color)"
-                [routerLink]="'reset-password' | route"
-                >Forgot password?</a>
-            </div>
-            <div class="flex align-items-center justify-content-between mb-5 gap-5">
-              <div class="flex align-items-center gap-1">
-                <p-checkbox name="checkbox" formControlName="agreedToTerms" styleClass="mr-2" [binary]="true" label="I agree to the" />
-                <a [routerLink]="'terms-and-conditions' | route" target="_blank">Terms and Conditions</a>
-                <span>and</span>
-                <a [routerLink]="'privacy-policy' | route" target="_blank">Privacy Policy</a>
-              </div>
-            </div>
-
-            @if (errors.length) {
-            <div class="flex align-items-center mt-1 mb-4">
-              <ul>
-                @for (error of errors; track error) {
-                <li class="text-900 font-bold text-red-500">{{ error }}</li>
-                }
-              </ul>
-            </div>
-            }
-
-            <p-button type="submit" label="Register" styleClass="w-full p-3 text-xl" [disabled]="!form.valid" pRipple />
-          </form>
-
-          <div class="flex flex-column mt-4">
-            <a [routerLink]="'login' | route">I already have an account</a>
-          </div>
-        </div>
+    <div class="flex align-items-center justify-content-between mb-5 gap-5">
+      <div class="flex align-items-center">
+        <p-checkbox name="checkbox" formControlName="rememberMe" styleClass="mr-2" [binary]="true" label="Remember me" />
+      </div>
+      <a class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)" [routerLink]="'reset-password' | route"
+        >Forgot password?</a
+      >
+    </div>
+    <div class="flex align-items-center justify-content-between mb-5 gap-5">
+      <div class="flex align-items-center gap-1">
+        <p-checkbox name="checkbox" formControlName="agreedToTerms" styleClass="mr-2" [binary]="true" label="I agree to the" />
+        <a [routerLink]="'terms-and-conditions' | route" target="_blank">Terms and Conditions</a>
+        <span>and</span>
+        <a [routerLink]="'privacy-policy' | route" target="_blank">Privacy Policy</a>
       </div>
     </div>
+
+    <error-list [errors]="errors" />
+
+    <p-button type="submit" label="Register" styleClass="w-full p-3 text-xl" [disabled]="!form.valid" pRipple />
+  </form>
+
+  <div class="flex flex-column mt-4">
+    <a [routerLink]="'login' | route">I already have an account</a>
   </div>
-</div>
+</focus-content-layout>
+
+<p-blockUI [blocked]="blockUi">
+  <div class="text-white flex align-items-center gap-1">
+    <i class="pi pi-spin pi-spinner text-4xl"></i>
+    <span>Registering...</span>
+  </div>
+</p-blockUI>

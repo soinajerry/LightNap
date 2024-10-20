@@ -2,8 +2,8 @@
 import { Component, inject } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { RoutePipe } from "@core";
-import { AppConfigComponent } from "src/app/layout/config/app.config.component";
-import { LayoutService } from "src/app/layout/service/app.layout.service";
+import { AppConfigComponent } from "src/app/layout/components/controls/app-config/app-config.component";
+import { LayoutService } from "src/app/layout/services/layout.service";
 
 @Component({
   standalone: true,

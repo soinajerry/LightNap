@@ -1,13 +1,11 @@
 import { Component, inject } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { LayoutService } from 'src/app/layout/services/layout.service';
 
 @Component({
-    selector: 'app-privacy-policy',
+    selector: 'app-footer',
     standalone: true,
-    templateUrl: './privacy-policy.component.html',
-    imports: [RouterModule]
+    templateUrl: './app-footer.component.html'
 })
-export class PrivacyPolicyComponent {
+export class AppFooterComponent {
     layoutService = inject(LayoutService);
 }

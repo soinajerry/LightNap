@@ -1,22 +1,21 @@
 import { inject, OnInit } from "@angular/core";
 import { Component } from "@angular/core";
-import { LayoutService } from "./service/app.layout.service";
-import { AppMenuitemComponent } from "./app.menuitem.component";
 import { MenuItem } from "primeng/api";
 import { ROUTE_HELPER } from "@core";
+import { LayoutService } from "src/app/layout/services/layout.service";
+import { AppMenuItemComponent } from "../app-menu-item/app-menu-item.component";
 
 @Component({
   selector: "app-menu",
   standalone: true,
-  templateUrl: "./app.menu.component.html",
-  imports: [AppMenuitemComponent],
+  templateUrl: "./app-menu.component.html",
+  imports: [AppMenuItemComponent],
 })
 export class AppMenuComponent implements OnInit {
   #routeHelper = inject(ROUTE_HELPER);
+  layoutService = inject(LayoutService);
 
   model: MenuItem[] = [];
-
-  constructor(public layoutService: LayoutService) {}
 
   ngOnInit() {
     this.model = [

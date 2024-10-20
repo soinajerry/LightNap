@@ -1,16 +1,16 @@
 import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { LayoutService } from "./service/app.layout.service";
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { RoutePipe } from '@core';
+import { LayoutService } from 'src/app/layout/services/layout.service';
 
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    templateUrl: './app.topbar.component.html',
+    templateUrl: './app-top-bar.component.html',
     imports: [CommonModule, RouterModule, ButtonModule, RippleModule, RoutePipe]
 })
 export class AppTopBarComponent {

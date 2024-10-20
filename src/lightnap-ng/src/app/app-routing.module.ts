@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AppLayoutComponent } from "./layout/app.layout.component";
 import { adminGuard } from '@core/guards/admin.guard';
 import { authGuard } from '@core/guards/auth.guard';
+import { AppLayoutComponent } from './layout/components/controls/app-layout/app-layout.component';
 
 @NgModule({
     imports: [

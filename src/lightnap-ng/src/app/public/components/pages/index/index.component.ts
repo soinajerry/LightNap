@@ -8,7 +8,7 @@ import { ButtonModule } from "primeng/button";
 import { DividerModule } from "primeng/divider";
 import { RippleModule } from "primeng/ripple";
 import { StyleClassModule } from "primeng/styleclass";
-import { LayoutService } from "src/app/layout/service/app.layout.service";
+import { LayoutService } from "src/app/layout/services/layout.service";
 
 @Component({
   selector: "app-index",
