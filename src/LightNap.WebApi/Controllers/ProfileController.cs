@@ -15,48 +15,75 @@ namespace LightNap.WebApi.Controllers
     [ApiController]
     [Authorize]
     [Route("api/[controller]")]
-    public class ProfileController : ControllerBase
+    public class ProfileController(
+        UserManager<ApplicationUser> userManager,
+        ApplicationDbContext db) : ControllerBase
     {
-        private readonly ILogger _logger;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ApplicationDbContext _db;
-
-        public ProfileController(ILogger<ProfileController> logger, UserManager<ApplicationUser> userManager, ApplicationDbContext db)
-        {
-            this._logger = logger;
-            this._userManager = userManager;
-            this._db = db;
-        }
-
+        /// <summary>
+        /// Retrieves the profile of the current user.
+        /// </summary>
+        /// <returns>
+        /// An <see cref="ApiResponseDto{T}"/> containing the profile of the current user.
+        /// </returns>
+        /// <response code="200">Returns the profile of the current user.</response>
+        /// <response code="401">If the user is not authenticated.</response>
         [HttpGet]
+        [ProducesResponseType(typeof(ApiResponseDto<ProfileDto>), 200)]
+        [ProducesResponseType(401)]
         public async Task<ActionResult<ApiResponseDto<ProfileDto>>> GetProfile()
         {
-            var user = await this._db.Users.FindAsync(this.User.GetUserId());
+            var user = await db.Users.FindAsync(this.User.GetUserId());
             return ApiResponseDto<ProfileDto>.CreateSuccess(user?.ToLoggedInUserDto());
         }
 
+        /// <summary>
+        /// Updates the profile of the current user.
+        /// </summary>
+        /// <param name="requestDto">The updated profile information.</param>
+        /// <returns>
+        /// An <see cref="ApiResponseDto{T}"/> containing the updated profile of the current user.
+        /// </returns>
+        /// <response code="200">Returns the updated profile of the current user.</response>
+        /// <response code="401">If the user is not authenticated.</response>
+        /// <response code="400">If the request is invalid.</response>
         [HttpPut]
+        [ProducesResponseType(typeof(ApiResponseDto<ProfileDto>), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(400)]
         public async Task<ActionResult<ApiResponseDto<ProfileDto>>> UpdateProfile(UpdateProfileDto requestDto)
         {
-            var user = await this._db.Users.FindAsync(this.User.GetUserId());
+            var user = await db.Users.FindAsync(this.User.GetUserId());
             if (user is null) { return this.Unauthorized(); }
 
             user.UpdateLoggedInUser(requestDto);
 
-            await this._db.SaveChangesAsync();
+            await db.SaveChangesAsync();
 
             return ApiResponseDto<ProfileDto>.CreateSuccess(user.ToLoggedInUserDto());
         }
 
+        /// <summary>
+        /// Changes the password of the current user.
+        /// </summary>
+        /// <param name="requestDto">The password change request.</param>
+        /// <returns>
+        /// An <see cref="ApiResponseDto{T}"/> indicating whether the password was changed successfully.
+        /// </returns>
+        /// <response code="200">If the password was changed successfully.</response>
+        /// <response code="400">If the request is invalid or the current password is incorrect.</response>
+        /// <response code="401">If the user is not authenticated.</response>
         [HttpPost("change-password")]
+        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public async Task<ActionResult<ApiResponseDto<bool>>> ChangePassword(ChangePasswordRequestDto requestDto)
         {
             if (requestDto.NewPassword != requestDto.ConfirmNewPassword) { return ApiResponseDto<bool>.CreateError("New password does not match confirmation password."); }
 
-            ApplicationUser? user = await this._userManager.FindByIdAsync(this.User.GetUserId());
+            ApplicationUser? user = await userManager.FindByIdAsync(this.User.GetUserId());
             if (user is null) { return this.BadRequest(); }
 
-            var result = await this._userManager.ChangePasswordAsync(user, requestDto.CurrentPassword, requestDto.NewPassword);
+            var result = await userManager.ChangePasswordAsync(user, requestDto.CurrentPassword, requestDto.NewPassword);
             if (!result.Succeeded)
             {
                 if (result.Errors.Any()) { return ApiResponseDto<bool>.CreateError(result.Errors.Select(item => item.Description).ToArray()); }
@@ -65,6 +92,5 @@ namespace LightNap.WebApi.Controllers
 
             return ApiResponseDto<bool>.CreateSuccess(true);
         }
-
     }
 }

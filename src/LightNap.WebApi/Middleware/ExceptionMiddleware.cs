@@ -5,6 +5,9 @@ using System.Text.Json.Serialization;
 
 namespace LightNap.WebApi.Middleware
 {
+    /// <summary>
+    /// Middleware to handle exceptions globally.
+    /// </summary>
     public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger, IHostEnvironment environment)
     {
         private static readonly JsonSerializerOptions _jsonSerializerOptions =
@@ -15,33 +18,32 @@ namespace LightNap.WebApi.Middleware
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
 
-        private readonly IHostEnvironment _environment = environment;
-        private readonly ILogger<ExceptionMiddleware> _logger = logger;
-        private readonly RequestDelegate _next = next;
-
+        /// <summary>
+        /// Handles the HTTP request and catches exceptions.
+        /// </summary>
+        /// <param name="context">The HTTP context.</param>
+        /// <returns>A task that represents the completion of request processing.</returns>
         public async Task InvokeAsync(HttpContext context)
         {
             try
             {
-                await this._next(context);
+                await next(context);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                context.Response.Clear();
+                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                await context.Response.WriteAsync("Unauthorized");
             }
             catch (Exception ex)
             {
-                this._logger.LogError(ex, "{message}", ex.Message);
+                logger.LogError(ex, "Unexpected error in Web API: {message}", ex.Message);
 
-                if (ex is UnauthorizedAccessException)
-                {
-                    context.Response.Clear();
-                    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                    await context.Response.WriteAsync("Unauthorized");
-                    return;
-                }
-
-                // To simplify client-side development, we convert all remaining errors to easily digestable ApiResponseDtos.
-
+                // To simplify client-side development, we convert all remaining errors to easily digestible ApiResponseDtos.
+                // We use string as the type because it doesn't matter since Result is going to be null anyway.
                 ApiResponseDto<string> error;
 
-                if (this._environment.IsDevelopment())
+                if (environment.IsDevelopment())
                 {
                     if (string.IsNullOrWhiteSpace(ex.StackTrace))
                     {
@@ -49,7 +51,7 @@ namespace LightNap.WebApi.Middleware
                     }
                     else
                     {
-                        error = ApiResponseDto<string>.CreateError([ex.Message, ex.StackTrace]);
+                        error = ApiResponseDto<string>.CreateError(new[] { ex.Message, ex.StackTrace });
                     }
                 }
                 else
@@ -61,6 +63,12 @@ namespace LightNap.WebApi.Middleware
             }
         }
 
+        /// <summary>
+        /// Writes the error response as JSON.
+        /// </summary>
+        /// <param name="context">The HTTP context.</param>
+        /// <param name="error">The error response to write.</param>
+        /// <returns>A task that represents the completion of the write operation.</returns>
         private static async Task WriteErrorAsync(HttpContext context, ApiResponseDto<string> error)
         {
             context.Response.ContentType = "application/json";

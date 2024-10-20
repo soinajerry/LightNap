@@ -32,7 +32,7 @@ export class LoginComponent {
   #fb = inject(FormBuilder);
   #routeHelper = inject(ROUTE_HELPER);
 
-  form = this.#fb.group({
+  form = this.#fb.nonNullable.group({
     email: this.#fb.control("", [Validators.required, Validators.email]),
     password: this.#fb.control("", [Validators.required]),
     rememberMe: this.#fb.control(true),
@@ -45,9 +45,9 @@ export class LoginComponent {
 
     this.#identityService
       .logIn({
-        email: value.email!,
-        password: value.password!,
-        rememberMe: value.rememberMe!,
+        email: value.email,
+        password: value.password,
+        rememberMe: value.rememberMe,
         deviceDetails: navigator.userAgent,
       })
       .subscribe({
@@ -59,7 +59,7 @@ export class LoginComponent {
               this.errors = ["An unexpected error occurred."];
             }
           } else if (response.result.twoFactorRequired) {
-            this.#routeHelper.navigate("verify-code", value.email!);
+            this.#routeHelper.navigate("verify-code", value.email);
           } else {
             this.#routeHelper.navigate("home");
           }

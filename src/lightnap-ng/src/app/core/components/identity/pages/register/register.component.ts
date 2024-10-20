@@ -31,7 +31,7 @@ export class RegisterComponent {
   #routeHelper = inject(ROUTE_HELPER);
   layoutService = inject(LayoutService);
 
-  form = this.#fb.group({
+  form = this.#fb.nonNullable.group({
     email: this.#fb.control("", [Validators.required, Validators.email]),
     password: this.#fb.control("", [Validators.required]),
     confirmPassword: this.#fb.control("", [Validators.required]),
@@ -51,12 +51,12 @@ export class RegisterComponent {
 
   register() {
     this.#identityService.register({
-        email: this.form.value.email!,
-        password: this.form.value.password!,
+        email: this.form.value.email,
+        password: this.form.value.password,
+        confirmPassword: this.form.value.confirmPassword,
         deviceDetails: navigator.userAgent,
-        rememberMe: this.form.value.rememberMe!,
-        userName: this.form.value.userName!
-
+        rememberMe: this.form.value.rememberMe,
+        userName: this.form.value.userName
       }).subscribe({
       next: response => {
         if (!response?.result) {
@@ -66,7 +66,7 @@ export class RegisterComponent {
             this.errors = ["An unexpected error occurred."];
           }
         } else if (response.result.twoFactorRequired) {
-          this.#routeHelper.navigate("verify-code", this.form.value.email!);
+          this.#routeHelper.navigate("verify-code", this.form.value.email);
         } else {
           this.#routeHelper.navigate("home");
         }

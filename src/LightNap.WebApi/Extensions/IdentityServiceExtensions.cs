@@ -9,8 +9,17 @@ using System.Text;
 
 namespace LightNap.WebApi.Extensions
 {
+    /// <summary>
+    /// Extension methods for configuring identity services.
+    /// </summary>
     public static class IdentityServiceExtensions
     {
+        /// <summary>
+        /// Adds identity services to the service collection.
+        /// </summary>
+        /// <param name="services">The service collection.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <returns>The updated service collection.</returns>
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddIdentity<ApplicationUser, ApplicationRole>(

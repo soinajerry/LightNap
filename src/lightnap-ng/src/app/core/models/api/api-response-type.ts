@@ -1,1 +1,1 @@
-export type ApiResponseType = "Success" | "Error" | "UnhandledError";
+export type ApiResponseType = "Success" | "Error" | "UnexpectedError";

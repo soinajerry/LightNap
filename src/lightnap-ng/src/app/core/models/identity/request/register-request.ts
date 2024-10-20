@@ -1,7 +1,8 @@
 export interface RegisterRequest {
+    userName: string;
     email: string;
     password: string;
-    userName: string;
+    confirmPassword: string;
     rememberMe: boolean;
     deviceDetails: string;
 }

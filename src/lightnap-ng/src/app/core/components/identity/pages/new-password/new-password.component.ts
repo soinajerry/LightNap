@@ -39,7 +39,7 @@ export class NewPasswordComponent {
   rememberMe: boolean = false;
   errors: Array<string> = [];
 
-  form = this.#fb.group({
+  form = this.#fb.nonNullable.group({
     password: this.#fb.control("", [Validators.required]),
     confirmPassword: this.#fb.control("", [Validators.required]),
     rememberMe: this.#fb.control(false),
@@ -57,10 +57,10 @@ export class NewPasswordComponent {
     this.#identityService
       .newPassword({
         email: this.email,
-        password: this.form.value.password!,
+        password: this.form.value.password,
         token: this.token,
         deviceDetails: navigator.userAgent,
-        rememberMe: this.form.value.rememberMe!
+        rememberMe: this.form.value.rememberMe
       })
       .pipe(take(1))
       .subscribe({

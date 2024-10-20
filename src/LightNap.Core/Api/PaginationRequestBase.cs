@@ -1,18 +1,26 @@
-﻿namespace LightNap.Core.Api
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace LightNap.Core.Api
 {
+    /// <summary>
+    /// Base class for pagination requests.
+    /// </summary>
     public class PaginationRequestBase
     {
-        private const int MaxPageSize = 50;
+        private const int _maxPageSize = 50;
 
+        /// <summary>
+        /// Gets or sets the page number. Must be greater than 0.
+        /// </summary>
+        /// <value>The page number.</value>
+        [Range(1, int.MaxValue, ErrorMessage = "Page number must be greater than 0.")]
         public int PageNumber { get; set; } = 1;
 
-        private int _pageSize = 10;
-
-        public int PageSize
-        {
-            get => this._pageSize;
-            set => this._pageSize = (value > PaginationRequestBase.MaxPageSize) ? PaginationRequestBase.MaxPageSize : value;
-        }
+        /// <summary>
+        /// Gets or sets the page size. Must be between 1 and 50.
+        /// </summary>
+        /// <value>The page size.</value>
+        [Range(1, PaginationRequestBase._maxPageSize, ErrorMessage = "Page size must be between 1 and 50.")]
+        public int PageSize { get; set; } = 10;
     }
-
 }

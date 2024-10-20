@@ -12,33 +12,43 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LightNap.WebApi.Controllers
 {
+    /// <summary>
+    /// Controller for managing administrative tasks.
+    /// </summary>
     [ApiController]
     [Authorize(Policy = Policies.RequireAdministratorRole)]
     [Route("api/[controller]")]
-    public class AdministratorController : ControllerBase
+    public class AdministratorController(UserManager<ApplicationUser> userManager, ApplicationDbContext db) : ControllerBase
     {
-        private readonly ILogger _logger;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ApplicationDbContext _db;
-
-        public AdministratorController(ILogger<ProfileController> logger, UserManager<ApplicationUser> userManager, ApplicationDbContext db)
+        /// <summary>
+        /// Retrieves a user by ID.
+        /// </summary>
+        /// <param name="userId">The ID of the user to retrieve.</param>
+        /// <returns>The user details.</returns>
+        /// <response code="200">Returns the user details.</response>
+        /// <response code="404">If the user is not found.</response>
+        [HttpGet("users/{userId}")]
+        [ProducesResponseType(typeof(ApiResponseDto<AdminUserDto?>), 200)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<ApiResponseDto<AdminUserDto?>>> GetUser(string userId)
         {
-            this._logger = logger;
-            this._userManager = userManager;
-            this._db = db;
-        }
-
-        [HttpGet("users/{id}")]
-        public async Task<ActionResult<ApiResponseDto<AdminUserDto?>>> GetUser(string id)
-        {
-            var user = await this._db.Users.FindAsync(id);
+            var user = await db.Users.FindAsync(userId);
+            // NOTE: The requested user not being found is a successful request if nothing fails. As a result, we return null as
+            // confirmation that the request succeeded but there is no user matching that ID. It makes client development easier.
             return ApiResponseDto<AdminUserDto?>.CreateSuccess(user?.ToAdminUserDto());
         }
 
+        /// <summary>
+        /// Searches for users based on the specified criteria.
+        /// </summary>
+        /// <param name="requestDto">The search criteria.</param>
+        /// <returns>The list of users matching the criteria.</returns>
+        /// <response code="200">Returns the list of users.</response>
         [HttpPost("users/search")]
-        public async Task<ActionResult<ApiResponseDto<IList<AdminUserDto>>>> SearchUsers(SearchUsersRequestDto requestDto)
+        [ProducesResponseType(typeof(ApiResponseDto<PagedResponse<AdminUserDto>>), 200)]
+        public async Task<ActionResult<ApiResponseDto<PagedResponse<AdminUserDto>>>> SearchUsers(SearchUsersRequestDto requestDto)
         {
-            IQueryable<ApplicationUser> query = this._db.Users.AsQueryable();
+            IQueryable<ApplicationUser> query = db.Users.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(requestDto.Email))
             {
@@ -50,69 +60,121 @@ namespace LightNap.WebApi.Controllers
                 query = query.Where(user => user.UserName == requestDto.UserName);
             }
 
+            int totalCount = await query.CountAsync();
+
             if (requestDto.PageNumber > 1)
             {
-                query = query.Skip(requestDto.PageNumber * requestDto.PageSize);
+                query = query.Skip((requestDto.PageNumber - 1) * requestDto.PageSize);
             }
 
             var users = await query.Take(requestDto.PageSize).Select(user => user.ToAdminUserDto()).ToListAsync();
 
-            return ApiResponseDto<IList<AdminUserDto>>.CreateSuccess(users);
+            return ApiResponseDto<PagedResponse<AdminUserDto>>.CreateSuccess(
+                new PagedResponse<AdminUserDto>(users, requestDto.PageNumber, requestDto.PageSize, totalCount));
         }
 
+        /// <summary>
+        /// Updates a user.
+        /// </summary>
+        /// <param name="id">The ID of the user to update.</param>
+        /// <param name="requestDto">The updated user information.</param>
+        /// <returns>The updated user details.</returns>
+        /// <response code="200">Returns the updated user details.</response>
+        /// <response code="404">If the user is not found.</response>
         [HttpPut("users/{id}")]
+        [ProducesResponseType(typeof(ApiResponseDto<AdminUserDto>), 200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<ApiResponseDto<AdminUserDto>>> UpdateUser(string id, UpdateAdminUserDto requestDto)
         {
-            var user = await this._db.Users.FindAsync(id);
+            var user = await db.Users.FindAsync(id);
             if (user is null) { return ApiResponseDto<AdminUserDto>.CreateError("The specified user was not found."); }
 
             user.UpdateAdminUserDto(requestDto);
 
-            await this._db.SaveChangesAsync();
+            await db.SaveChangesAsync();
 
             return ApiResponseDto<AdminUserDto>.CreateSuccess(user.ToAdminUserDto());
         }
 
+        /// <summary>
+        /// Deletes a user.
+        /// </summary>
+        /// <param name="id">The ID of the user to delete.</param>
+        /// <returns>True if the user was successfully deleted.</returns>
+        /// <response code="200">User successfully deleted.</response>
+        /// <response code="404">If the user is not found.</response>
+        /// <response code="400">If the user is an administrator and cannot be deleted.</response>
         [HttpDelete("users/{id}")]
+        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
         public async Task<ActionResult<ApiResponseDto<bool>>> DeleteUser(string id)
         {
-            var user = await this._db.Users.FindAsync(id);
+            var user = await db.Users.FindAsync(id);
             if (user is null) { return ApiResponseDto<bool>.CreateError("The specified user was not found."); }
 
-            if (await this._userManager.IsInRoleAsync(user, ApplicationRoles.Administrator.Name!)) { return ApiResponseDto<bool>.CreateError("You may not delete an Administrator."); }
+            if (await userManager.IsInRoleAsync(user, ApplicationRoles.Administrator.Name!)) { return ApiResponseDto<bool>.CreateError("You may not delete an Administrator."); }
 
-            this._db.Users.Remove(user);
+            db.Users.Remove(user);
 
-            await this._db.SaveChangesAsync();
+            await db.SaveChangesAsync();
 
             return ApiResponseDto<bool>.CreateSuccess(true);
         }
 
+        /// <summary>
+        /// Retrieves the roles for a user.
+        /// </summary>
+        /// <param name="id">The ID of the user.</param>
+        /// <returns>The list of roles for the user.</returns>
+        /// <response code="200">Returns the list of roles.</response>
+        /// <response code="404">If the user is not found.</response>
         [HttpGet("users/{id}/roles")]
+        [ProducesResponseType(typeof(ApiResponseDto<IList<string>>), 200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<ApiResponseDto<IList<string>>>> GetRolesForUser(string id)
         {
-            var user = await this._db.Users.FindAsync(id);
+            var user = await db.Users.FindAsync(id);
             if (user is null) { return ApiResponseDto<IList<string>>.CreateError("The specified user was not found."); }
 
-            var roles = await this._userManager.GetRolesAsync(user);
+            var roles = await userManager.GetRolesAsync(user);
 
             return ApiResponseDto<IList<string>>.CreateSuccess(roles);
         }
 
+        /// <summary>
+        /// Retrieves the users in a specific role.
+        /// </summary>
+        /// <param name="role">The role to search for.</param>
+        /// <returns>The list of users in the specified role.</returns>
+        /// <response code="200">Returns the list of users.</response>
         [HttpGet("roles/{role}")]
+        [ProducesResponseType(typeof(ApiResponseDto<IList<AdminUserDto>>), 200)]
         public async Task<ActionResult<ApiResponseDto<IList<AdminUserDto>>>> GetUsersInRole(string role)
         {
-            var users = await this._userManager.GetUsersInRoleAsync(role);
+            var users = await userManager.GetUsersInRoleAsync(role);
             return ApiResponseDto<IList<AdminUserDto>>.CreateSuccess(users.ToAdminUserDtoList());
         }
 
+        /// <summary>
+        /// Adds a user to a role.
+        /// </summary>
+        /// <param name="role">The role to add the user to.</param>
+        /// <param name="userId">The ID of the user to add to the role.</param>
+        /// <returns>True if the user was successfully added to the role.</returns>
+        /// <response code="200">User successfully added to the role.</response>
+        /// <response code="404">If the user is not found.</response>
+        /// <response code="400">If there was an error adding the user to the role.</response>
         [HttpPost("roles/{role}/{userId}")]
+        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
         public async Task<ActionResult<ApiResponseDto<bool>>> AddUserToRole(string role, string userId)
         {
-            var user = await this._db.Users.FindAsync(userId);
+            var user = await db.Users.FindAsync(userId);
             if (user is null) { return ApiResponseDto<bool>.CreateError("The specified user was not found."); }
 
-            var result = await this._userManager.AddToRoleAsync(user, role);
+            var result = await userManager.AddToRoleAsync(user, role);
             if (!result.Succeeded)
             {
                 return ApiResponseDto<bool>.CreateError(result.Errors.Select(error => error.Description));
@@ -121,13 +183,25 @@ namespace LightNap.WebApi.Controllers
             return ApiResponseDto<bool>.CreateSuccess(true);
         }
 
+        /// <summary>
+        /// Removes a user from a role.
+        /// </summary>
+        /// <param name="role">The role to remove the user from.</param>
+        /// <param name="userId">The ID of the user to remove from the role.</param>
+        /// <returns>True if the user was successfully removed from the role.</returns>
+        /// <response code="200">User successfully removed from the role.</response>
+        /// <response code="404">If the user is not found.</response>
+        /// <response code="400">If there was an error removing the user from the role.</response>
         [HttpDelete("roles/{role}/{userId}")]
+        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
         public async Task<ActionResult<ApiResponseDto<bool>>> RemoveUserFromRole(string role, string userId)
         {
-            var user = await this._db.Users.FindAsync(userId);
+            var user = await db.Users.FindAsync(userId);
             if (user is null) { return ApiResponseDto<bool>.CreateError("The specified user was not found."); }
 
-            var result = await this._userManager.RemoveFromRoleAsync(user, role);
+            var result = await userManager.RemoveFromRoleAsync(user, role);
             if (!result.Succeeded)
             {
                 return ApiResponseDto<bool>.CreateError(result.Errors.Select(error => error.Description));
@@ -135,6 +209,5 @@ namespace LightNap.WebApi.Controllers
 
             return ApiResponseDto<bool>.CreateSuccess(true);
         }
-
     }
 }

@@ -1,13 +1,21 @@
 ﻿using LightNap.Core.Identity;
-using LightNap.WebApi.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Data;
 
-namespace LightNap.Core
+namespace LightNap.WebApi.Configuration
 {
-    public class Seeder
+    /// <summary>
+    /// Class responsible for seeding roles and administrators.
+    /// </summary>
+    public static class Seeder
     {
+        /// <summary>
+        /// Seeds the roles in the application.
+        /// </summary>
+        /// <param name="roleManager">The role manager.</param>
+        /// <param name="logger">The logger.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public static async Task SeedRoles(RoleManager<ApplicationRole> roleManager, ILogger logger)
         {
             foreach (ApplicationRole role in ApplicationRoles.All)
@@ -21,13 +29,21 @@ namespace LightNap.Core
 
             var roleSet = new HashSet<string>(ApplicationRoles.All.Select(role => role.Name!), StringComparer.OrdinalIgnoreCase);
 
-            foreach (var role in roleManager.Roles.Where(role => (role.Name != null) && !roleSet.Contains(role.Name)))
+            foreach (var role in roleManager.Roles.Where(role => role.Name != null && !roleSet.Contains(role.Name)))
             {
                 await roleManager.DeleteAsync(role);
                 logger.LogInformation("Removed role '{roleName}'", role.Name);
             }
         }
 
+        /// <summary>
+        /// Seeds the administrators in the application.
+        /// </summary>
+        /// <param name="userManager">The user manager.</param>
+        /// <param name="roleManager">The role manager.</param>
+        /// <param name="administratorConfigurations">The administrator configurations.</param>
+        /// <param name="logger">The logger.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public static async Task SeedAdministrators(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IOptions<List<AdministratorConfiguration>> administratorConfigurations, ILogger logger)
         {
             if (administratorConfigurations.Value is null) { return; }

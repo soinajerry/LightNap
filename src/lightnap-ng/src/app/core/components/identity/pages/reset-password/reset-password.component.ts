@@ -23,7 +23,7 @@ export class ResetPasswordComponent {
   #routeHelper = inject(ROUTE_HELPER);
   layoutService = inject(LayoutService);
 
-  form = this.#fb.group({
+  form = this.#fb.nonNullable.group({
     email: this.#fb.control("", [Validators.required, Validators.email])
   });
 
@@ -33,7 +33,7 @@ export class ResetPasswordComponent {
   resetPassword() {
     this.isResettingPassword = true;
     this.#identityService
-      .resetPassword({email: this.form.value.email!})
+      .resetPassword({email: this.form.value.email})
       .pipe(take(1))
       .subscribe({
         next: response => {
