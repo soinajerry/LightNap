@@ -5,7 +5,7 @@ import { environment } from "src/environments/environment";
 
 export class HttpErrorApiResponse<T> implements ApiResponse<T> {
   result?: T;
-  type: ApiResponseType = "UnhandledError";
+  type: ApiResponseType = "UnexpectedError";
   errorMessages: Array<string>;
   succeeded = false;
   requiresReauthorization = false;
