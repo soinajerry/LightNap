@@ -1,28 +1,18 @@
-import { inject, OnInit } from "@angular/core";
-import { Component } from "@angular/core";
-import { MenuItem } from "primeng/api";
-import { ROUTE_HELPER } from "@core";
+import { Component, inject } from "@angular/core";
 import { LayoutService } from "src/app/layout/services/layout.service";
+import { MenuService } from "src/app/layout/services/menu.service";
 import { AppMenuItemComponent } from "../app-menu-item/app-menu-item.component";
+import { CommonModule } from "@angular/common";
 
 @Component({
   selector: "app-menu",
   standalone: true,
   templateUrl: "./app-menu.component.html",
-  imports: [AppMenuItemComponent],
+  imports: [CommonModule, AppMenuItemComponent],
 })
-export class AppMenuComponent implements OnInit {
-  #routeHelper = inject(ROUTE_HELPER);
+export class AppMenuComponent {
   layoutService = inject(LayoutService);
+  #menuService = inject(MenuService);
 
-  model: MenuItem[] = [];
-
-  ngOnInit() {
-    this.model = [
-      {
-        label: "Home",
-        items: [{ label: "Home", icon: "pi pi-fw pi-home", routerLink: this.#routeHelper.getRoute("home") }],
-      },
-    ];
-  }
+  menuItems$ = this.#menuService.watchMenuItems$();
 }
