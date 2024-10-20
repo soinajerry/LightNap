@@ -1,6 +1,6 @@
 # Index
 
-[Getting Started](./getting-started/)
+[Getting Started](./getting-started)
 
 [Web API](./web-api/)
 
