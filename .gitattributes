@@ -1,0 +1,8 @@
+# Ignore CSS files
+*.css linguist-detectable=false
+
+# Ensure C# files are recognized
+*.cs linguist-language=C#
+
+# Ensure TypeScript files are recognized
+*.ts linguist-language=TypeScript
