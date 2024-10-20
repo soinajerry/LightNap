@@ -16,10 +16,6 @@ export class HttpErrorApiResponse<T> implements ApiResponse<T> {
         this.errorMessages = ["We were unable to connect to the service."];
         break;
 
-      case 405:
-        this.errorMessages = ["The service reported an unexpected error."];
-        break;
-
       default:
         this.errorMessages = ["An unexpected error occurred"];
         break;
