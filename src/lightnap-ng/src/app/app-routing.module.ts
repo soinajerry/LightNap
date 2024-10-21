@@ -23,7 +23,7 @@ import { AppLayoutComponent } from './layout/components/controls/app-layout/app-
                 children: [{ path: "", data: { breadcrumb: "Admin" }, loadChildren: () => import("./admin/components/pages/routes").then(m => m.ROUTES) }],
             },
             { path: "identity", data: { breadcrumb: "Identity" }, loadChildren: () => import("./core/components/identity/pages/routes").then(m => m.ROUTES) },
-            { path: "**", redirectTo: "/notfound" }
+            { path: "**", redirectTo: "/not-found" }
     ], { bindToComponentInputs: true, scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', onSameUrlNavigation: 'reload' })
     ],
     exports: [RouterModule]

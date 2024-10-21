@@ -1,5 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import { BehaviorSubject, of, Subject } from "rxjs";
+import { BehaviorSubject, combineLatest, debounceTime, of, startWith, Subject, tap } from "rxjs";
 import { MenuChangeEvent } from "../models/menu-change-event";
 import { MenuItem } from "primeng/api";
 import { ROUTE_HELPER } from "@core";
@@ -20,15 +20,37 @@ export class MenuService {
     label: "Home",
     items: [{ label: "Home", icon: "pi pi-fw pi-home", routerLink: this.#routeHelper.getRoute("home") }],
   });
+
+  #loggedInMenuItems = new Array<MenuItem>({
+    label: "Profile",
+    items: [
+      { label: "Profile", icon: "pi pi-fw pi-home", routerLink: this.#routeHelper.getRoute("profile") },
+      { label: "Devices", icon: "pi pi-fw pi-users", routerLink: this.#routeHelper.getRoute("devices") },
+      { label: "Change Password", icon: "pi pi-fw pi-users", routerLink: this.#routeHelper.getRoute("change-password") },
+    ],
+  });
+
+  #adminMenuItems = new Array<MenuItem>({
+    label: "Admin",
+    items: [
+      { label: "Home", icon: "pi pi-fw pi-home", routerLink: this.#routeHelper.getRoute("admin") },
+      { label: "Users", icon: "pi pi-fw pi-users", routerLink: this.#routeHelper.getRoute("admin-users") },
+      { label: "Roles", icon: "pi pi-fw pi-lock", routerLink: this.#routeHelper.getRoute("admin-roles") },
+    ],
+  });
+
   #menuItemSubject = new BehaviorSubject<Array<MenuItem>>(this.#defaultMenuItems);
 
+  #isLoggedIn = false;
   #isAdminLoggedIn = false;
 
   constructor() {
-    this.#identityService.watchLoggedInToRole$("Administrator").pipe(takeUntilDestroyed()).subscribe((isAdminLoggedIn) => {
-      this.#isAdminLoggedIn = isAdminLoggedIn;
-      this.#refreshMenuItems();
-    });
+    combineLatest([
+      this.#identityService.watchLoggedIn$().pipe(tap(isLoggedIn => (this.#isLoggedIn = isLoggedIn))),
+      this.#identityService.watchLoggedInToRole$("Administrator").pipe(tap(isAdminLoggedIn => (this.#isAdminLoggedIn = isAdminLoggedIn))),
+    ])
+      .pipe(takeUntilDestroyed(), debounceTime(100))
+      .subscribe(() => this.#refreshMenuItems());
   }
 
   onMenuStateChange(event: MenuChangeEvent) {
@@ -38,15 +60,12 @@ export class MenuService {
   #refreshMenuItems() {
     var menuItems = [...this.#defaultMenuItems];
 
+    if (this.#isLoggedIn) {
+      menuItems.push(...this.#loggedInMenuItems);
+    }
+
     if (this.#isAdminLoggedIn) {
-      menuItems.push({
-        label: "Admin",
-        items: [
-          { label: "Home", icon: "pi pi-fw pi-home", routerLink: this.#routeHelper.getRoute("admin") },
-          { label: "Users", icon: "pi pi-fw pi-users", routerLink: this.#routeHelper.getRoute("admin-users") },
-          { label: "Roles", icon: "pi pi-fw pi-lock", routerLink: this.#routeHelper.getRoute("admin-roles") },
-        ],
-      });
+      menuItems.push(...this.#adminMenuItems);
     }
 
     this.#menuItemSubject.next(menuItems);

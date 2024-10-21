@@ -11,5 +11,4 @@ export const ROUTES: Route[] = [
   { path: "new-password", loadComponent: () => import("./new-password/new-password.component").then(m => m.NewPasswordComponent) },
   { path: "new-password/:email/:token", loadComponent: () => import("./new-password/new-password.component").then(m => m.NewPasswordComponent) },
   { path: "verify-code", loadComponent: () => import("./verify-code/verify-code.component").then(m => m.VerifyCodeComponent) },
-  { path: "**", redirectTo: "/notfound" },
 ];

@@ -1,9 +1,9 @@
-
 import { Component, Input, inject } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { ROUTE_HELPER, RoutePipe } from "@core";
 import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
+import { confirmPasswordValidator } from "@core/helpers/form-helpers";
 import { IdentityService } from "@core/services/identity.service";
 import { BlockUIModule } from "primeng/blockui";
 import { ButtonModule } from "primeng/button";
@@ -27,8 +27,8 @@ import { LayoutService } from "src/app/layout/services/layout.service";
     BlockUIModule,
     RoutePipe,
     ErrorListComponent,
-    FocusContentLayout
-],
+    FocusContentLayout,
+  ],
 })
 export class NewPasswordComponent {
   #identityService = inject(IdentityService);
@@ -42,18 +42,14 @@ export class NewPasswordComponent {
   blockUi: boolean = false;
   errors: Array<string> = [];
 
-  form = this.#fb.nonNullable.group({
-    password: this.#fb.control("", [Validators.required]),
-    confirmPassword: this.#fb.control("", [Validators.required]),
-    rememberMe: this.#fb.control(false),
-  });
-
-  constructor() {
-    this.form.addValidators(() => {
-      if (this.form.controls.password.value !== this.form.controls.confirmPassword.value) return { match_error: "Passwords must match." };
-      return null;
-    });
-  }
+  form = this.#fb.nonNullable.group(
+    {
+      password: this.#fb.control("", [Validators.required]),
+      confirmPassword: this.#fb.control("", [Validators.required]),
+      rememberMe: this.#fb.control(false),
+    },
+    { validators: [confirmPasswordValidator("password", "confirmPassword")] }
+  );
 
   newPassword() {
     this.blockUi = true;
@@ -63,7 +59,7 @@ export class NewPasswordComponent {
         password: this.form.value.password,
         token: this.token,
         deviceDetails: navigator.userAgent,
-        rememberMe: this.form.value.rememberMe
+        rememberMe: this.form.value.rememberMe,
       })
       .pipe(take(1))
       .subscribe({

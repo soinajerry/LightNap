@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
+import { CardModule } from 'primeng/card';
 
 @Component({
-    selector: 'app-admin-index',
     standalone: true,
     templateUrl: './index.component.html',
-    imports: []
+    imports: [CardModule]
 })
 export class IndexComponent {
 }

@@ -12,12 +12,12 @@ export class AppRouteHelper implements RouteHelper {
   #resetPassword = [...this.#identity, "reset-password"];
   #resetInstructionsSent = [...this.#identity, "reset-instructions-sent"];
   #newPassword = [...this.#identity, "new-password"];
-  #changePassword = [...this.#identity, "change-password"];
   #register = [...this.#identity, "register"];
   #verifyCode = [...this.#identity, "verify-code"];
 
   #profile = ["/", "profile"];
   #devices = [...this.#profile, "devices"];
+  #changePassword = [...this.#profile, "change-password"];
 
   #admin = ["/", "admin"];
   #adminUsers = [...this.#admin, "users"];
@@ -48,8 +48,11 @@ export class AppRouteHelper implements RouteHelper {
 
       case "profile":
         return this.#profile;
-      case "profile":
+      case "devices":
         return this.#devices;
+      case "change-password":
+        return this.#changePassword;
+
       case "login":
         return this.#login;
       case "reset-instructions-sent":
@@ -58,8 +61,6 @@ export class AppRouteHelper implements RouteHelper {
         return this.#resetPassword;
       case "new-password":
         return this.#newPassword;
-      case "change-password":
-        return this.#changePassword;
       case "register":
         return this.#register;
       case "verify-code":
@@ -73,9 +74,9 @@ export class AppRouteHelper implements RouteHelper {
         return this.#adminUsers;
       case "admin-user":
         return [...this.#adminUsers, value];
-        case "admin-roles":
-            return this.#adminRoles;
-        }
+      case "admin-roles":
+        return this.#adminRoles;
+    }
 
     throw new Error(`Unexpected view '${view}'. Did you add a path for it in AppRouteHelper?`);
   }

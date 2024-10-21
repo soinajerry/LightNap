@@ -10,9 +10,10 @@ import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
 import { AppConfigComponent } from "src/app/layout/components/controls/app-config/app-config.component";
 import { LayoutService } from "src/app/layout/services/layout.service";
-import { ErrorListComponent } from "../../../controls/error-list/error-list.component";
-import { FocusContentLayout } from "../../../../../layout/components/controls/focus-content-layout/focus-content-layout.component";
 import { BlockUIModule } from "primeng/blockui";
+import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
+import { FocusContentLayout } from "src/app/layout/components/controls/focus-content-layout/focus-content-layout.component";
+import { confirmPasswordValidator } from "@core/helpers/form-helpers";
 
 @Component({
   standalone: true,
@@ -44,17 +45,12 @@ export class RegisterComponent {
     userName: this.#fb.control("", [Validators.required]),
     agreedToTerms: this.#fb.control(false, [Validators.requiredTrue]),
     rememberMe: this.#fb.control(true),
-  });
+  },
+  { validators: [confirmPasswordValidator("password", "confirmPassword")] }
+);
 
   blockUi = false;
   errors: Array<string> = [];
-
-  constructor() {
-    this.form.addValidators(() => {
-        if (this.form.controls.password.value !== this.form.controls.confirmPassword.value) return { match_error: "Passwords must match." };
-        return null;
-      });
-  }
 
   register() {
     this.blockUi = true;

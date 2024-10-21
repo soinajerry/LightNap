@@ -3,11 +3,10 @@ import { RouterModule } from '@angular/router';
 import { LayoutService } from 'src/app/layout/services/layout.service';
 
 @Component({
-    selector: 'app-privacy-policy',
     standalone: true,
-    templateUrl: './privacy-policy.component.html',
+    templateUrl: './not-found.component.html',
     imports: [RouterModule]
 })
-export class PrivacyPolicyComponent {
+export class NotFoundComponent {
     layoutService = inject(LayoutService);
 }

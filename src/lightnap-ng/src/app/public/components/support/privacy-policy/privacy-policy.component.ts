@@ -3,11 +3,10 @@ import { RouterModule } from '@angular/router';
 import { LayoutService } from 'src/app/layout/services/layout.service';
 
 @Component({
-    selector: 'app-terms-and-conditions',
     standalone: true,
-    templateUrl: './terms-and-conditions.component.html',
+    templateUrl: './privacy-policy.component.html',
     imports: [RouterModule]
 })
-export class TermsAndConditionsComponent {
+export class PrivacyPolicyComponent {
     layoutService = inject(LayoutService);
 }

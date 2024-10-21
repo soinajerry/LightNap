@@ -3,7 +3,7 @@
     <div class="py-4 px-4 mx-0 md:mx-6 lg:mx-8 lg:px-8 flex align-items-center justify-content-between relative lg:static mb-3">
       <a class="flex align-items-center" href="#">
         <img
-          src="assets/layout/images/{{ layoutService.config().colorScheme === 'light' ? 'logo-dark' : 'logo-white' }}.svg"
+          src="assets/layout/images/{{ layoutService.config().colorScheme === 'light' ? 'logo-dark' : 'logo-white' }}.png"
           alt="LightNap Logo"
           height="50"
           class="mr-0 lg:mr-2"
@@ -59,9 +59,8 @@
       </div>
     </div>
 
-    <div class="w-full">
-      <h1>Public landing page</h1>
-      <p>This is the public landing page</p>
-    </div>
+    <p-card header="Welcome To The App">
+      <p>This is the public landing page accessible to anyone.</p>
+    </p-card>
   </div>
 </div>

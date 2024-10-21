@@ -5,14 +5,15 @@ import { ROUTE_HELPER, RoutePipe } from "@core";
 import { IdentityService } from "@core/services/identity.service";
 import { ButtonModule } from "primeng/button";
 import { take } from "rxjs";
+import { LayoutService } from "src/app/layout/services/layout.service";
 
 @Component({
-  selector: "app-access-denied",
   standalone: true,
   templateUrl: "./access-denied.component.html",
   imports: [CommonModule, RouterLink, RoutePipe, ButtonModule],
 })
 export class AccessDeniedComponent {
+    layoutService = inject(LayoutService);
   #identityService = inject(IdentityService);
   #routeHelper = inject(ROUTE_HELPER);
 

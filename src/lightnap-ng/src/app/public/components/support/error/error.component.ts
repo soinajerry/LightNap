@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { RoutePipe } from '@core';
+import { LayoutService } from 'src/app/layout/services/layout.service';
 
 @Component({
-    selector: 'app-error',
     standalone: true,
     templateUrl: './error.component.html',
     imports: [RouterLink, RoutePipe]
 })
-export class ErrorComponent { }
+export class ErrorComponent {
+    layoutService = inject(LayoutService);
+}

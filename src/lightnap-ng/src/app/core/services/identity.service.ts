@@ -10,15 +10,18 @@ import { TimerService } from "./timer.service";
   providedIn: "root",
 })
 export class IdentityService {
+  // How often we check if we need to refresh the token. (Evaluate the expiration every minute.)
   static readonly TokenRefreshCheckMillis = 60 * 1000;
+  // How close to expiration we should try to refresh the token. (Refresh if it expires in less than 5 minutes.)
   static readonly TokenExpirationWindowMillis = 5 * 60 * 1000;
 
   #timer = inject(TimerService);
   #dataService = inject(DataService);
+
   #token?: string;
   #expires = 0;
+
   #loggedInBehaviorSubject$ = new ReplaySubject<boolean>(1);
-  #loggedInObservable$ = this.#loggedInBehaviorSubject$.pipe(distinctUntilChanged());
   #loggedInRolesSubject$ = new ReplaySubject<Array<string>>(1);
   #requestingRefreshToken = false;
 
@@ -66,7 +69,7 @@ export class IdentityService {
     if (this.#token) {
       const helper = new JwtHelperService();
       const decodedToken = helper.decodeToken(this.#token);
-      this.#expires = decodedToken.exp;
+      this.#expires = decodedToken.exp * 1000;
       const roles = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
       if (!roles) {
         this.#loggedInRolesSubject$.next([]);
@@ -82,7 +85,7 @@ export class IdentityService {
   }
 
   watchLoggedIn$() {
-    return this.#loggedInObservable$;
+    return this.#loggedInBehaviorSubject$.pipe(distinctUntilChanged());
   }
 
   watchLoggedInToRole$(role: string) {

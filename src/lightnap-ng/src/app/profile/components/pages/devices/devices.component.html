@@ -1,0 +1,29 @@
+<p-card header="Manage Your Devices">
+  @if (devices$ | async; as response) { @if (response.result; as devices) {
+  <p-table [value]="devices">
+    <ng-template pTemplate="header">
+      <tr>
+        <th><i class="pi pi-trash"></i></th>
+        <th>Last Seen</th>
+        <th>Details</th>
+        <th>IP Address</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-device>
+      <tr>
+        <td><p-button severity="danger" icon="pi pi-trash" title="Remove device" (onClick)="revokeDevice(device.id)" /></td>
+        <td>{{ device.lastSeen | date : "short" }}</td>
+        <td>{{ device.details }}</td>
+        <td>{{ device.ipAddress }}</td>
+      </tr>
+    </ng-template>
+
+    <error-list [errors]="errors" />
+  </p-table>
+  } @else {
+  <p>Unable to load devices</p>
+  <error-list [errors]="response" />
+  } } @else {
+  <p>Loading devices...</p>
+  }
+</p-card>
