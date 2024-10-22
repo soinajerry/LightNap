@@ -1,12 +1,13 @@
 ﻿# SQL Server Data Provider
 
-The `LightNap.DataProviders.SqlServer` project contains the migrations for a SQL Server database.
+The `LightNap.DataProviders.SqlServer` project contains the migrations for a SQL Server database. This project should never need to be manually edited as the migrations are handled by the `dotnet ef migrations` commands.
 
 ## Configuration
 
-To use SQL Server, make sure the consuming project references the project.
+To use SQL Server:
 
-Next, use the `IServiceCollection.AddLightNapSqlServer` extension method to add the SQL Server data provider to the service collection.
+- Set the `DatabaseProvider` setting to `SqlServer`.
+- Set the `DefaultConnection` connections string.
 
 For example, in `LightNap.WebApi` this can be added in `Program.cs`:
 

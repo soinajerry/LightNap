@@ -1,7 +1,5 @@
 using LightNap.Core.Data;
-using LightNap.Core.Extensions;
 using LightNap.Core.Identity;
-using LightNap.Migrations.SqlServer.Extensions;
 using LightNap.WebApi.Configuration;
 using LightNap.WebApi.Extensions;
 using LightNap.WebApi.Middleware;
@@ -32,15 +30,10 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 });
 
-// Select a DB provider. Ensure you reference the appropriate library and update appsettings.config if necessary.
-builder.Services.AddLightNapSqlServer(builder.Configuration);
-
-// Select an email provider. Ensure you reference the appropriate library and update appsettings.config if necessary.
-builder.Services.AddLogToConsoleEmailer();
-//builder.Services.AddSmtpEmailer();
-
-builder.Services.AddApplicationServices(builder.Configuration);
-builder.Services.AddIdentityServices(builder.Configuration);
+builder.Services.AddDatabaseServices(builder.Configuration)
+    .AddEmailServices(builder.Configuration)
+    .AddApplicationServices(builder.Configuration)
+    .AddIdentityServices(builder.Configuration);
 
 var app = builder.Build();
 

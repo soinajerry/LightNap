@@ -1,6 +1,8 @@
-﻿using LightNap.MaintenanceService;
+﻿using LightNap.Core.Extensions;
+using LightNap.DataProviders.Sqlite.Extensions;
+using LightNap.DataProviders.SqlServer.Extensions;
+using LightNap.MaintenanceService;
 using LightNap.MaintenanceService.Tasks;
-using LightNap.Migrations.SqlServer.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -10,8 +12,17 @@ var host = Host.CreateDefaultBuilder(args)
     {
         services.AddLogging(configure => configure.AddConsole());
 
-        // Select a DB provider. Ensure you reference the appropriate library if necessary.
-        services.AddLightNapSqlServer(context.Configuration);
+        string databaseProvider = context.Configuration.GetRequiredSetting("DatabaseProvider");
+        switch (databaseProvider)
+        {
+            case "Sqlite":
+                services.AddLightNapSqlite(context.Configuration);
+                break;
+            case "SqlServer":
+                services.AddLightNapSqlServer(context.Configuration);
+                break;
+            default: throw new ArgumentException($"Unsupported 'DatabaseProvider' setting: '{databaseProvider}'");
+        }
 
         services.AddTransient<IMaintenanceTask, CountUsersMaintenanceTask>();
         services.AddTransient<IMaintenanceTask, PurgeExpiredRefreshTokensMaintenanceTask>();

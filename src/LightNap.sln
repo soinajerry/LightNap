@@ -5,11 +5,13 @@ VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.WebApi", "LightNap.WebApi\LightNap.WebApi.csproj", "{EA38F962-A671-4B19-8336-01934841226B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightNap.Core", "LightNap.Core\LightNap.Core.csproj", "{34811103-29EA-45E2-AB72-8E36F3531C27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.Core", "LightNap.Core\LightNap.Core.csproj", "{34811103-29EA-45E2-AB72-8E36F3531C27}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.DataProviders.SqlServer", "LightNap.DataProviders.SqlServer\LightNap.DataProviders.SqlServer.csproj", "{EED4671C-FA21-49AB-9612-33AA7AA54066}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightNap.MaintenanceService", "LightNap.MaintenanceService\LightNap.MaintenanceService.csproj", "{BFE9336E-F171-40B7-8887-1BC7A0242E2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.MaintenanceService", "LightNap.MaintenanceService\LightNap.MaintenanceService.csproj", "{BFE9336E-F171-40B7-8887-1BC7A0242E2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightNap.DataProviders.Sqlite", "LightNap.DataProviders.Sqlite\LightNap.DataProviders.Sqlite.csproj", "{2346CF84-901E-40EC-8970-318CA75D6B83}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{BFE9336E-F171-40B7-8887-1BC7A0242E2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFE9336E-F171-40B7-8887-1BC7A0242E2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFE9336E-F171-40B7-8887-1BC7A0242E2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2346CF84-901E-40EC-8970-318CA75D6B83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2346CF84-901E-40EC-8970-318CA75D6B83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2346CF84-901E-40EC-8970-318CA75D6B83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2346CF84-901E-40EC-8970-318CA75D6B83}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

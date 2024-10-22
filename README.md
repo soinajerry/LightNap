@@ -12,4 +12,4 @@ LightNap (**light**weight .**N**ET Core/**A**ngular/**P**rimeNG) is a full stack
 - **Angular**: Frontend framework for building dynamic user interfaces.
 - **PrimeNG**: Rich set of UI components for Angular.
 
-Check out [the docs](https://lightnap.sharplogic.com).
+Check out [the docs](https://lightnap.sharplogic.com/docs).
