@@ -9,11 +9,12 @@ import { RouterLink } from "@angular/router";
 import { TableModule } from "primeng/table";
 import { ButtonModule } from "primeng/button";
 import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
+import { ApiResponseComponent } from "@core/components/controls/api-response/api-response.component";
 
 @Component({
   standalone: true,
   templateUrl: "./role.component.html",
-  imports: [CommonModule, CardModule, TableModule, ButtonModule, RouterLink, RoutePipe, ErrorListComponent],
+  imports: [CommonModule, CardModule, TableModule, ButtonModule, RouterLink, RoutePipe, ErrorListComponent, ApiResponseComponent],
 })
 export class RoleComponent implements OnInit {
   #adminService = inject(AdminService);

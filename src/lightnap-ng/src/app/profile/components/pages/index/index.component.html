@@ -1,24 +1,21 @@
 <p-card header="Manage Your Profile">
-  @if (profile$ | async; as response) { @if (response.result; as profile) {
-  <div class="flex flex-column gap-2">
-    <div class="flex flex-column gap-1">
-      <label for="userName" class="font-semibold">UserName</label>
-      <span id="userName">{{ profile.userName }}</span>
-    </div>
+  <api-response [apiResponse]="profile$" errorMessage="Error loading profile" loadingMessage="Loading profile...">
+    <ng-template #success let-profile>
+      <div class="flex flex-column gap-2">
+        <div class="flex flex-column gap-1">
+          <label for="userName" class="font-semibold">UserName</label>
+          <span id="userName">{{ profile.userName }}</span>
+        </div>
 
-    <div class="flex flex-column gap-1">
-      <label for="email" class="font-semibold">Email</label>
-      <span id="email">{{ profile.email }}</span>
-    </div>
-  </div>
-  } @else {
-  <p>Unable to load profile:</p>
-  <error-list [apiResponse]="response" />
-  } } @else {
-  <p>Loading profile</p>
-  }
+        <div class="flex flex-column gap-1">
+          <label for="email" class="font-semibold">Email</label>
+          <span id="email">{{ profile.email }}</span>
+        </div>
 
-  <div class="mt-1">
-    <p-button (onClick)="logOut()" label="Log Out" />
-  </div>
+        <div class="mt-1">
+          <p-button (onClick)="logOut()" label="Log Out" />
+        </div>
+      </div>
+    </ng-template>
+  </api-response>
 </p-card>

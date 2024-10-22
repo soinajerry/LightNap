@@ -9,11 +9,12 @@ import { TableModule } from "primeng/table";
 import { ButtonModule } from "primeng/button";
 import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
 import { UserViewModel } from "./user-view-model";
+import { ApiResponseComponent } from "@core/components/controls/api-response/api-response.component";
 
 @Component({
   standalone: true,
   templateUrl: "./user.component.html",
-  imports: [CommonModule, CardModule, TableModule, ButtonModule, RouterLink, RoutePipe, ErrorListComponent],
+  imports: [CommonModule, CardModule, TableModule, ButtonModule, RouterLink, RoutePipe, ErrorListComponent, ApiResponseComponent],
 })
 export class UserComponent implements OnInit {
   #adminService = inject(AdminService);

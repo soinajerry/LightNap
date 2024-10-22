@@ -215,7 +215,7 @@ namespace LightNap.WebApi.Controllers
             var user = await db.Users.FindAsync(userId);
             if (user is null) { return ApiResponseDto<bool>.CreateError("The specified user was not found."); }
 
-            if ((user.Id == this.User.GetUserId()) && (role == ApplicationRoles.Administrator.Name)) { return ApiResponseDto<bool>.CreateError("You may not remove yourself from a role."); }
+            if ((user.Id == this.User.GetUserId()) && (role == ApplicationRoles.Administrator.Name)) { return ApiResponseDto<bool>.CreateError("You may not remove yourself from the Administrator role."); }
 
             var result = await userManager.RemoveFromRoleAsync(user, role);
             if (!result.Succeeded)

@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { ROUTE_HELPER } from "@core";
+import { ApiResponseComponent } from "@core/components/controls/api-response/api-response.component";
 import { IdentityService } from "@core/services/identity.service";
 import { ProfileService } from "@profile/services/profile.service";
 import { ButtonModule } from "primeng/button";
@@ -10,7 +11,7 @@ import { TableModule } from "primeng/table";
 @Component({
   standalone: true,
   templateUrl: "./index.component.html",
-  imports: [CommonModule, TableModule, ButtonModule, CardModule],
+  imports: [CommonModule, TableModule, ButtonModule, CardModule, ApiResponseComponent],
 })
 export class IndexComponent {
   #identityService = inject(IdentityService);
