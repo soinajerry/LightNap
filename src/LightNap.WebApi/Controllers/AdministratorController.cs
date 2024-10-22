@@ -4,6 +4,7 @@ using LightNap.Core.Api;
 using LightNap.Core.Data;
 using LightNap.Core.Extensions;
 using LightNap.Core.Identity;
+using LightNap.Core.Identity.Dto.Response;
 using LightNap.WebApi.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -120,6 +121,18 @@ namespace LightNap.WebApi.Controllers
             await db.SaveChangesAsync();
 
             return ApiResponseDto<bool>.CreateSuccess(true);
+        }
+
+        /// <summary>
+        /// Retrieves all available roles.
+        /// </summary>
+        /// <returns>The list of roles.</returns>
+        /// <response code="200">Returns the list of roles.</response>
+        [HttpGet("roles")]
+        [ProducesResponseType(typeof(ApiResponseDto<IList<RoleDto>>), 200)]
+        public ActionResult<ApiResponseDto<IList<RoleDto>>> GetRoles()
+        {
+            return ApiResponseDto<IList<RoleDto>>.CreateSuccess(ApplicationRoles.All.ToDtoList());
         }
 
         /// <summary>

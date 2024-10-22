@@ -1,4 +1,4 @@
-import { AdminUser, SearchAdminUsersRequest, UpdateAdminUserRequest } from "@admin/models";
+import { AdminUser, Role, SearchAdminUsersRequest, UpdateAdminUserRequest } from "@admin/models";
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { API_URL_ROOT, ApiResponse } from "@core";
@@ -24,6 +24,10 @@ export class DataService {
 
   searchUsers(searchAdminUsers: SearchAdminUsersRequest) {
     return this.#http.post<ApiResponse<Array<AdminUser>>>(`${this.#apiUrl}administrator/users/search`, searchAdminUsers);
+  }
+
+  getRoles() {
+    return this.#http.get<ApiResponse<Array<Role>>>(`${this.#apiUrl}administrator/roles`);
   }
 
   getUserRoles(userId: string) {

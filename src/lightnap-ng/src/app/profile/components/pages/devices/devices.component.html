@@ -17,10 +17,9 @@
         <td>{{ device.ipAddress }}</td>
       </tr>
     </ng-template>
-
-    <error-list [errors]="errors" />
   </p-table>
-  } @else {
+  <error-list [errors]="errors" />
+} @else {
   <p>Unable to load devices</p>
   <error-list [errors]="response" />
   } } @else {

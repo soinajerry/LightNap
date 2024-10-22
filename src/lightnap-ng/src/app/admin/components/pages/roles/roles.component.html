@@ -1,5 +1,14 @@
 <p-card header="Manage Roles">
-    <p>Role management...</p>
+  @if(roles$ | async; as response) { @if(response.result; as roles) {
+    <ul>
+    @for (role of roles; track $index) {
+<li>{{ role.name }}</li>
+    }
+</ul>
+  } @else {
+  <p>Unable to load roles</p>
+  <error-list [errors]="response" />
+  } } @else {
+  <p>Loading roles...</p>
+  > }
 </p-card>
-
-
