@@ -54,7 +54,7 @@ export class IdentityService {
   #tryRefreshToken() {
     if (this.#requestingRefreshToken) return;
     this.#requestingRefreshToken = true;
-    this.#dataService.refreshToken().subscribe({
+    this.#dataService.getAccessToken().subscribe({
       next: response => {
         this.#onTokenReceived(response.result);
       },

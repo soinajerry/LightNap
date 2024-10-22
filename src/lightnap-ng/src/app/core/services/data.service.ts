@@ -17,8 +17,8 @@ export class DataService {
   #http = inject(HttpClient);
   #apiUrl = inject(API_URL_ROOT);
 
-  refreshToken() {
-    return this.#http.get<ApiResponse<string>>(`${this.#apiUrl}identity/refresh-token`);
+  getAccessToken() {
+    return this.#http.get<ApiResponse<string>>(`${this.#apiUrl}identity/access-token`);
   }
 
   logIn(loginRequest: LoginRequest) {

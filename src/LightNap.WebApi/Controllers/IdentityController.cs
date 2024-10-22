@@ -326,7 +326,7 @@ namespace LightNap.WebApi.Controllers
         /// Refreshes the access token using the refresh token.
         /// </summary>
         /// <returns>The API response containing the new access token.</returns>
-        [HttpGet("refresh-token")]
+        [HttpGet("access-token")]
         [ProducesResponseType(typeof(ApiResponseDto<string>), 200)]
         public async Task<ActionResult<ApiResponseDto<string>>> RefreshToken()
         {
