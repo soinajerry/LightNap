@@ -24,9 +24,9 @@ export class MenuService {
   #loggedInMenuItems = new Array<MenuItem>({
     label: "Profile",
     items: [
-      { label: "Profile", icon: "pi pi-fw pi-home", routerLink: this.#routeHelper.getRoute("profile") },
-      { label: "Devices", icon: "pi pi-fw pi-users", routerLink: this.#routeHelper.getRoute("devices") },
-      { label: "Change Password", icon: "pi pi-fw pi-users", routerLink: this.#routeHelper.getRoute("change-password") },
+      { label: "Profile", icon: "pi pi-fw pi-user", routerLink: this.#routeHelper.getRoute("profile") },
+      { label: "Devices", icon: "pi pi-fw pi-mobile", routerLink: this.#routeHelper.getRoute("devices") },
+      { label: "Change Password", icon: "pi pi-fw pi-lock", routerLink: this.#routeHelper.getRoute("change-password") },
     ],
   });
 

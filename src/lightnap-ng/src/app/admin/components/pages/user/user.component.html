@@ -1,26 +1,54 @@
 <p-card [header]="header" [subheader]="subHeader">
   <api-response [apiResponse]="viewModel$" errorMessage="Error loading user" loadingMessage="Loading user...">
     <ng-template #success let-viewModel>
-      <p-table [value]="viewModel.roles">
-        <ng-template pTemplate="header">
-          <tr>
-            <th><i class="pi pi-trash"></i></th>
-            <th>Role</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-role>
-          <tr>
-            <td><p-button severity="danger" icon="pi pi-trash" title="Remove device" (onClick)="removeUserFromRole(role.name)" /></td>
-            <td>
-              <div class="flex flex-column">
-                <a [routerLink]="'admin-role' | route : role.name"> {{ role.name }}</a>
-                <span>{{ role.description }}</span>
+      <div class="flex flex-column gap-1">
+        <p-table [value]="viewModel.roles">
+          <ng-template pTemplate="header">
+            <tr>
+              <th><i class="pi pi-trash"></i></th>
+              <th>Role</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-role>
+            <tr>
+              <td><p-button severity="danger" icon="pi pi-trash" title="Remove user from role" (onClick)="removeUserFromRole(role.name)" /></td>
+              <td>
+                <div class="flex flex-column">
+                  <a [routerLink]="'admin-role' | route : role.name"> {{ role.name }}</a>
+                  <span>{{ role.description }}</span>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="100%">User is not a member of any roles.</td>
+            </tr>
+          </ng-template>
+        </p-table>
+
+        <api-response [apiResponse]="roles$" errorMessage="Error loading roles" loadingMessage="Loading roles...">
+          <ng-template #success let-roles>
+            <form [formGroup]="addUserToRoleForm" (ngSubmit)="addUserToRole()">
+              <div class="flex gap-1">
+                <p-dropdown
+                  formControlName="role"
+                  [options]="roles"
+                  optionLabel="displayName"
+                  optionValue="name"
+                  placeholder="Select a role"
+                  [showClear]="true"
+                  emptyFilterMessage="No roles found"
+                />
+
+                <p-button severity="success" label="Add user to role" (onClick)="addUserToRole()" [disabled]="!addUserToRoleForm.valid" />
               </div>
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-      <error-list [errors]="errors" />
+            </form>
+          </ng-template>
+        </api-response>
+
+        <error-list [errors]="errors" />
+      </div>
     </ng-template>
   </api-response>
 </p-card>

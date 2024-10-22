@@ -10,14 +10,28 @@ import { ButtonModule } from "primeng/button";
 import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
 import { UserViewModel } from "./user-view-model";
 import { ApiResponseComponent } from "@core/components/controls/api-response/api-response.component";
+import { DropdownModule } from "primeng/dropdown";
+import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 
 @Component({
   standalone: true,
   templateUrl: "./user.component.html",
-  imports: [CommonModule, CardModule, TableModule, ButtonModule, RouterLink, RoutePipe, ErrorListComponent, ApiResponseComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    CardModule,
+    TableModule,
+    ButtonModule,
+    RouterLink,
+    RoutePipe,
+    ErrorListComponent,
+    ApiResponseComponent,
+    DropdownModule,
+  ],
 })
 export class UserComponent implements OnInit {
   #adminService = inject(AdminService);
+  #fb = inject(FormBuilder);
 
   @Input() userId!: string;
 
@@ -25,13 +39,19 @@ export class UserComponent implements OnInit {
   subHeader = "";
   errors: string[] = [];
 
+  addUserToRoleForm = this.#fb.group({
+    role: this.#fb.control("", [Validators.required]),
+  });
+
   viewModel$ = new Observable<ApiResponse<UserViewModel>>();
 
+  roles$ = this.#adminService.getRoles();
+
   ngOnInit() {
-    this.#refreshRole();
+    this.#refreshUser();
   }
 
-  #refreshRole() {
+  #refreshUser() {
     this.viewModel$ = combineLatest([this.#adminService.getUser(this.userId), this.#adminService.getUserRoles(this.userId)]).pipe(
       map(([userResponse, rolesResponse]) => {
         if (!userResponse.result) return userResponse as any as ApiResponse<UserViewModel>;
@@ -57,7 +77,21 @@ export class UserComponent implements OnInit {
           return;
         }
 
-        this.#refreshRole();
+        this.#refreshUser();
+      },
+    });
+  }
+
+  addUserToRole() {
+    this.errors = [];
+    this.#adminService.addUserToRole(this.userId, this.addUserToRoleForm.value.role).subscribe({
+      next: response => {
+        if (!response.result) {
+          this.errors = response.errorMessages;
+          return;
+        }
+
+        this.#refreshUser();
       },
     });
   }

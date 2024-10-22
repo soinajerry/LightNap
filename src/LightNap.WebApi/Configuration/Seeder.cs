@@ -22,7 +22,7 @@ namespace LightNap.WebApi.Configuration
             {
                 if (!await roleManager.RoleExistsAsync(role.Name!))
                 {
-                    await roleManager.CreateAsync(ApplicationRoles.Administrator);
+                    await roleManager.CreateAsync(role);
                     logger.LogInformation("Added role '{roleName}'", role.Name);
                 }
             }
