@@ -6,6 +6,7 @@ using LightNap.Core.Extensions;
 using LightNap.Core.Identity;
 using LightNap.Core.Identity.Dto.Response;
 using LightNap.WebApi.Configuration;
+using LightNap.WebApi.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -213,6 +214,8 @@ namespace LightNap.WebApi.Controllers
         {
             var user = await db.Users.FindAsync(userId);
             if (user is null) { return ApiResponseDto<bool>.CreateError("The specified user was not found."); }
+
+            if ((user.Id == this.User.GetUserId()) && (role == ApplicationRoles.Administrator.Name)) { return ApiResponseDto<bool>.CreateError("You may not remove yourself from a role."); }
 
             var result = await userManager.RemoveFromRoleAsync(user, role);
             if (!result.Succeeded)

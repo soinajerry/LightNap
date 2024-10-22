@@ -14,6 +14,7 @@ export type SupportedRoutes =
     | 'admin-users'
     | 'admin-user'
     | 'admin-roles'
+    | 'admin-role'
 
     // Profile
     | 'profile'

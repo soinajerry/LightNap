@@ -1,8 +1,8 @@
 import { UpdateAdminUserRequest, SearchAdminUsersRequest, Role } from "@admin/models";
 import { inject, Injectable } from "@angular/core";
 import { DataService } from "./data.service";
-import { of, shareReplay, tap } from "rxjs";
-import { ApiResponse } from "@core";
+import { combineLatestAll, map, of, shareReplay, tap } from "rxjs";
+import { ApiResponse, SuccessApiResponse } from "@core";
 
 @Injectable({
   providedIn: "root",
@@ -31,11 +31,22 @@ export class AdminService {
     if (this.#rolesResponse) {
       return of(this.#rolesResponse);
     }
-    return this.#dataService.getRoles().pipe(tap(response => {
+    return this.#dataService.getRoles().pipe(
+      tap(response => {
         if (response.result) {
           this.#rolesResponse = response;
         }
-    }));
+      })
+    );
+  }
+
+  getRole(roleName: string) {
+    return this.getRoles().pipe(
+      map(response => {
+        if (!response.result) return response as any as ApiResponse<Role>;
+        return new SuccessApiResponse(response.result.find(role => role.name === roleName));
+      })
+    );
   }
 
   getUserRoles(userId: string) {

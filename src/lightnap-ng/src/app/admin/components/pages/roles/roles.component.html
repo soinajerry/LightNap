@@ -1,10 +1,12 @@
 <p-card header="Manage Roles">
   @if(roles$ | async; as response) { @if(response.result; as roles) {
-    <ul>
+  <ul>
     @for (role of roles; track $index) {
-<li>{{ role.name }}</li>
+    <li>
+      <a [routerLink]="'admin-role' | route : role.name"> {{ role.name }}</a>
+    </li>
     }
-</ul>
+  </ul>
   } @else {
   <p>Unable to load roles</p>
   <error-list [errors]="response" />

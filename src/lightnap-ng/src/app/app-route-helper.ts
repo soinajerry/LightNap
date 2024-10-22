@@ -22,6 +22,7 @@ export class AppRouteHelper implements RouteHelper {
   #admin = ["/", "admin"];
   #adminUsers = [...this.#admin, "users"];
   #adminRoles = [...this.#admin, "roles"];
+  #adminRole = [...this.#admin, "role"];
 
   navigate(view: SupportedRoutes, value?: any) {
     return this.#router.navigate(this.getRoute(view, value));
@@ -76,7 +77,9 @@ export class AppRouteHelper implements RouteHelper {
         return [...this.#adminUsers, value];
       case "admin-roles":
         return this.#adminRoles;
-    }
+        case "admin-role":
+            return [...this.#adminRoles, value];
+        }
 
     throw new Error(`Unexpected view '${view}'. Did you add a path for it in AppRouteHelper?`);
   }
