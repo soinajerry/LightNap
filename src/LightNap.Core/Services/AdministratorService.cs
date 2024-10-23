@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LightNap.Core.Services
 {
+    /// <summary>
+    /// Service for managing administrator-related operations.
+    /// </summary>
     public class AdministratorService(UserManager<ApplicationUser> userManager, ApplicationDbContext db) : IAdministratorService
     {
         /// <summary>

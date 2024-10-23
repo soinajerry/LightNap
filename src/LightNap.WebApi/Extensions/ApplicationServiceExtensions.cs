@@ -19,6 +19,22 @@ namespace LightNap.WebApi.Extensions
     /// </summary>
     public static class ApplicationServiceExtensions
     {
+        /// <summary>
+        /// Adds application services to the service collection.
+        /// </summary>
+        /// <param name="services">The service collection.</param>
+        /// <returns>The updated service collection.</returns>
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+        {
+            services.AddCors();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IAdministratorService, AdministratorService>();
+            services.AddScoped<IDeviceService, DeviceService>();
+            services.AddScoped<IProfileService, ProfileService>();
+
+            return services;
+        }
+
         public static IServiceCollection AddDatabaseServices(this IServiceCollection services, IConfiguration configuration)
         {
             string databaseProvider = configuration.GetRequiredSetting("DatabaseProvider");
@@ -48,21 +64,6 @@ namespace LightNap.WebApi.Extensions
                     break;
                 default: throw new ArgumentException($"Unsupported 'EmailProvider' setting: '{emailProvider}'");
             }
-            return services;
-        }
-
-        /// <summary>
-        /// Adds application services to the service collection.
-        /// </summary>
-        /// <param name="services">The service collection.</param>
-        /// <returns>The updated service collection.</returns>
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
-        {
-            services.AddCors();
-            services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<IAdministratorService, AdministratorService>();
-            services.AddScoped<IDeviceService, DeviceService>();
-
             return services;
         }
 
