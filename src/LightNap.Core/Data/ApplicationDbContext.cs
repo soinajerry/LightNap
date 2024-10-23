@@ -1,6 +1,7 @@
 ﻿using LightNap.Core.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace LightNap.Core.Data
 {
@@ -32,11 +33,22 @@ namespace LightNap.Core.Data
         {
             base.OnModelCreating(builder);
 
+            if (this.Database.IsSqlite())
+            {
+                builder.Entity<ApplicationUser>()
+                    .Property(u => u.UserName)
+                    .UseCollation("NOCASE");
+
+                builder.Entity<ApplicationUser>()
+                    .Property(u => u.Email)
+                    .UseCollation("NOCASE");
+            }
+
             builder.Entity<RefreshToken>()
-                .HasOne(rt => rt.User)
-                .WithMany(u => u.RefreshTokens)
-                .HasForeignKey(rt => rt.UserId)
-                .IsRequired();
+            .HasOne(rt => rt.User)
+            .WithMany(u => u.RefreshTokens)
+            .HasForeignKey(rt => rt.UserId)
+            .IsRequired();
         }
 
         /// <inheritdoc />

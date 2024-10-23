@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LightNap.DataProviders.Sqlite.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241022021333_InitialCreate")]
+    [Migration("20241023070044_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -71,7 +71,8 @@ namespace LightNap.DataProviders.Sqlite.Migrations
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("INTEGER");
@@ -110,7 +111,8 @@ namespace LightNap.DataProviders.Sqlite.Migrations
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.HasKey("Id");
 

@@ -42,6 +42,7 @@ namespace LightNap.WebApi.Configuration
         /// <param name="userManager">The user manager.</param>
         /// <param name="roleManager">The role manager.</param>
         /// <param name="administratorConfigurations">The administrator configurations.</param>
+        /// <param name="siteSettings">The site settings.</param>
         /// <param name="logger">The logger.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
         public static async Task SeedAdministrators(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IOptions<List<AdministratorConfiguration>> administratorConfigurations, IOptions<SiteSettings> siteSettings, ILogger logger)

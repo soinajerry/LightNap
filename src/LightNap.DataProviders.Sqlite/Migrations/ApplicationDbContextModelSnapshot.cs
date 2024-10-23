@@ -68,7 +68,8 @@ namespace LightNap.DataProviders.Sqlite.Migrations
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("INTEGER");
@@ -107,7 +108,8 @@ namespace LightNap.DataProviders.Sqlite.Migrations
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.HasKey("Id");
 

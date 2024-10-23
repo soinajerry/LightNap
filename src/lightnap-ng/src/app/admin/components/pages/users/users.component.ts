@@ -33,7 +33,7 @@ import { debounceTime, map, startWith, Subject, switchMap, tap } from "rxjs";
   ],
 })
 export class UsersComponent {
-  pageSize = 2;
+  pageSize = 25;
 
   #adminService = inject(AdminService);
   #fb = inject(FormBuilder);
@@ -55,7 +55,6 @@ export class UsersComponent {
         pageNumber: event.first / this.pageSize + 1,
       })
     ),
-    tap(response => console.log(response)),
     // We need to bootstrap the p-table with a response to get the whole process running. We do it this way to fake an empty response
     // so we can avoid a redundant call to the API.
     startWith(new SuccessApiResponse(new EmptyPagedResponse<AdminUser>()))
