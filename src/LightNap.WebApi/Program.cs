@@ -32,7 +32,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddDatabaseServices(builder.Configuration)
     .AddEmailServices(builder.Configuration)
-    .AddApplicationServices(builder.Configuration)
+    .AddApplicationServices()
     .AddIdentityServices(builder.Configuration);
 
 var app = builder.Build();

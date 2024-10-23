@@ -1,18 +1,15 @@
 using LightNap.Core.Api;
-using LightNap.Core.Data;
-using LightNap.Core.Extensions;
 using LightNap.Core.Profile.Dto.Response;
 using LightNap.WebApi.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace LightNap.WebApi.Controllers
 {
     [ApiController]
     [Authorize]
     [Route("api/[controller]")]
-    public class DevicesController(ApplicationDbContext db) : ControllerBase
+    public class DevicesController(IDeviceService deviceService) : ControllerBase
     {
         /// <summary>
         /// Retrieves the list of devices.
@@ -25,12 +22,7 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(401)]
         public async Task<ActionResult<ApiResponseDto<IList<DeviceDto>>>> GetDevices()
         {
-            var tokens = await db.RefreshTokens
-                .Where(token => token.UserId == this.User.GetUserId() && !token.IsRevoked && token.Expires > DateTime.UtcNow)
-                .OrderByDescending(device => device.Expires)
-                .ToListAsync();
-
-            return ApiResponseDto<IList<DeviceDto>>.CreateSuccess(tokens.ToDtoList());
+            return await deviceService.GetDevicesAsync(this.User.GetUserId());
         }
 
         /// <summary>
@@ -47,16 +39,7 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(404)]
         public async Task<ActionResult<ApiResponseDto<bool>>> RevokeDevice(string deviceId)
         {
-            var token = await db.RefreshTokens.FindAsync(deviceId);
-
-            if (token?.UserId == this.User.GetUserId())
-            {
-                token.IsRevoked = true;
-                await db.SaveChangesAsync();
-                return ApiResponseDto<bool>.CreateSuccess(true);
-            }
-
-            return ApiResponseDto<bool>.CreateError("Device not found.");
+            return await deviceService.RevokeDeviceAsync(this.User.GetUserId(), deviceId);
         }
 
     }
