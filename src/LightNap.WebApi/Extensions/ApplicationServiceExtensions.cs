@@ -1,6 +1,7 @@
 ﻿using LightNap.Core.Data;
 using LightNap.Core.Extensions;
 using LightNap.Core.Identity;
+using LightNap.Core.Services;
 using LightNap.DataProviders.Sqlite.Extensions;
 using LightNap.DataProviders.SqlServer.Extensions;
 using LightNap.WebApi.Configuration;
@@ -60,6 +61,7 @@ namespace LightNap.WebApi.Extensions
         {
             services.AddCors();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IAdministratorService, AdministratorService>();
 
             return services;
         }

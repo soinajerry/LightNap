@@ -6,9 +6,11 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { ApiResponseComponent, DropdownListItemComponent, EmptyPagedResponse, ErrorListComponent, ListItem, RoutePipe, SuccessApiResponse } from "@core";
+import { LazyLoadEvent } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { DropdownModule } from "primeng/dropdown";
+import { InputTextModule } from "primeng/inputtext";
 import { TableModule } from "primeng/table";
 import { ToggleButtonModule } from "primeng/togglebutton";
 import { debounceTime, startWith, Subject, switchMap } from "rxjs";
@@ -27,8 +29,7 @@ import { debounceTime, startWith, Subject, switchMap } from "rxjs";
     RoutePipe,
     DropdownModule,
     ErrorListComponent,
-    ToggleButtonModule,
-    DropdownListItemComponent
+    InputTextModule
 ],
 })
 export class UsersComponent {
@@ -38,20 +39,22 @@ export class UsersComponent {
   #fb = inject(FormBuilder);
 
   form = this.#fb.group({
-    sortBy: this.#fb.control<SearchAdminUsersSortBy>("userName"),
-    reverseSort: this.#fb.control(false),
+    email: this.#fb.control(""),
+    userName: this.#fb.control("")
   });
 
   errors = new Array<string>();
 
-  #lazyLoadEventSubject = new Subject<{ first: number }>();
+  #lazyLoadEventSubject = new Subject<LazyLoadEvent>();
   users$ = this.#lazyLoadEventSubject.pipe(
     switchMap(event =>
       this.#adminService.searchUsers({
-        sortBy: this.form.value.sortBy,
-        reverseSort: this.form.value.reverseSort,
+        sortBy: event.sortField as SearchAdminUsersSortBy ?? "userName",
+        reverseSort: event.sortOrder === -1,
         pageSize: this.pageSize,
         pageNumber: event.first / this.pageSize + 1,
+        email: this.form.value.email?.length > 0 ? this.form.value.email : undefined,
+        userName: this.form.value.userName?.length > 0 ? this.form.value.userName : undefined,
       })
     ),
     // We need to bootstrap the p-table with a response to get the whole process running. We do it this way to fake an empty response
@@ -72,7 +75,7 @@ export class UsersComponent {
     });
   }
 
-  loadUsersLazy(event: any) {
+  loadUsersLazy(event: LazyLoadEvent) {
     this.#lazyLoadEventSubject.next(event);
   }
 

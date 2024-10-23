@@ -2,20 +2,15 @@
   <api-response [apiResponse]="users$" errorMessage="Error loading users" loadingMessage="Loading users...">
     <ng-template #success let-users>
       <div [formGroup]="form">
-        <div class="flex align-items-center justify-content-end gap-1">
-          <label for="sortBy">Sort By</label>
-          <p-dropdown id="sortBy" [options]="sortBys" formControlName="sortBy">
-            <ng-template let-item pTemplate="item">
-                <dropdown-list-item [listItem]="item" />
-              </ng-template>
-            </p-dropdown>
-          <p-toggleButton
-            formControlName="reverseSort"
-            [onIcon]="'pi pi-sort-amount-down'"
-            [offIcon]="'pi pi-sort-amount-up'"
-            title="Toggle Sort Direction"
-            class="my-1"
-          />
+        <div class="flex align-items-center gap-1">
+          <div class="flex flex-column">
+            <label for="userName">User Name</label>
+            <input pInputText id="userName" formControlName="userName" />
+          </div>
+          <div class="flex flex-column">
+            <label for="email">Email</label>
+            <input pInputText id="email" formControlName="email" />
+          </div>
         </div>
       </div>
       <p-table
@@ -29,10 +24,10 @@
         <ng-template pTemplate="header">
           <tr>
             <th><i class="pi pi-trash"></i></th>
-            <th>User Name</th>
-            <th>Email</th>
-            <th>Created</th>
-            <th>Last Modified</th>
+            <th pSortableColumn="userName">User Name <p-sortIcon field="userName"></p-sortIcon></th>
+            <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
+            <th pSortableColumn="createdDate">Created <p-sortIcon field="createdDate"></p-sortIcon></th>
+            <th pSortableColumn="lastModifiedDate">Last Modified <p-sortIcon field="lastModifiedDate"></p-sortIcon></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-user>
