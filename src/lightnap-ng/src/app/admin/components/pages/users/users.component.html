@@ -7,8 +7,8 @@
           <p-dropdown id="sortBy" [options]="sortBys$ | async" formControlName="sortBy" optionLabel="displayName" optionValue="key" />
           <p-toggleButton
             formControlName="reverseSort"
-            onIcon="pi pi-sort-amount-down"
-            offIcon="pi pi-sort-amount-up"
+            [onIcon]="'pi pi-sort-amount-down'"
+            [offIcon]="'pi pi-sort-amount-up'"
             title="Toggle Sort Direction"
             class="my-1"
           />
