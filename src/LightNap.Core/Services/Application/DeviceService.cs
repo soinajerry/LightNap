@@ -1,10 +1,11 @@
 ﻿using LightNap.Core.Api;
 using LightNap.Core.Data;
 using LightNap.Core.Extensions;
+using LightNap.Core.Interfaces;
 using LightNap.Core.Profile.Dto.Response;
 using Microsoft.EntityFrameworkCore;
 
-namespace LightNap.Core.Services
+namespace LightNap.Core.Services.Application
 {
     /// <summary>
     /// Service for managing devices.

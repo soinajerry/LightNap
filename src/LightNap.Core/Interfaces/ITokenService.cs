@@ -1,6 +1,6 @@
 ﻿using LightNap.Core.Identity;
 
-namespace LightNap.WebApi.Interfaces
+namespace LightNap.Core.Interfaces
 {
     /// <summary>
     /// Represents a token service interface.

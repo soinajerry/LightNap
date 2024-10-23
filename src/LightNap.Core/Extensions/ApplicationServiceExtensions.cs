@@ -1,5 +1,5 @@
 ﻿using LightNap.Core.Interfaces;
-using LightNap.Core.Services;
+using LightNap.Core.Services.Email;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LightNap.Core.Extensions

@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Net.Mail;
 
-namespace LightNap.Core.Services
+namespace LightNap.Core.Services.Email
 {
     /// <summary>
     /// Service for sending emails using SMTP.

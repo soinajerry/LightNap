@@ -5,10 +5,11 @@ using LightNap.Core.Data;
 using LightNap.Core.Extensions;
 using LightNap.Core.Identity;
 using LightNap.Core.Identity.Dto.Response;
+using LightNap.Core.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace LightNap.Core.Services
+namespace LightNap.Core.Services.Application
 {
     /// <summary>
     /// Service for managing administrator-related operations.

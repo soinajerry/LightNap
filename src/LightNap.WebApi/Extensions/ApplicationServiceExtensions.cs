@@ -1,12 +1,12 @@
 ﻿using LightNap.Core.Data;
 using LightNap.Core.Extensions;
 using LightNap.Core.Identity;
-using LightNap.Core.Services;
+using LightNap.Core.Interfaces;
+using LightNap.Core.Services.Application;
+using LightNap.Core.Services.Token;
 using LightNap.DataProviders.Sqlite.Extensions;
 using LightNap.DataProviders.SqlServer.Extensions;
 using LightNap.WebApi.Configuration;
-using LightNap.WebApi.Interfaces;
-using LightNap.WebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -31,6 +31,7 @@ namespace LightNap.WebApi.Extensions
             services.AddScoped<IAdministratorService, AdministratorService>();
             services.AddScoped<IDeviceService, DeviceService>();
             services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<IPublicService, PublicService>();
 
             return services;
         }

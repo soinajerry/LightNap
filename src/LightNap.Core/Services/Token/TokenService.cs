@@ -1,13 +1,14 @@
 ﻿using LightNap.Core.Extensions;
 using LightNap.Core.Identity;
-using LightNap.WebApi.Interfaces;
+using LightNap.Core.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace LightNap.WebApi.Services
+namespace LightNap.Core.Services.Token
 {
     /// <summary>
     /// Service for generating JWT access tokens and refresh tokens.
@@ -66,7 +67,7 @@ namespace LightNap.WebApi.Services
                 };
 
             IList<string>? roles = await this._userManager.GetRolesAsync(user);
-            if ((roles != null) && roles.Any())
+            if (roles != null && roles.Any())
             {
                 claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
             }

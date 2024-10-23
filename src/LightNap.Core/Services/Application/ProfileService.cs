@@ -3,11 +3,12 @@ using LightNap.Core.Data;
 using LightNap.Core.Extensions;
 using LightNap.Core.Identity;
 using LightNap.Core.Identity.Dto.Request;
+using LightNap.Core.Interfaces;
 using LightNap.Core.Profile.Dto.Request;
 using LightNap.Core.Profile.Dto.Response;
 using Microsoft.AspNetCore.Identity;
 
-namespace LightNap.Core.Services
+namespace LightNap.Core.Services.Application
 {
     /// <summary>
     /// Service for managing user profiles.

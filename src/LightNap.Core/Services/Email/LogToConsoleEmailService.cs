@@ -3,7 +3,7 @@ using LightNap.Core.Interfaces;
 using System.Diagnostics;
 using System.Net.Mail;
 
-namespace LightNap.Core.Services
+namespace LightNap.Core.Services.Email
 {
     /// <summary>
     /// Service for logging email details to the console instead of sending them.

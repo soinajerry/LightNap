@@ -1,4 +1,5 @@
 using LightNap.Core.Api;
+using LightNap.Core.Interfaces;
 using LightNap.Core.Profile.Dto.Response;
 using LightNap.WebApi.Extensions;
 using Microsoft.AspNetCore.Authorization;
