@@ -1,19 +1,17 @@
-import { AdminUser } from "@admin";
+import { AdminUser, SearchAdminUsersSortBy } from "@admin";
 import { AdminService } from "@admin/services/admin.service";
 import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { EmptyPagedResponse, RoutePipe, SuccessApiResponse } from "@core";
-import { ApiResponseComponent } from "@core/components/controls/api-response/api-response.component";
-import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
+import { ApiResponseComponent, DropdownListItemComponent, EmptyPagedResponse, ErrorListComponent, ListItem, RoutePipe, SuccessApiResponse } from "@core";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { DropdownModule } from "primeng/dropdown";
 import { TableModule } from "primeng/table";
 import { ToggleButtonModule } from "primeng/togglebutton";
-import { debounceTime, map, startWith, Subject, switchMap, tap } from "rxjs";
+import { debounceTime, startWith, Subject, switchMap } from "rxjs";
 
 @Component({
   standalone: true,
@@ -30,7 +28,8 @@ import { debounceTime, map, startWith, Subject, switchMap, tap } from "rxjs";
     DropdownModule,
     ErrorListComponent,
     ToggleButtonModule,
-  ],
+    DropdownListItemComponent
+],
 })
 export class UsersComponent {
   pageSize = 25;
@@ -39,7 +38,7 @@ export class UsersComponent {
   #fb = inject(FormBuilder);
 
   form = this.#fb.group({
-    sortBy: this.#fb.control("user-name"),
+    sortBy: this.#fb.control<SearchAdminUsersSortBy>("userName"),
     reverseSort: this.#fb.control(false),
   });
 
@@ -60,7 +59,12 @@ export class UsersComponent {
     startWith(new SuccessApiResponse(new EmptyPagedResponse<AdminUser>()))
   );
 
-  sortBys$ = this.#adminService.getAppConfiguration().pipe(map(response => response.result?.userSortOptions ?? []));
+  sortBys = [
+    new ListItem<SearchAdminUsersSortBy>("userName", "User Name", "Sort by user name."),
+    new ListItem<SearchAdminUsersSortBy>("email", "Email", "Sort by email."),
+    new ListItem<SearchAdminUsersSortBy>("createdDate", "Created", "Sort by created date."),
+    new ListItem<SearchAdminUsersSortBy>("lastModifiedDate", "Last Modified", "Sort by last modified date."),
+  ];
 
   constructor() {
     this.form.valueChanges.pipe(takeUntilDestroyed(), debounceTime(250)).subscribe(() => {

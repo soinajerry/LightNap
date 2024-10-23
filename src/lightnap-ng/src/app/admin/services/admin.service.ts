@@ -1,4 +1,4 @@
-import { AdminAppConfiguration, Role, SearchAdminUsersRequest, UpdateAdminUserRequest } from "@admin/models";
+import { Role, SearchAdminUsersRequest, UpdateAdminUserRequest } from "@admin/models";
 import { inject, Injectable } from "@angular/core";
 import { ApiResponse, SuccessApiResponse } from "@core";
 import { combineLatest, map, of, tap } from "rxjs";
@@ -9,19 +9,7 @@ import { DataService } from "./data.service";
 })
 export class AdminService {
   #dataService = inject(DataService);
-  #appConfigurationResponse?: ApiResponse<AdminAppConfiguration>;
   #rolesResponse?: ApiResponse<Array<Role>>;
-
-  getAppConfiguration() {
-    if (this.#appConfigurationResponse) return of(this.#appConfigurationResponse);
-    return this.#dataService.getAppConfiguration().pipe(
-      tap(response => {
-        if (response.result) {
-          this.#appConfigurationResponse = response;
-        }
-      })
-    );
-  }
 
   getUser(userId: string) {
     return this.#dataService.getUser(userId);

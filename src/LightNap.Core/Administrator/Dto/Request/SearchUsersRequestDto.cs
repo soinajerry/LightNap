@@ -1,4 +1,5 @@
 ﻿using LightNap.Core.Api;
+using LightNap.Core.Identity;
 
 namespace LightNap.Core.Administrator.Dto.Request
 {
@@ -20,7 +21,7 @@ namespace LightNap.Core.Administrator.Dto.Request
         /// <summary>
         /// Gets or sets the field to sort the users by.
         /// </summary>
-        public string? SortBy { get; set; }
+        public ApplicationUserSortBy SortBy { get; set; }
 
         /// <summary>
         /// Reverses the default sort behavior of the SortBy field.

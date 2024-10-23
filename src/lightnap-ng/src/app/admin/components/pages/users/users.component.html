@@ -4,7 +4,11 @@
       <div [formGroup]="form">
         <div class="flex align-items-center justify-content-end gap-1">
           <label for="sortBy">Sort By</label>
-          <p-dropdown id="sortBy" [options]="sortBys$ | async" formControlName="sortBy" optionLabel="displayName" optionValue="key" />
+          <p-dropdown id="sortBy" [options]="sortBys" formControlName="sortBy">
+            <ng-template let-item pTemplate="item">
+                <dropdown-list-item [listItem]="item" />
+              </ng-template>
+            </p-dropdown>
           <p-toggleButton
             formControlName="reverseSort"
             [onIcon]="'pi pi-sort-amount-down'"
@@ -25,10 +29,10 @@
         <ng-template pTemplate="header">
           <tr>
             <th><i class="pi pi-trash"></i></th>
-            <th>UserName</th>
+            <th>User Name</th>
             <th>Email</th>
             <th>Created</th>
-            <th width="100%">Last Modified</th>
+            <th>Last Modified</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-user>

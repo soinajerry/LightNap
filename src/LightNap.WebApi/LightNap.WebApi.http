@@ -125,15 +125,6 @@ DELETE  {{_hostAddress}}/api/devices/{{_deviceToDelete}}
 Authorization: Bearer {{_token}}
 
 #
-### Admin misc methods.
-#
-
-### Admin get UX configuration.
-# @name AdminGetUser
-GET {{_hostAddress}}/api/administrator/app-configuration
-Authorization: Bearer {{_token}}
-
-#
 ### Admin user methods.
 #
 @_adminUserMethodsUserId = 4887de44-202c-49f0-84a7-19483fc7d47c

@@ -62,22 +62,21 @@ namespace LightNap.WebApi.Controllers
                 query = query.Where(user => user.UserName == requestDto.UserName);
             }
 
-            string sortBy = requestDto.SortBy ?? ApplicationUserSortOptions.UserName.Key;
-            if (sortBy == ApplicationUserSortOptions.Email.Key)
+            switch (requestDto.SortBy)
             {
-                query = requestDto.ReverseSort ? query.OrderByDescending(user => user.Email) : query.OrderBy(user => user.Email);
-            }
-            else if (sortBy == ApplicationUserSortOptions.CreatedDate.Key)
-            {
-                query = requestDto.ReverseSort ? query.OrderByDescending(user => user.CreatedDate) : query.OrderBy(user => user.CreatedDate);
-            }
-            else if (sortBy == ApplicationUserSortOptions.LastModifiedDate.Key)
-            {
-                query = requestDto.ReverseSort ? query.OrderByDescending(user => user.LastModifiedDate) : query.OrderBy(user => user.LastModifiedDate);
-            }
-            else //if (sortBy == ApplicationUserSortOptions.UserName.Key)
-            {
-                query = requestDto.ReverseSort ? query.OrderByDescending(user => user.UserName) : query.OrderBy(user => user.UserName);
+                case ApplicationUserSortBy.Email:
+                    query = requestDto.ReverseSort ? query.OrderByDescending(user => user.Email) : query.OrderBy(user => user.Email);
+                    break;
+                case ApplicationUserSortBy.UserName:
+                    query = requestDto.ReverseSort ? query.OrderByDescending(user => user.UserName) : query.OrderBy(user => user.UserName);
+                    break;
+                case ApplicationUserSortBy.CreatedDate:
+                    query = requestDto.ReverseSort ? query.OrderByDescending(user => user.CreatedDate) : query.OrderBy(user => user.CreatedDate);
+                    break;
+                case ApplicationUserSortBy.LastModifiedDate:
+                    query = requestDto.ReverseSort ? query.OrderByDescending(user => user.LastModifiedDate) : query.OrderBy(user => user.LastModifiedDate);
+                    break;
+                default: throw new ArgumentException($"Invalid sort field: '{requestDto.SortBy}'", nameof(requestDto.SortBy));
             }
 
             int totalCount = await query.CountAsync();
@@ -242,18 +241,6 @@ namespace LightNap.WebApi.Controllers
             }
 
             return ApiResponseDto<bool>.CreateSuccess(true);
-        }
-
-        /// <summary>
-        /// Retrieves the application configuration for the admin app.
-        /// </summary>
-        /// <returns>The admin app configuration.</returns>
-        /// <response code="200">Returns the admin app configuration.</response>
-        [HttpGet("app-configuration")]
-        [ProducesResponseType(typeof(ApiResponseDto<AdminAppConfigurationDto>), 200)]
-        public ActionResult<ApiResponseDto<AdminAppConfigurationDto>> GetAdminAppConfiguration()
-        {
-            return ApiResponseDto<AdminAppConfigurationDto>.CreateSuccess(new AdminAppConfigurationDto());
         }
     }
 }

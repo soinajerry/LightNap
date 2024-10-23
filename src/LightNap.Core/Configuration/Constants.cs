@@ -3,12 +3,12 @@
     /// <summary>
     /// Contains constant values used in the configuration of the core library.
     /// </summary>
-    internal class Constants
+    public static class Constants
     {
         /// <summary>
         /// Contains constant values related to DTO lengths.
         /// </summary>
-        internal class Dto
+        internal static class Dto
         {
             public const int Max2FaCodeLength = 512;
             public const int MaxEmailLength = 256;
