@@ -80,7 +80,7 @@ try
 
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var administratorSettings = services.GetRequiredService<IOptions<List<AdministratorConfiguration>>>();
-    await Seeder.SeedAdministrators(userManager, roleManager, administratorSettings, logger);
+    await Seeder.SeedAdministrators(userManager, roleManager, administratorSettings, siteSettings, logger);
 }
 catch (Exception ex)
 {

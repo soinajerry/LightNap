@@ -21,5 +21,10 @@ namespace LightNap.Core.Administrator.Dto.Request
         /// Gets or sets the field to sort the users by.
         /// </summary>
         public string? SortBy { get; set; }
+
+        /// <summary>
+        /// Reverses the default sort behavior of the SortBy field.
+        /// </summary>
+        public bool ReverseSort { get; set; }
     }
 }

@@ -44,7 +44,7 @@ namespace LightNap.WebApi.Configuration
         /// <param name="administratorConfigurations">The administrator configurations.</param>
         /// <param name="logger">The logger.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public static async Task SeedAdministrators(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IOptions<List<AdministratorConfiguration>> administratorConfigurations, ILogger logger)
+        public static async Task SeedAdministrators(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IOptions<List<AdministratorConfiguration>> administratorConfigurations, IOptions<SiteSettings> siteSettings, ILogger logger)
         {
             if (administratorConfigurations.Value is null) { return; }
 
@@ -59,6 +59,9 @@ namespace LightNap.WebApi.Configuration
                         Email = administrator.Email,
                         EmailConfirmed = true,
                         UserName = administrator.UserName,
+                        CreatedDate = DateTime.UtcNow,
+                        LastModifiedDate = DateTime.UtcNow,
+                        TwoFactorEnabled = siteSettings.Value.RequireTwoFactorForNewUsers,
                     };
 
                     bool passwordProvided = !string.IsNullOrWhiteSpace(administrator.Password);

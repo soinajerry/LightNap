@@ -190,9 +190,10 @@ namespace LightNap.WebApi.Controllers
             ApplicationUser user = new()
             {
                 Email = requestDto.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
                 TwoFactorEnabled = siteSettings.Value.RequireTwoFactorForNewUsers,
-                UserName = requestDto.UserName
+                UserName = requestDto.UserName,
+                CreatedDate = DateTime.UtcNow,
+                LastModifiedDate = DateTime.UtcNow,
             };
 
             var result = await userManager.CreateAsync(user, requestDto.Password);

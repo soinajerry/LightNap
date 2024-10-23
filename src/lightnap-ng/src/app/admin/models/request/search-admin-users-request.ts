@@ -1,7 +1,8 @@
 import { PaginationRequest } from "@core";
 
 export interface SearchAdminUsersRequest extends PaginationRequest {
-    email: string;
-    userName: string;
-    sortBy: string;
+    email?: string;
+    userName?: string;
+    sortBy?: string;
+    reverseSort: boolean;
 }

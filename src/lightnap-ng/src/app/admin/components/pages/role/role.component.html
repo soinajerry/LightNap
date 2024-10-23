@@ -11,7 +11,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-user>
           <tr>
-            <td><p-button severity="danger" icon="pi pi-trash" title="Remove device" (onClick)="removeUserFromRole(user.id)" /></td>
+            <td><p-button severity="danger" icon="pi pi-trash" title="Remove user from role" (onClick)="removeUserFromRole(user.id)" /></td>
             <td>
               <a [routerLink]="'admin-user' | route : user.id"> {{ user.userName }}</a>
             </td>

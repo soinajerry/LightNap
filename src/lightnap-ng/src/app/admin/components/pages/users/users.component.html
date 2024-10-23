@@ -1,5 +1,57 @@
 <p-card header="Manage Users">
-    <p>User management...</p>
+  <api-response [apiResponse]="users$" errorMessage="Error loading users" loadingMessage="Loading users...">
+    <ng-template #success let-users>
+      <div [formGroup]="form">
+        <div class="flex align-items-center justify-content-end gap-1">
+          <label for="sortBy">Sort By</label>
+          <p-dropdown id="sortBy" [options]="sortBys$ | async" formControlName="sortBy" optionLabel="displayName" optionValue="key" />
+          <p-toggleButton
+            formControlName="reverseSort"
+            onIcon="pi pi-sort-amount-down"
+            offIcon="pi pi-sort-amount-up"
+            title="Toggle Sort Direction"
+            class="my-1"
+          />
+        </div>
+      </div>
+      <p-table
+        [value]="users.data"
+        [paginator]="true"
+        [rows]="pageSize"
+        [totalRecords]="users.totalCount"
+        [lazy]="true"
+        (onLazyLoad)="loadUsersLazy($event)"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th><i class="pi pi-trash"></i></th>
+            <th>UserName</th>
+            <th>Email</th>
+            <th>Created</th>
+            <th width="100%">Last Modified</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-user>
+          <tr>
+            <td><p-button severity="danger" icon="pi pi-trash" title="Delete user" (onClick)="deleteUser(user.id)" /></td>
+            <td>
+              <a [routerLink]="'admin-user' | route : user.id"> {{ user.userName }}</a>
+            </td>
+            <td>
+              <a href="mailto:{{ user.email }}"> {{ user.email }}</a>
+            </td>
+            <td>{{ user.createdDate | date : "short" }}</td>
+            <td>{{ user.lastModifiedDate | date : "short" }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="100%">No users match the filters.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <error-list [errors]="errors" />
+    </ng-template>
+  </api-response>
 </p-card>
-
-
