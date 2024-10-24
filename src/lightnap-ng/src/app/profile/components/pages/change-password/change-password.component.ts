@@ -5,6 +5,7 @@ import { RouterModule } from "@angular/router";
 import { RoutePipe } from "@core";
 import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
 import { confirmPasswordValidator } from "@core/helpers/form-helpers";
+import { ToastService } from "@core/services/toast.service";
 import { ProfileService } from "@profile/services/profile.service";
 import { BlockUIModule } from "primeng/blockui";
 import { ButtonModule } from "primeng/button";
@@ -32,6 +33,7 @@ import { TableModule } from "primeng/table";
 })
 export class ChangePasswordComponent {
   #profileService = inject(ProfileService);
+  #toastService = inject(ToastService);
   #fb = inject(FormBuilder);
 
   blockUi = false;
@@ -61,7 +63,7 @@ export class ChangePasswordComponent {
             return;
           }
 
-          alert("Success!");
+          this.#toastService.success("Password changed successfully.");
           this.form.reset();
         },
       });

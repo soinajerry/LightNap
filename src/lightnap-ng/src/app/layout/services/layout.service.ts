@@ -67,7 +67,6 @@ export class LayoutService {
         this.profileService.getSettings().subscribe(response => {
           if (response.result.style) {
             this.config.set(response.result.style);
-            console.log("Setting style");
           }
         });
       });
@@ -124,7 +123,6 @@ export class LayoutService {
     this.#configUpdate.next(this.config());
 
     if (this.profileService.hasLoadedStyleSettings()) {
-        console.log("Updating style");
         this.profileService.updateStyleSettings(this.#styleSettings).subscribe({
           next: response => {
             if (!response.result) {
