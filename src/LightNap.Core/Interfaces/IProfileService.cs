@@ -29,5 +29,18 @@ namespace LightNap.Core.Interfaces
         /// <param name="requestDto">The data transfer object containing the password change information.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="ApiResponseDto{bool}"/> indicating whether the password change was successful.</returns>
         Task<ApiResponseDto<bool>> ChangePasswordAsync(ChangePasswordRequestDto requestDto);
+
+        /// <summary>
+        /// Retrieves the settings of the requesting user.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="ApiResponseDto{SettingsDto}"/> with the user's settings.</returns>
+        Task<ApiResponseDto<BrowserSettingsDto>> GetSettingsAsync();
+
+        /// <summary>
+        /// Updates the settings of the requesting user.
+        /// </summary>
+        /// <param name="requestDto">The data transfer object containing the settings update information.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="ApiResponseDto{SettingsDto}"/> with the updated settings.</returns>
+        Task<ApiResponseDto<bool>> UpdateSettingsAsync(BrowserSettingsDto requestDto);
     }
 }

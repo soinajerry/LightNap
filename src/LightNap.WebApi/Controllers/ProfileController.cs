@@ -66,5 +66,40 @@ namespace LightNap.WebApi.Controllers
         {
             return await profileService.ChangePasswordAsync(requestDto);
         }
+
+        /// <summary>
+        /// Retrieves the settings of the current user.
+        /// </summary>
+        /// <returns>
+        /// An <see cref="ApiResponseDto{T}"/> containing the settings of the current user.
+        /// </returns>
+        /// <response code="200">Returns the settings of the current user.</response>
+        /// <response code="401">If the user is not authenticated.</response>
+        [HttpGet("settings")]
+        [ProducesResponseType(typeof(ApiResponseDto<BrowserSettingsDto>), 200)]
+        [ProducesResponseType(401)]
+        public async Task<ActionResult<ApiResponseDto<BrowserSettingsDto>>> GetSettings()
+        {
+            return await profileService.GetSettingsAsync();
+        }
+
+        /// <summary>
+        /// Updates the settings of the current user.
+        /// </summary>
+        /// <param name="requestDto">The updated settings information.</param>
+        /// <returns>
+        /// A <see cref="ApiResponseDto{T}"/> containing true if the update succeeded.
+        /// </returns>
+        /// <response code="200">Returns the updated settings of the current user.</response>
+        /// <response code="401">If the user is not authenticated.</response>
+        /// <response code="400">If the request is invalid.</response>
+        [HttpPut("settings")]
+        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult<ApiResponseDto<bool>>> UpdateSettings(BrowserSettingsDto requestDto)
+        {
+            return await profileService.UpdateSettingsAsync(requestDto);
+        }
     }
 }

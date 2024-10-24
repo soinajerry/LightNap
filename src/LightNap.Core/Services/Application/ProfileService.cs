@@ -63,5 +63,30 @@ namespace LightNap.Core.Services.Application
 
             return ApiResponseDto<ProfileDto>.CreateSuccess(user.ToLoggedInUserDto());
         }
+
+        /// <summary>
+        /// Retrieves the settings of the specified user.
+        /// </summary>
+        /// <returns>An <see cref="ApiResponseDto{T}"/> containing the user's settings.</returns>
+        public async Task<ApiResponseDto<BrowserSettingsDto>> GetSettingsAsync()
+        {
+            var user = await db.Users.FindAsync(userContext.GetUserId());
+            if (user is null) { return ApiResponseDto<BrowserSettingsDto>.CreateError("Unable to load settings"); }
+            return ApiResponseDto<BrowserSettingsDto>.CreateSuccess(user.BrowserSettings);
+        }
+
+        /// <summary>
+        /// Updates the settings of the specified user.
+        /// </summary>
+        /// <param name="requestDto">The data transfer object containing the updated settings information.</param>
+        /// <returns>An <see cref="ApiResponseDto{T}"/> indicating the success or failure of the operation.</returns>
+        public async Task<ApiResponseDto<bool>> UpdateSettingsAsync(BrowserSettingsDto requestDto)
+        {
+            var user = await db.Users.FindAsync(userContext.GetUserId());
+            if (user is null) { return ApiResponseDto<bool>.CreateError("Unable to update settings"); }
+            user.BrowserSettings = requestDto;
+            await db.SaveChangesAsync();
+            return ApiResponseDto<bool>.CreateSuccess(true);
+        }
     }
 }

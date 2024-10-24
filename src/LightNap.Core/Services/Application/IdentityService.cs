@@ -5,6 +5,7 @@ using LightNap.Core.Identity;
 using LightNap.Core.Identity.Dto.Request;
 using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Interfaces;
+using LightNap.Core.Profile.Dto.Response;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -156,14 +157,7 @@ namespace LightNap.Core.Services.Application
                 return ApiResponseDto<LoginResultDto>.CreateError("This email is already in use.");
             }
 
-            ApplicationUser user = new()
-            {
-                Email = requestDto.Email,
-                TwoFactorEnabled = applicationSettings.Value.RequireTwoFactorForNewUsers,
-                UserName = requestDto.UserName,
-                CreatedDate = DateTime.UtcNow,
-                LastModifiedDate = DateTime.UtcNow,
-            };
+            ApplicationUser user = new(requestDto.UserName, requestDto.Email, applicationSettings.Value.RequireTwoFactorForNewUsers);
 
             var result = await userManager.CreateAsync(user, requestDto.Password);
             if (!result.Succeeded)

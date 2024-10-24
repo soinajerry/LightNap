@@ -1,4 +1,5 @@
 ﻿using LightNap.Core.Identity;
+using LightNap.Core.Profile.Dto.Response;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,6 +27,15 @@ namespace LightNap.Core.Data
         /// Initializes a new instance of the <see cref="ApplicationDbContext"/> class.
         /// </summary>
         public ApplicationDbContext() { }
+
+        ///// <inheritdoc />
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    if (!optionsBuilder.IsConfigured)
+        //    {
+        //        optionsBuilder.UseLazyLoadingProxies();
+        //    }
+        //}
 
         /// <inheritdoc />
         protected override void OnModelCreating(ModelBuilder builder)
@@ -57,6 +67,9 @@ namespace LightNap.Core.Data
         {
             // Make sure all DateTime properties are stored as UTC.
             configurationBuilder.Properties<DateTime>().HaveConversion(typeof(UtcValueConverter));
+
+            // Storing this as a JSON string.
+            configurationBuilder.Properties<BrowserSettingsDto>().HaveConversion(typeof(BrowserSettingsConverter));
         }
     }
 }

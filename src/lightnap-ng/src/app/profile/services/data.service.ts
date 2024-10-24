@@ -4,7 +4,7 @@ import {
     API_URL_ROOT,
     ApiResponse,
 } from "@core";
-import { ChangePasswordRequest, Device, Profile, UpdateProfileRequest } from "@profile";
+import { BrowserSettings, ChangePasswordRequest, Device, Profile, UpdateProfileRequest } from "@profile";
 
 @Injectable({
   providedIn: "root",
@@ -33,5 +33,12 @@ export class DataService {
     return this.#http.delete<ApiResponse<boolean>>(`${this.#apiUrl}devices/${deviceId}`);
   }
 
+  getSettings() {
+    return this.#http.get<ApiResponse<BrowserSettings>>(`${this.#apiUrl}profile/settings`);
+  }
+
+  updateSettings(browserSettings: BrowserSettings) {
+    return this.#http.put<ApiResponse<boolean>>(`${this.#apiUrl}profile/settings`, browserSettings);
+  }
 
 }

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LightNap.DataProviders.Sqlite.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241023070044_InitialCreate")]
+    [Migration("20241024065815_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -61,6 +61,10 @@ namespace LightNap.DataProviders.Sqlite.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("BrowserSettings")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()

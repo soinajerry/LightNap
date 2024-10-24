@@ -1,4 +1,5 @@
-﻿using LightNap.Core.Administrator.Dto.Request;
+﻿using LightNap.Core.Administrator;
+using LightNap.Core.Administrator.Dto.Request;
 using LightNap.Core.Administrator.Dto.Response;
 using LightNap.Core.Api;
 using LightNap.Core.Data;

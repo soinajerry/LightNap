@@ -1,14 +1,16 @@
 import { inject, Injectable } from "@angular/core";
-import { ChangePasswordRequest, UpdateProfileRequest } from "@profile";
+import { BrowserSettings, ChangePasswordRequest, UpdateProfileRequest } from "@profile";
 import { DataService } from "./data.service";
-import { delay, map } from "rxjs";
-import { ErrorApiResponse } from "@core";
+import { delay, map, of, tap } from "rxjs";
+import { ApiResponse, ErrorApiResponse } from "@core";
 
 @Injectable({
   providedIn: "root",
 })
 export class ProfileService {
   #dataService = inject(DataService);
+
+  #settingsResponse?: ApiResponse<BrowserSettings>;
 
   getProfile() {
     return this.#dataService.getProfile();
@@ -29,4 +31,22 @@ export class ProfileService {
   changePassword(changePasswordRequest: ChangePasswordRequest) {
     return this.#dataService.changePassword(changePasswordRequest);
   }
+
+  getSettings() {
+    if (this.#settingsResponse) return of(this.#settingsResponse);
+
+    return this.#dataService.getSettings().pipe(tap(response => {
+        if (response.result) {
+          this.#settingsResponse = response;
+        }
+    }));
+  }
+
+  updateSettings(browserSettings: BrowserSettings) {
+    if (this.#settingsResponse) {
+        this.#settingsResponse.result = browserSettings;
+    }
+    return this.#dataService.updateSettings(browserSettings);
+  }
+
 }

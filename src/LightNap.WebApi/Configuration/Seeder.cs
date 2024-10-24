@@ -56,15 +56,7 @@ namespace LightNap.WebApi.Configuration
 
                 if (user is null)
                 {
-                    user = new ApplicationUser()
-                    {
-                        Email = administrator.Email,
-                        EmailConfirmed = true,
-                        UserName = administrator.UserName,
-                        CreatedDate = DateTime.UtcNow,
-                        LastModifiedDate = DateTime.UtcNow,
-                        TwoFactorEnabled = applicationSettings.Value.RequireTwoFactorForNewUsers,
-                    };
+                    user = new ApplicationUser(administrator.UserName, administrator.Email, applicationSettings.Value.RequireTwoFactorForNewUsers);
 
                     bool passwordProvided = !string.IsNullOrWhiteSpace(administrator.Password);
                     string password = passwordProvided ? administrator.Password! : $"P@ssw0rd{Guid.NewGuid()}";

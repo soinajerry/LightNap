@@ -1,4 +1,4 @@
-﻿namespace LightNap.Core.Identity
+﻿namespace LightNap.Core.Administrator
 {
     /// <summary>
     /// Supported user sorting options.
