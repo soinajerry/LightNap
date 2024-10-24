@@ -70,7 +70,7 @@ export class UsersComponent {
   ];
 
   constructor() {
-    this.form.valueChanges.pipe(takeUntilDestroyed(), debounceTime(250)).subscribe(() => {
+    this.form.valueChanges.pipe(takeUntilDestroyed(), debounceTime(1000)).subscribe(() => {
       this.#lazyLoadEventSubject.next({ first: 0 });
     });
   }

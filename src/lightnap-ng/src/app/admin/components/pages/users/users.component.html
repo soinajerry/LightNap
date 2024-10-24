@@ -1,15 +1,13 @@
 <p-card header="Manage Users">
   <api-response [apiResponse]="users$" errorMessage="Error loading users" loadingMessage="Loading users...">
     <ng-template #success let-users>
-      <div [formGroup]="form">
+      <div [formGroup]="form" class="my-2">
         <div class="flex align-items-center gap-1">
           <div class="flex flex-column">
-            <label for="userName">User Name</label>
-            <input pInputText id="userName" formControlName="userName" />
+            <input pInputText placeholder="User Name" formControlName="userName" />
           </div>
           <div class="flex flex-column">
-            <label for="email">Email</label>
-            <input pInputText id="email" formControlName="email" />
+            <input pInputText placeholder="Email" formControlName="email" />
           </div>
         </div>
       </div>
