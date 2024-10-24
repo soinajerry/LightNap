@@ -8,41 +8,41 @@ import { API_URL_ROOT, ApiResponse, PagedResponse } from "@core";
 })
 export class DataService {
   #http = inject(HttpClient);
-  #apiUrl = inject(API_URL_ROOT);
+  #apiUrlRoot = `${inject(API_URL_ROOT)}administrator/`;
 
   getUser(userId: string) {
-    return this.#http.get<ApiResponse<AdminUser>>(`${this.#apiUrl}administrator/users/${userId}`);
+    return this.#http.get<ApiResponse<AdminUser>>(`${this.#apiUrlRoot}users/${userId}`);
   }
 
   updateUser(userId: string, updateAdminUser: UpdateAdminUserRequest) {
-    return this.#http.put<ApiResponse<AdminUser>>(`${this.#apiUrl}administrator/users/${userId}`, updateAdminUser);
+    return this.#http.put<ApiResponse<AdminUser>>(`${this.#apiUrlRoot}users/${userId}`, updateAdminUser);
   }
 
   deleteUser(userId: string) {
-    return this.#http.delete<ApiResponse<boolean>>(`${this.#apiUrl}administrator/users/${userId}`);
+    return this.#http.delete<ApiResponse<boolean>>(`${this.#apiUrlRoot}users/${userId}`);
   }
 
   searchUsers(searchAdminUsers: SearchAdminUsersRequest) {
-    return this.#http.post<ApiResponse<PagedResponse<AdminUser>>>(`${this.#apiUrl}administrator/users/search`, searchAdminUsers);
+    return this.#http.post<ApiResponse<PagedResponse<AdminUser>>>(`${this.#apiUrlRoot}users/search`, searchAdminUsers);
   }
 
   getRoles() {
-    return this.#http.get<ApiResponse<Array<Role>>>(`${this.#apiUrl}administrator/roles`);
+    return this.#http.get<ApiResponse<Array<Role>>>(`${this.#apiUrlRoot}roles`);
   }
 
   getUserRoles(userId: string) {
-    return this.#http.get<ApiResponse<Array<string>>>(`${this.#apiUrl}administrator/users/${userId}/roles`);
+    return this.#http.get<ApiResponse<Array<string>>>(`${this.#apiUrlRoot}users/${userId}/roles`);
   }
 
   getUsersInRole(role: string) {
-    return this.#http.get<ApiResponse<Array<AdminUser>>>(`${this.#apiUrl}administrator/roles/${role}`);
+    return this.#http.get<ApiResponse<Array<AdminUser>>>(`${this.#apiUrlRoot}roles/${role}`);
   }
 
   addUserToRole(userId: string, role: string) {
-    return this.#http.post<ApiResponse<boolean>>(`${this.#apiUrl}administrator/roles/${role}/${userId}`, null);
+    return this.#http.post<ApiResponse<boolean>>(`${this.#apiUrlRoot}roles/${role}/${userId}`, null);
   }
 
   removeUserFromRole(userId: string, role: string) {
-    return this.#http.delete<ApiResponse<boolean>>(`${this.#apiUrl}administrator/roles/${role}/${userId}`);
+    return this.#http.delete<ApiResponse<boolean>>(`${this.#apiUrlRoot}roles/${role}/${userId}`);
   }
 }

@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
-import { BrowserSettings, ChangePasswordRequest, UpdateProfileRequest } from "@profile";
+import { BrowserSettings, ChangePasswordRequest, StyleSettings, UpdateProfileRequest } from "@profile";
 import { DataService } from "./data.service";
-import { delay, map, of, tap } from "rxjs";
+import { delay, map, of, switchMap, tap } from "rxjs";
 import { ApiResponse, ErrorApiResponse } from "@core";
 
 @Injectable({
@@ -35,18 +35,32 @@ export class ProfileService {
   getSettings() {
     if (this.#settingsResponse) return of(this.#settingsResponse);
 
-    return this.#dataService.getSettings().pipe(tap(response => {
+    return this.#dataService.getSettings().pipe(
+      tap(response => {
         if (response.result) {
           this.#settingsResponse = response;
         }
-    }));
+      })
+    );
   }
 
   updateSettings(browserSettings: BrowserSettings) {
     if (this.#settingsResponse) {
-        this.#settingsResponse.result = browserSettings;
+      this.#settingsResponse.result = browserSettings;
     }
     return this.#dataService.updateSettings(browserSettings);
   }
 
+  updateStyleSettings(styleSettings: StyleSettings) {
+    return this.#dataService.getSettings().pipe(
+      switchMap(response => {
+        if (!response.result || JSON.stringify(response.result.style) === JSON.stringify(styleSettings)) return of(response);
+        return this.updateSettings({ ...response.result, style: styleSettings });
+      })
+    );
+  }
+
+  hasLoadedStyleSettings() {
+    return !!this.#settingsResponse;
+  }
 }

@@ -15,33 +15,33 @@ import {
 })
 export class DataService {
   #http = inject(HttpClient);
-  #apiUrl = inject(API_URL_ROOT);
+  #identityApiUrlRoot = `${inject(API_URL_ROOT)}identity/`;
 
   getAccessToken() {
-    return this.#http.get<ApiResponse<string>>(`${this.#apiUrl}identity/access-token`);
+    return this.#http.get<ApiResponse<string>>(`${this.#identityApiUrlRoot}access-token`);
   }
 
   logIn(loginRequest: LoginRequest) {
-    return this.#http.post<ApiResponse<LoginResult>>(`${this.#apiUrl}identity/login`, loginRequest);
+    return this.#http.post<ApiResponse<LoginResult>>(`${this.#identityApiUrlRoot}login`, loginRequest);
   }
 
   register(registerRequest: LoginRequest) {
-    return this.#http.post<ApiResponse<LoginResult>>(`${this.#apiUrl}identity/register`, registerRequest);
+    return this.#http.post<ApiResponse<LoginResult>>(`${this.#identityApiUrlRoot}register`, registerRequest);
   }
 
   logOut() {
-    return this.#http.get<ApiResponse<boolean>>(`${this.#apiUrl}identity/logout`);
+    return this.#http.get<ApiResponse<boolean>>(`${this.#identityApiUrlRoot}logout`);
   }
 
   resetPassword(resetPasswordRequest: ResetPasswordRequest) {
-    return this.#http.post<ApiResponse<boolean>>(`${this.#apiUrl}identity/reset-password`, resetPasswordRequest);
+    return this.#http.post<ApiResponse<boolean>>(`${this.#identityApiUrlRoot}reset-password`, resetPasswordRequest);
   }
 
   newPassword(newPasswordRequest: NewPasswordRequest) {
-    return this.#http.post<ApiResponse<string>>(`${this.#apiUrl}identity/new-password`, newPasswordRequest);
+    return this.#http.post<ApiResponse<string>>(`${this.#identityApiUrlRoot}new-password`, newPasswordRequest);
   }
 
   verifyCode(verifyCodeRequest: VerifyCodeRequest) {
-    return this.#http.post<ApiResponse<string>>(`${this.#apiUrl}identity/verify-code`, verifyCodeRequest);
+    return this.#http.post<ApiResponse<string>>(`${this.#identityApiUrlRoot}verify-code`, verifyCodeRequest);
   }
 }

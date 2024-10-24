@@ -1,7 +1,7 @@
 ﻿namespace LightNap.Core.Profile.Dto.Response
 {
     /// <summary>
-    /// Data transfer object representing the user's settings for the browser app.
+    /// Data transfer object representing the user's settings for the browser front-end app.
     /// </summary>
     public class BrowserSettingsDto
     {
@@ -11,13 +11,23 @@
         public int Version { get; set; } = 1;
 
         /// <summary>
-        /// The selected browser app theme.
+        /// Style data like the theme, menu preferences, etc.
         /// </summary>
-        public string? Theme { get; set; } = string.Empty;
+        public Dictionary<string, object> Style { get; set; } = [];
 
         /// <summary>
-        /// Contains extended settings that might be less commonly set and/or temporary (like feature flags).
+        /// Preferences like the language, timezone, etc.
         /// </summary>
-        public Dictionary<string, object> Extended { get; set; } = new Dictionary<string, object>();
+        public Dictionary<string, object> Preferences { get; set; } = [];
+
+        /// <summary>
+        /// Features like feature flags, etc.
+        /// </summary>
+        public Dictionary<string, object> Features { get; set; } = [];
+
+        /// <summary>
+        /// Contains extended settings that might be less commonly set and/or temporary.
+        /// </summary>
+        public Dictionary<string, object> Extended { get; set; } = [];
     }
 }

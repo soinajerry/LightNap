@@ -1,14 +1,14 @@
 @_hostAddress = https://localhost:7266
 
+# This will set the token based on the response to the login request. If you're using a tool that
+# does not yet support parsing responses (like VS 2022), then you can set the token here manually.
+#@_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIzYzE0NWJkYy0xNjE2LTQyMWItOTlmZS04OWYyMTFkZjU1MDYiLCJzdWIiOiJUZXN0IiwiZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwianRpIjoiMmQ4ZmM3ZjgtYTkzOS00NGQ0LWExZGMtYzI1YWMzNzE0Nzk1IiwiZXhwIjoxNzI5ODEwOTcwLCJpc3MiOiJodHRwczovL3d3dy55b3VyZG9tYWluLmNvbSIsImF1ZCI6Imh0dHBzOi8vd3d3LnlvdXJkb21haW4uY29tIn0.ck-NAKaBzu7GQmfehFMr2b9G4-ZNekUrhtNi_T5puJo
+@_token = {{GetToken.response.body.result}}
+
 ### Get a new bearer token. You will need to call login or register first so the
 ### server can set the refresh token required by this call.
 # @name GetToken
 GET {{_hostAddress}}/api/identity/access-token
-
-# This will set the token based on the response to the login request. If you're using a tool that
-# does not yet support parsing responses (like VS 2022), then you can set the token here manually.
-#@_token = LiteralTokenDataWithoutContainingQuotes
-@_token = {{GetToken.response.body.result}}
 
 ### Log in a test user if there's already an account.
 # @name LogInTestUser
@@ -22,7 +22,6 @@ Content-Type: application/json
   "deviceDetails": "VS REST Client Login"
 }
 
-### Log in an admin user.
 ### Log in an admin user.
 # @name LogInAdmin
 POST {{_hostAddress}}/api/identity/login
@@ -61,9 +60,11 @@ Content-Type: application/json
   "deviceDetails": "VS REST Client Verify Code"
 }
 
-### Get the profile of the logged-in user.
+### Logs the user out. The refresh token is revoked and client should discard access token.
 # @name LogOut
 GET {{_hostAddress}}/api/identity/logout
+
+@_token =
 
 ### Request a password reset email.
 # @name ResetPassword
@@ -100,12 +101,12 @@ Authorization: Bearer {{_token}}
 }
 
 ### Get the profile of the logged-in user.
-# @name GetLoggedInProfile
+# @name GetProfile
 GET {{_hostAddress}}/api/profile
 Authorization: Bearer {{_token}}
 
 ### Update the logged in user's profile.
-# @name UpdateLoggedInProfile
+# @name UpdateProfile
 PUT {{_hostAddress}}/api/profile
 Content-Type: application/json
 Authorization: Bearer {{_token}}
@@ -113,15 +114,36 @@ Authorization: Bearer {{_token}}
 {
 }
 
+### Get the settings of the logged-in user.
+# @name GetSettings
+GET {{_hostAddress}}/api/profile/settings
+Authorization: Bearer {{_token}}
+
+### Update the logged in user's settings.
+# @name UpdateSettings
+PUT {{_hostAddress}}/api/profile/settings
+Content-Type: application/json
+Authorization: Bearer {{_token}}
+
+{
+  "version": 1,
+  "style": {
+    "theme": "test-theme"
+  },
+  "preferences": {},
+  "features": {},
+  "extended": {}
+}
+
 ### Get the devices (refresh tokens) of the logged-in user.
 # @name GetDevices
-GET {{_hostAddress}}/api/devices
+GET {{_hostAddress}}/api/profile/devices
 Authorization: Bearer {{_token}}
 
 ### Revoke a refresh token.
 # @name RemoveDevice
 @_deviceToDelete = 663777ce-aabe-4171-a2bf-8f4641d472eb
-DELETE  {{_hostAddress}}/api/devices/{{_deviceToDelete}}
+DELETE  {{_hostAddress}}/api/profile/devices/{{_deviceToDelete}}
 Authorization: Bearer {{_token}}
 
 #

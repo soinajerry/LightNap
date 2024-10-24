@@ -33,7 +33,6 @@ namespace LightNap.WebApi.Extensions
             services.AddScoped<ICookieManager, WebCookieManager>();
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IAdministratorService, AdministratorService>();
-            services.AddScoped<IDeviceService, DeviceService>();
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IPublicService, PublicService>();
 

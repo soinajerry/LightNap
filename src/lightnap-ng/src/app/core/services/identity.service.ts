@@ -25,6 +25,8 @@ export class IdentityService {
   #loggedInRolesSubject$ = new ReplaySubject<Array<string>>(1);
   #requestingRefreshToken = false;
 
+  get loggedIn() { return !!this.#token; }
+
   constructor() {
     this.#timer
       .watchTimer$(IdentityService.TokenRefreshCheckMillis)
