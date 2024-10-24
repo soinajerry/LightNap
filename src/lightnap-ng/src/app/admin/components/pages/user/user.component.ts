@@ -1,17 +1,18 @@
 import { AdminService } from "@admin/services/admin.service";
 import { CommonModule } from "@angular/common";
 import { Component, inject, Input, OnInit } from "@angular/core";
-import { ApiResponse, RoutePipe, SuccessApiResponse } from "@core";
-import { CardModule } from "primeng/card";
-import { combineLatest, map, Observable } from "rxjs";
-import { RouterLink } from "@angular/router";
-import { TableModule } from "primeng/table";
-import { ButtonModule } from "primeng/button";
-import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
-import { UserViewModel } from "./user-view-model";
-import { ApiResponseComponent } from "@core/components/controls/api-response/api-response.component";
-import { DropdownModule } from "primeng/dropdown";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { RouterLink } from "@angular/router";
+import { ApiResponse, ConfirmPopupComponent, RoutePipe, SuccessApiResponse } from "@core";
+import { ApiResponseComponent } from "@core/components/controls/api-response/api-response.component";
+import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
+import { ConfirmationService } from "primeng/api";
+import { ButtonModule } from "primeng/button";
+import { CardModule } from "primeng/card";
+import { DropdownModule } from "primeng/dropdown";
+import { TableModule } from "primeng/table";
+import { combineLatest, map, Observable } from "rxjs";
+import { UserViewModel } from "./user-view-model";
 
 @Component({
   standalone: true,
@@ -27,10 +28,13 @@ import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
     ErrorListComponent,
     ApiResponseComponent,
     DropdownModule,
+    ConfirmPopupComponent,
   ],
 })
 export class UserComponent implements OnInit {
   #adminService = inject(AdminService);
+  #confirmationService = inject(ConfirmationService);
+
   #fb = inject(FormBuilder);
 
   @Input() userId!: string;
@@ -68,22 +72,32 @@ export class UserComponent implements OnInit {
     );
   }
 
-  removeUserFromRole(role: string) {
+  removeUserFromRole(event: any, role: string) {
     this.errors = [];
-    this.#adminService.removeUserFromRole(this.userId, role).subscribe({
-      next: response => {
-        if (!response.result) {
-          this.errors = response.errorMessages;
-          return;
-        }
 
-        this.#refreshUser();
+    this.#confirmationService.confirm({
+      header: "Confirm Role Removal?",
+      message: `Are you sure that you want to remove this role membership?`,
+      target: event.target,
+      key: role,
+      accept: () => {
+        this.#adminService.removeUserFromRole(this.userId, role).subscribe({
+          next: response => {
+            if (!response.result) {
+              this.errors = response.errorMessages;
+              return;
+            }
+
+            this.#refreshUser();
+          },
+        });
       },
     });
   }
 
   addUserToRole() {
     this.errors = [];
+
     this.#adminService.addUserToRole(this.userId, this.addUserToRoleForm.value.role).subscribe({
       next: response => {
         if (!response.result) {

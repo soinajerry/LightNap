@@ -30,7 +30,10 @@
         </ng-template>
         <ng-template pTemplate="body" let-user>
           <tr>
-            <td><p-button severity="danger" icon="pi pi-trash" title="Delete user" (onClick)="deleteUser(user.id)" /></td>
+            <td>
+                <confirm-popup [key]="user.id" />
+                <p-button severity="danger" icon="pi pi-trash" title="Delete user" (onClick)="deleteUser($event, user.id)" />
+            </td>
             <td>
               <a [routerLink]="'admin-user' | route : user.id"> {{ user.userName }}</a>
             </td>

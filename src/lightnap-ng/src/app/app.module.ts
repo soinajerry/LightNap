@@ -11,7 +11,7 @@ import { AppComponent } from "./app.component";
 import { API_URL_ROOT, ROUTE_HELPER } from "@core";
 import { apiResponseInterceptor } from "@core/interceptors/api-response-interceptor";
 import { tokenInterceptor } from "@core/interceptors/token-interceptor";
-import { MessageService } from "primeng/api";
+import { ConfirmationService, MessageService } from "primeng/api";
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,6 +23,7 @@ import { MessageService } from "primeng/api";
     { provide: LocationStrategy, useClass: PathLocationStrategy },
     provideHttpClient(withInterceptors([tokenInterceptor, apiResponseInterceptor])),
     MessageService,
+    ConfirmationService
   ],
   bootstrap: [AppComponent],
 })

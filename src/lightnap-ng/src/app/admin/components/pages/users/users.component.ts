@@ -5,14 +5,21 @@ import { Component, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { ApiResponseComponent, DropdownListItemComponent, EmptyPagedResponse, ErrorListComponent, ListItem, RoutePipe, SuccessApiResponse } from "@core";
-import { LazyLoadEvent } from "primeng/api";
+import {
+    ApiResponseComponent,
+    ConfirmPopupComponent,
+    EmptyPagedResponse,
+    ErrorListComponent,
+    ListItem,
+    RoutePipe,
+    SuccessApiResponse
+} from "@core";
+import { ConfirmationService, LazyLoadEvent } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { DropdownModule } from "primeng/dropdown";
 import { InputTextModule } from "primeng/inputtext";
 import { TableModule } from "primeng/table";
-import { ToggleButtonModule } from "primeng/togglebutton";
 import { debounceTime, startWith, Subject, switchMap } from "rxjs";
 
 @Component({
@@ -29,18 +36,21 @@ import { debounceTime, startWith, Subject, switchMap } from "rxjs";
     RoutePipe,
     DropdownModule,
     ErrorListComponent,
-    InputTextModule
-],
+    InputTextModule,
+    ConfirmPopupComponent
+  ],
 })
 export class UsersComponent {
   pageSize = 25;
 
   #adminService = inject(AdminService);
+  #confirmationService = inject(ConfirmationService);
+
   #fb = inject(FormBuilder);
 
   form = this.#fb.group({
     email: this.#fb.control(""),
-    userName: this.#fb.control("")
+    userName: this.#fb.control(""),
   });
 
   errors = new Array<string>();
@@ -49,7 +59,7 @@ export class UsersComponent {
   users$ = this.#lazyLoadEventSubject.pipe(
     switchMap(event =>
       this.#adminService.searchUsers({
-        sortBy: event.sortField as SearchAdminUsersSortBy ?? "userName",
+        sortBy: (event.sortField as SearchAdminUsersSortBy) ?? "userName",
         reverseSort: event.sortOrder === -1,
         pageSize: this.pageSize,
         pageNumber: event.first / this.pageSize + 1,
@@ -79,13 +89,21 @@ export class UsersComponent {
     this.#lazyLoadEventSubject.next(event);
   }
 
-  deleteUser(userId: string) {
-    this.#adminService.deleteUser(userId).subscribe(response => {
-      if (!response.result) {
-        this.errors = response.errorMessages;
-        return;
-      }
-      this.#lazyLoadEventSubject.next({ first: 0 });
+  deleteUser(event: any, userId: string) {
+    this.#confirmationService.confirm({
+      header: "Confirm Delete?",
+      message: `Are you sure that you want to delete this user?`,
+      key: userId,
+      target: event.target,
+      accept: () => {
+        this.#adminService.deleteUser(userId).subscribe(response => {
+          if (!response.result) {
+            this.errors = response.errorMessages;
+            return;
+          }
+          this.#lazyLoadEventSubject.next({ first: 0 });
+        });
+      },
     });
   }
 }
