@@ -33,12 +33,6 @@ tags: ["setup", "installation"]
      dotnet restore
      ```
 
-   - Update the database:
-
-     ```bash
-     dotnet ef database update
-     ```
-
    - Run the application:
 
      ```bash
@@ -47,10 +41,10 @@ tags: ["setup", "installation"]
 
 3. **Frontend Setup:**
 
-   - Navigate to the `lightnap-ng` directory:
+   - In a separate console, navigate to the `lightnap-ng` directory:
 
      ```bash
-     cd lightnap-ng
+     cd src/lightnap-ng
      ```
 
    - Install Angular dependencies:
@@ -68,6 +62,10 @@ tags: ["setup", "installation"]
 ## Usage
 
 - Access the application at `http://localhost:4200`.
+- A default administrator account is created with:
+    - **Email**: admin@admin.com
+    - **UserName**: admin
+    - **Password**: A2m!nPassword 
 
 ## Project Structure
 
@@ -81,16 +79,19 @@ tags: ["setup", "installation"]
 
 - **appsettings.json**: Configuration settings for the Web API.
 
+#### DatabaseProvider
+- **DatabaseProvider**: The database provider to use. ("Sqlite" or "SqlServer")
+
 #### ConnectionStrings
 
-- **ConnectionStrings.DefaultConnection**: The connection string for the default database.
+- **ConnectionStrings.DefaultConnection**: The connection string for the database.
 
-#### SiteSettings
+#### ApplicationSettings
 
-- **SiteSettings.AutomaticallyApplyEfMigrations**: Boolean indicating whether to automatically apply EF migrations. (e.g., true)
-- **SiteSettings.RequireTwoFactorForNewUsers**: Boolean indicating whether to require two-factor authentication for new users. (e.g., false)
-- **SiteSettings.SiteUrlRootForEmails**: The root URL used in emails. (e.g., "<https://localhost:4200/>")
-- **SiteSettings.UseSameSiteStrictCookies**: Boolean indicating whether to use SameSite strict cookies. (e.g., false)
+- **ApplicationSettings.AutomaticallyApplyEfMigrations**: true to automatically apply EF migrations.
+- **ApplicationSettings.RequireTwoFactorForNewUsers**: true to require two-factor authentication for new users.
+- **ApplicationSettings.SiteUrlRootForEmails**: The root URL used in emails. (e.g., "<https://localhost:4200/>")
+- **ApplicationSettings.UseSameSiteStrictCookies**: true to use SameSite strict cookies. (e.g., false)
 
 #### Administrators
 
@@ -101,9 +102,9 @@ tags: ["setup", "installation"]
 
 #### Jwt
 
-- **Jwt.Key**: The secret key used for JWT token generation. (e.g., "PutAGuidHereSoYouMeetThe256+BitRequirement")
-- **Jwt.Issuer**: The issuer of the JWT token. (e.g., "<https://www.yourdomain.com>")
-- **Jwt.Audience**: The audience of the JWT token. (e.g., "<https://www.yourdomain.com>")
+- **Jwt.Key**: The secret key used for JWT token generation. (e.g., "Any 32+ Character Key (Like A Guid)+BitRequirement")
+- **Jwt.Issuer**: The issuer of the JWT token. (e.g., "https://www.yourdomain.com")
+- **Jwt.Audience**: The audience of the JWT token. (e.g., "https://www.yourdomain.com")
 - **Jwt.ExpirationMinutes**: The expiration time of the JWT token in minutes. (e.g., 120)
 
 #### Smtp
@@ -112,6 +113,6 @@ tags: ["setup", "installation"]
 - **Smtp.Port**: The SMTP server port. (e.g., 587)
 - **Smtp.EnableSsl**: Boolean indicating whether to enable SSL for SMTP. (e.g., true)
 - **Smtp.User**: The SMTP user. (e.g., "apikey")
-- **Smtp.Password**: The SMTP password or API key. (e.g., "Your SendGrid API Key>")
-- **Smtp.FromEmail**: The email address used for sending emails. (e.g., "<hello@yourdomain.com>")
+- **Smtp.Password**: The SMTP password or API key. (e.g., "Your SendGrid API Key")
+- **Smtp.FromEmail**: The email address used for sending emails. (e.g., "hello@yourdomain.com")
 - **Smtp.FromDisplayName**: The display name used for sending emails. (e.g., "LightNap Team")

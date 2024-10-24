@@ -30,8 +30,8 @@ namespace LightNap.Core.Services.Token
         /// <param name="userManager">The user manager.</param>
         public TokenService(IConfiguration configuration, UserManager<ApplicationUser> userManager)
         {
-            this._configuration = configuration;
-            this._userManager = userManager;
+            this._configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this._userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
 
             var tokenKey = this._configuration.GetRequiredSetting("Jwt:Key");
             if (tokenKey.Length < 32) { throw new ArgumentException("The provided setting 'Jwt:Key' must be at least 32 characters long"); }
@@ -53,10 +53,7 @@ namespace LightNap.Core.Services.Token
         /// <exception cref="ArgumentNullException">Thrown when the user parameter is null.</exception>
         public async Task<string> GenerateAccessTokenAsync(ApplicationUser user)
         {
-            if (user is null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
+            ArgumentNullException.ThrowIfNull(user);
 
             var claims = new List<Claim>
                 {

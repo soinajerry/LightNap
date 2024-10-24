@@ -1,7 +1,6 @@
 ﻿using LightNap.Core.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 
 namespace LightNap.Core.Data
 {
@@ -35,6 +34,8 @@ namespace LightNap.Core.Data
 
             if (this.Database.IsSqlite())
             {
+                // Allow case-insensitive queries for SQLite.
+
                 builder.Entity<ApplicationUser>()
                     .Property(u => u.UserName)
                     .UseCollation("NOCASE");
@@ -45,15 +46,16 @@ namespace LightNap.Core.Data
             }
 
             builder.Entity<RefreshToken>()
-            .HasOne(rt => rt.User)
-            .WithMany(u => u.RefreshTokens)
-            .HasForeignKey(rt => rt.UserId)
-            .IsRequired();
+                .HasOne(rt => rt.User)
+                .WithMany(u => u.RefreshTokens)
+                .HasForeignKey(rt => rt.UserId)
+                .IsRequired();
         }
 
         /// <inheritdoc />
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {
+            // Make sure all DateTime properties are stored as UTC.
             configurationBuilder.Properties<DateTime>().HaveConversion(typeof(UtcValueConverter));
         }
     }

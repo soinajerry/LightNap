@@ -3,7 +3,6 @@ using LightNap.Core.Identity.Dto.Request;
 using LightNap.Core.Interfaces;
 using LightNap.Core.Profile.Dto.Request;
 using LightNap.Core.Profile.Dto.Response;
-using LightNap.WebApi.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,7 +26,7 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(401)]
         public async Task<ActionResult<ApiResponseDto<ProfileDto>>> GetProfile()
         {
-            return await profileService.GetProfile(this.User.GetUserId());
+            return await profileService.GetProfile();
         }
 
         /// <summary>
@@ -46,7 +45,7 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(400)]
         public async Task<ActionResult<ApiResponseDto<ProfileDto>>> UpdateProfile(UpdateProfileDto requestDto)
         {
-            return await profileService.UpdateProfileAsync(this.User.GetUserId(), requestDto);
+            return await profileService.UpdateProfileAsync(requestDto);
         }
 
         /// <summary>
@@ -65,7 +64,7 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(401)]
         public async Task<ActionResult<ApiResponseDto<bool>>> ChangePassword(ChangePasswordRequestDto requestDto)
         {
-            return await profileService.ChangePasswordAsync(this.User.GetUserId(), requestDto);
+            return await profileService.ChangePasswordAsync(requestDto);
         }
     }
 }

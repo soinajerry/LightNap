@@ -1,7 +1,6 @@
 using LightNap.Core.Api;
 using LightNap.Core.Interfaces;
 using LightNap.Core.Profile.Dto.Response;
-using LightNap.WebApi.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +22,7 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(401)]
         public async Task<ActionResult<ApiResponseDto<IList<DeviceDto>>>> GetDevices()
         {
-            return await deviceService.GetDevicesAsync(this.User.GetUserId());
+            return await deviceService.GetDevicesAsync();
         }
 
         /// <summary>
@@ -40,7 +39,7 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(404)]
         public async Task<ActionResult<ApiResponseDto<bool>>> RevokeDevice(string deviceId)
         {
-            return await deviceService.RevokeDeviceAsync(this.User.GetUserId(), deviceId);
+            return await deviceService.RevokeDeviceAsync(deviceId);
         }
 
     }

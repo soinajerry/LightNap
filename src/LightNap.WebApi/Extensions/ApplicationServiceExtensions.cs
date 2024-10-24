@@ -7,6 +7,7 @@ using LightNap.Core.Services.Token;
 using LightNap.DataProviders.Sqlite.Extensions;
 using LightNap.DataProviders.SqlServer.Extensions;
 using LightNap.WebApi.Configuration;
+using LightNap.WebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -28,6 +29,9 @@ namespace LightNap.WebApi.Extensions
         {
             services.AddCors();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUserContext, WebUserContext>();
+            services.AddScoped<ICookieManager, WebCookieManager>();
+            services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IAdministratorService, AdministratorService>();
             services.AddScoped<IDeviceService, DeviceService>();
             services.AddScoped<IProfileService, ProfileService>();
@@ -36,6 +40,13 @@ namespace LightNap.WebApi.Extensions
             return services;
         }
 
+        /// <summary>
+        /// Adds database services to the service collection based on the configured database provider.
+        /// </summary>
+        /// <param name="services">The service collection.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <returns>The updated service collection.</returns>
+        /// <exception cref="ArgumentException">Thrown when the database provider is unsupported.</exception>
         public static IServiceCollection AddDatabaseServices(this IServiceCollection services, IConfiguration configuration)
         {
             string databaseProvider = configuration.GetRequiredSetting("DatabaseProvider");
@@ -52,6 +63,13 @@ namespace LightNap.WebApi.Extensions
             return services;
         }
 
+        /// <summary>
+        /// Adds email services to the service collection based on the configured email provider.
+        /// </summary>
+        /// <param name="services">The service collection.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <returns>The updated service collection.</returns>
+        /// <exception cref="ArgumentException">Thrown when the email provider is unsupported.</exception>
         public static IServiceCollection AddEmailServices(this IServiceCollection services, IConfiguration configuration)
         {
             string emailProvider = configuration.GetRequiredSetting("EmailProvider");

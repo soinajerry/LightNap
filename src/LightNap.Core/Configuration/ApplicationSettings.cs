@@ -1,9 +1,9 @@
-﻿namespace LightNap.WebApi.Configuration
+﻿namespace LightNap.Core.Configuration
 {
     /// <summary>
     /// Represents the site settings for the web API.
     /// </summary>
-    public class SiteSettings
+    public class ApplicationSettings
     {
         /// <summary>
         /// Gets or sets a value indicating whether to automatically apply Entity Framework migrations.

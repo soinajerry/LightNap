@@ -1,3 +1,4 @@
+using LightNap.Core.Configuration;
 using LightNap.Core.Data;
 using LightNap.Core.Identity;
 using LightNap.WebApi.Configuration;
@@ -11,7 +12,7 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<SiteSettings>(builder.Configuration.GetSection("SiteSettings"));
+builder.Services.Configure<ApplicationSettings>(builder.Configuration.GetSection("ApplicationSettings"));
 builder.Services.Configure<List<AdministratorConfiguration>>(builder.Configuration.GetSection("Administrators"));
 
 // Add services to the container.
@@ -69,8 +70,8 @@ var logger = services.GetService<ILogger<Program>>() ?? throw new Exception($"Lo
 try
 {
     var context = services.GetRequiredService<ApplicationDbContext>();
-    var siteSettings = services.GetRequiredService<IOptions<SiteSettings>>();
-    if (siteSettings.Value.AutomaticallyApplyEfMigrations)
+    var applicationSettings = services.GetRequiredService<IOptions<ApplicationSettings>>();
+    if (applicationSettings.Value.AutomaticallyApplyEfMigrations)
     {
         await context.Database.MigrateAsync();
     }
@@ -80,7 +81,7 @@ try
 
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var administratorSettings = services.GetRequiredService<IOptions<List<AdministratorConfiguration>>>();
-    await Seeder.SeedAdministrators(userManager, roleManager, administratorSettings, siteSettings, logger);
+    await Seeder.SeedAdministrators(userManager, roleManager, administratorSettings, applicationSettings, logger);
 }
 catch (Exception ex)
 {

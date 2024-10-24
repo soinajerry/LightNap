@@ -10,17 +10,17 @@ namespace LightNap.Core.Services.Application
     /// <summary>
     /// Service for managing devices.
     /// </summary>
-    public class DeviceService(ApplicationDbContext db) : IDeviceService
+    public class DeviceService(ApplicationDbContext db, IUserContext userContext) : IDeviceService
     {
         /// <summary>
         /// Retrieves the list of devices for the specified user.
         /// </summary>
         /// <param name="requestingUserId">The ID of the user requesting the devices.</param>
         /// <returns>A list of devices associated with the user.</returns>
-        public async Task<ApiResponseDto<IList<DeviceDto>>> GetDevicesAsync(string requestingUserId)
+        public async Task<ApiResponseDto<IList<DeviceDto>>> GetDevicesAsync()
         {
             var tokens = await db.RefreshTokens
-                            .Where(token => token.UserId == requestingUserId && !token.IsRevoked && token.Expires > DateTime.UtcNow)
+                            .Where(token => token.UserId == userContext.GetUserId() && !token.IsRevoked && token.Expires > DateTime.UtcNow)
                             .OrderByDescending(device => device.Expires)
                             .ToListAsync();
 
@@ -33,11 +33,11 @@ namespace LightNap.Core.Services.Application
         /// <param name="requestingUserId">The ID of the user requesting the revocation.</param>
         /// <param name="deviceId">The ID of the device to be revoked.</param>
         /// <returns>A boolean indicating whether the revocation was successful.</returns>
-        public async Task<ApiResponseDto<bool>> RevokeDeviceAsync(string requestingUserId, string deviceId)
+        public async Task<ApiResponseDto<bool>> RevokeDeviceAsync(string deviceId)
         {
             var token = await db.RefreshTokens.FindAsync(deviceId);
 
-            if (token?.UserId == requestingUserId)
+            if (token?.UserId == userContext.GetUserId())
             {
                 token.IsRevoked = true;
                 await db.SaveChangesAsync();

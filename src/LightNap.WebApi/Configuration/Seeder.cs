@@ -1,4 +1,5 @@
-﻿using LightNap.Core.Identity;
+﻿using LightNap.Core.Configuration;
+using LightNap.Core.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Data;
@@ -41,11 +42,11 @@ namespace LightNap.WebApi.Configuration
         /// </summary>
         /// <param name="userManager">The user manager.</param>
         /// <param name="roleManager">The role manager.</param>
-        /// <param name="administratorConfigurations">The administrator configurations.</param>
-        /// <param name="siteSettings">The site settings.</param>
+        /// <param name="administratorConfigurations">The administrators to create and promote.</param>
+        /// <param name="applicationSettings">Settings for the application.</param>
         /// <param name="logger">The logger.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public static async Task SeedAdministrators(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IOptions<List<AdministratorConfiguration>> administratorConfigurations, IOptions<SiteSettings> siteSettings, ILogger logger)
+        public static async Task SeedAdministrators(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IOptions<List<AdministratorConfiguration>> administratorConfigurations, IOptions<ApplicationSettings> applicationSettings, ILogger logger)
         {
             if (administratorConfigurations.Value is null) { return; }
 
@@ -62,7 +63,7 @@ namespace LightNap.WebApi.Configuration
                         UserName = administrator.UserName,
                         CreatedDate = DateTime.UtcNow,
                         LastModifiedDate = DateTime.UtcNow,
-                        TwoFactorEnabled = siteSettings.Value.RequireTwoFactorForNewUsers,
+                        TwoFactorEnabled = applicationSettings.Value.RequireTwoFactorForNewUsers,
                     };
 
                     bool passwordProvided = !string.IsNullOrWhiteSpace(administrator.Password);

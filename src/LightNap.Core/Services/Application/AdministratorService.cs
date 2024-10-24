@@ -81,12 +81,12 @@ namespace LightNap.Core.Services.Application
         /// <summary>
         /// Updates a user.
         /// </summary>
-        /// <param name="id">The ID of the user to update.</param>
+        /// <param name="userId">The ID of the user to update.</param>
         /// <param name="requestDto">The updated user information.</param>
         /// <returns>The updated user details.</returns>
-        public async Task<ApiResponseDto<AdminUserDto>> UpdateUserAsync(string id, UpdateAdminUserDto requestDto)
+        public async Task<ApiResponseDto<AdminUserDto>> UpdateUserAsync(string userId, UpdateAdminUserDto requestDto)
         {
-            var user = await db.Users.FindAsync(id);
+            var user = await db.Users.FindAsync(userId);
             if (user is null) { return ApiResponseDto<AdminUserDto>.CreateError("The specified user was not found."); }
 
             user.UpdateAdminUserDto(requestDto);
@@ -99,11 +99,11 @@ namespace LightNap.Core.Services.Application
         /// <summary>
         /// Deletes a user.
         /// </summary>
-        /// <param name="id">The ID of the user to delete.</param>
+        /// <param name="userId">The ID of the user to delete.</param>
         /// <returns>True if the user was successfully deleted.</returns>
-        public async Task<ApiResponseDto<bool>> DeleteUserAsync(string id)
+        public async Task<ApiResponseDto<bool>> DeleteUserAsync(string userId)
         {
-            var user = await db.Users.FindAsync(id);
+            var user = await db.Users.FindAsync(userId);
             if (user is null) { return ApiResponseDto<bool>.CreateError("The specified user was not found."); }
 
             if (await userManager.IsInRoleAsync(user, ApplicationRoles.Administrator.Name!)) { return ApiResponseDto<bool>.CreateError("You may not delete an Administrator."); }
@@ -127,11 +127,11 @@ namespace LightNap.Core.Services.Application
         /// <summary>
         /// Retrieves the roles for a user.
         /// </summary>
-        /// <param name="id">The ID of the user.</param>
+        /// <param name="userId">The ID of the user.</param>
         /// <returns>The list of roles for the user.</returns>
-        public async Task<ApiResponseDto<IList<string>>> GetRolesForUserAsync(string id)
+        public async Task<ApiResponseDto<IList<string>>> GetRolesForUserAsync(string userId)
         {
-            var user = await db.Users.FindAsync(id);
+            var user = await db.Users.FindAsync(userId);
             if (user is null) { return ApiResponseDto<IList<string>>.CreateError("The specified user was not found."); }
 
             var roles = await userManager.GetRolesAsync(user);

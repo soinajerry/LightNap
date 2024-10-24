@@ -13,19 +13,18 @@ namespace LightNap.Core.Services.Application
     /// <summary>
     /// Service for managing user profiles.
     /// </summary>
-    public class ProfileService(ApplicationDbContext db, UserManager<ApplicationUser> userManager) : IProfileService
+    public class ProfileService(ApplicationDbContext db, UserManager<ApplicationUser> userManager, IUserContext userContext) : IProfileService
     {
         /// <summary>
         /// Changes the password for the specified user.
         /// </summary>
-        /// <param name="requestingUserId">The ID of the user requesting the password change.</param>
         /// <param name="requestDto">The data transfer object containing the current and new passwords.</param>
         /// <returns>An <see cref="ApiResponseDto{T}"/> indicating the success or failure of the operation.</returns>
-        public async Task<ApiResponseDto<bool>> ChangePasswordAsync(string requestingUserId, ChangePasswordRequestDto requestDto)
+        public async Task<ApiResponseDto<bool>> ChangePasswordAsync(ChangePasswordRequestDto requestDto)
         {
             if (requestDto.NewPassword != requestDto.ConfirmNewPassword) { return ApiResponseDto<bool>.CreateError("New password does not match confirmation password."); }
 
-            ApplicationUser? user = await userManager.FindByIdAsync(requestingUserId);
+            ApplicationUser? user = await userManager.FindByIdAsync(userContext.GetUserId());
             if (user is null) { return ApiResponseDto<bool>.CreateError("Unable to change password."); }
 
             var result = await userManager.ChangePasswordAsync(user, requestDto.CurrentPassword, requestDto.NewPassword);
@@ -41,23 +40,21 @@ namespace LightNap.Core.Services.Application
         /// <summary>
         /// Retrieves the profile of the specified user.
         /// </summary>
-        /// <param name="requestingUserId">The ID of the user requesting their profile.</param>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the user's profile.</returns>
-        public async Task<ApiResponseDto<ProfileDto>> GetProfile(string requestingUserId)
+        public async Task<ApiResponseDto<ProfileDto>> GetProfile()
         {
-            var user = await db.Users.FindAsync(requestingUserId);
+            var user = await db.Users.FindAsync(userContext.GetUserId());
             return ApiResponseDto<ProfileDto>.CreateSuccess(user?.ToLoggedInUserDto());
         }
 
         /// <summary>
         /// Updates the profile of the specified user.
         /// </summary>
-        /// <param name="requestingUserId">The ID of the user whose profile is being updated.</param>
         /// <param name="requestDto">The data transfer object containing the updated profile information.</param>
         /// <returns>An <see cref="ApiResponseDto{T}"/> indicating the success or failure of the operation.</returns>
-        public async Task<ApiResponseDto<ProfileDto>> UpdateProfileAsync(string requestingUserId, UpdateProfileDto requestDto)
+        public async Task<ApiResponseDto<ProfileDto>> UpdateProfileAsync(UpdateProfileDto requestDto)
         {
-            var user = await db.Users.FindAsync(requestingUserId);
+            var user = await db.Users.FindAsync(userContext.GetUserId());
             if (user is null) { return ApiResponseDto<ProfileDto>.CreateError("Unable to change password."); }
 
             user.UpdateLoggedInUser(requestDto);
