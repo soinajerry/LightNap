@@ -12,10 +12,11 @@ import { API_URL_ROOT, ROUTE_HELPER } from "@core";
 import { apiResponseInterceptor } from "@core/interceptors/api-response-interceptor";
 import { tokenInterceptor } from "@core/interceptors/token-interceptor";
 import { ConfirmationService, MessageService } from "primeng/api";
+import { BlockUIModule } from "primeng/blockui";
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [AppRoutingModule, BrowserModule, ToastModule],
+  imports: [AppRoutingModule, BrowserModule, ToastModule, BlockUIModule],
   providers: [
     provideAnimations(),
     { provide: API_URL_ROOT, useValue: environment.apiUrlRoot },

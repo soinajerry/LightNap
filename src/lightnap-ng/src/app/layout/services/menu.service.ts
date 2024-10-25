@@ -3,7 +3,7 @@ import { BehaviorSubject, combineLatest, debounceTime, of, startWith, Subject, t
 import { MenuChangeEvent } from "../models/menu-change-event";
 import { MenuItem } from "primeng/api";
 import { ROUTE_HELPER } from "@core";
-import { IdentityService } from "@core/services/identity.service";
+import { IdentityService } from "src/app/identity/services/identity.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Injectable({

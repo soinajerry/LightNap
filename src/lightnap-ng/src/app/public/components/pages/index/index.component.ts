@@ -3,7 +3,7 @@ import { Component, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Router, RouterLink } from "@angular/router";
 import { RoutePipe } from "@core";
-import { IdentityService } from "@core/services/identity.service";
+import { IdentityService } from "src/app/identity/services/identity.service";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { DividerModule } from "primeng/divider";

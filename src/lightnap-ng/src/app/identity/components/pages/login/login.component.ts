@@ -1,16 +1,14 @@
 import { Component, inject } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { ROUTE_HELPER, RoutePipe } from "@core";
-import { IdentityService } from "@core/services/identity.service";
+import { BlockUiService, ErrorListComponent, ROUTE_HELPER, RoutePipe } from "@core";
+import { IdentityService } from "src/app/identity/services/identity.service";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
 import { FocusContentLayout } from "src/app/layout/components/layouts/focus-content-layout/focus-content-layout.component";
 import { LayoutService } from "src/app/layout/services/layout.service";
-import { ErrorListComponent } from "../../../controls/error-list/error-list.component";
-import { BlockUIModule } from "primeng/blockui";
 
 @Component({
   standalone: true,
@@ -25,12 +23,12 @@ import { BlockUIModule } from "primeng/blockui";
     PasswordModule,
     FocusContentLayout,
     ErrorListComponent,
-    BlockUIModule
   ],
 })
 export class LoginComponent {
   layoutService = inject(LayoutService);
   #identityService = inject(IdentityService);
+  #blockUi = inject(BlockUiService);
   #fb = inject(FormBuilder);
   #routeHelper = inject(ROUTE_HELPER);
 
@@ -41,10 +39,9 @@ export class LoginComponent {
   });
 
   errors: Array<string> = [];
-  blockUi = false;
 
   logIn() {
-    this.blockUi = true;
+    this.#blockUi.show({ message: "Logging in..." });
 
     this.#identityService
       .logIn({
@@ -67,7 +64,7 @@ export class LoginComponent {
             this.#routeHelper.navigate("home");
           }
         },
-        complete: () => (this.blockUi = false),
+        complete: () => this.#blockUi.hide(),
       });
   }
 }

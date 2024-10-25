@@ -1,7 +1,7 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, createUrlTreeFromSnapshot } from "@angular/router";
 import { ROUTE_HELPER } from "@core/helpers";
-import { IdentityService } from "@core/services/identity.service";
+import { IdentityService } from "src/app/identity/services/identity.service";
 import { map } from "rxjs";
 
 export const authGuard = (next: ActivatedRouteSnapshot) => {

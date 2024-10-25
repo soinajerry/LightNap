@@ -1,16 +1,14 @@
 import { Component, Input, inject } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { RoutePipe, ROUTE_HELPER } from "@core";
-import { IdentityService } from "@core/services/identity.service";
-import { BlockUIModule } from "primeng/blockui";
+import { RoutePipe, ROUTE_HELPER, BlockUiService, ErrorListComponent } from "@core";
+import { IdentityService } from "src/app/identity/services/identity.service";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputTextModule } from "primeng/inputtext";
 import { AppConfigComponent } from "src/app/layout/components/controls/app-config/app-config.component";
 import { FocusContentLayout } from "src/app/layout/components/layouts/focus-content-layout/focus-content-layout.component";
 import { LayoutService } from "src/app/layout/services/layout.service";
-import { ErrorListComponent } from "../../../controls/error-list/error-list.component";
 
 @Component({
   standalone: true,
@@ -22,7 +20,6 @@ import { ErrorListComponent } from "../../../controls/error-list/error-list.comp
     ButtonModule,
     InputTextModule,
     CheckboxModule,
-    BlockUIModule,
     RoutePipe,
     FocusContentLayout,
     ErrorListComponent,
@@ -30,6 +27,7 @@ import { ErrorListComponent } from "../../../controls/error-list/error-list.comp
 })
 export class VerifyCodeComponent {
   #identityService = inject(IdentityService);
+  #blockUi = inject(BlockUiService);
   #fb = inject(FormBuilder);
   #routeHelper = inject(ROUTE_HELPER);
   layoutService = inject(LayoutService);
@@ -47,7 +45,6 @@ export class VerifyCodeComponent {
     rememberMe: this.#fb.control(false),
   });
 
-  blockUi = false;
   errors: Array<string> = [];
 
   constructor() {
@@ -97,7 +94,7 @@ export class VerifyCodeComponent {
     const value = this.form.value;
     const code = `${value.code1}${value.code2}${value.code3}${value.code4}${value.code5}${value.code6}`;
 
-    this.blockUi = true;
+    this.#blockUi.show({ message: "Verifying code..." });
     this.#identityService
       .verifyCode({
         code,
@@ -119,7 +116,7 @@ export class VerifyCodeComponent {
 
           this.#routeHelper.navigate("home");
         },
-        complete: () => (this.blockUi = false),
+        complete: () => this.#blockUi.hide(),
       });
   }
 }

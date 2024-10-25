@@ -1,7 +1,7 @@
 import { HttpEvent, HttpHandlerFn, HttpRequest } from "@angular/common/http";
 import { inject } from "@angular/core";
 import { API_URL_ROOT } from "@core";
-import { IdentityService } from "@core/services/identity.service";
+import { IdentityService } from "src/app/identity/services/identity.service";
 import { Observable } from "rxjs";
 
 export function tokenInterceptor(request: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {

@@ -1,7 +1,7 @@
 import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest, HttpResponse } from "@angular/common/http";
 import { inject } from "@angular/core";
 import { ROUTE_HELPER, HttpErrorApiResponse } from "@core";
-import { IdentityService } from "@core/services/identity.service";
+import { IdentityService } from "src/app/identity/services/identity.service";
 import { Observable, catchError, of } from "rxjs";
 import { environment } from "src/environments/environment";
 

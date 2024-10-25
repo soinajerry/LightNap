@@ -2,8 +2,8 @@
 import { Component, inject } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { RoutePipe, ROUTE_HELPER } from "@core";
-import { IdentityService } from "@core/services/identity.service";
+import { RoutePipe, ROUTE_HELPER, BlockUiService } from "@core";
+import { IdentityService } from "src/app/identity/services/identity.service";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputTextModule } from "primeng/inputtext";
@@ -28,12 +28,12 @@ import { confirmPasswordValidator } from "@core/helpers/form-helpers";
     AppConfigComponent,
     RoutePipe,
     ErrorListComponent,
-    FocusContentLayout,
-    BlockUIModule
+    FocusContentLayout
 ],
 })
 export class RegisterComponent {
   #identityService = inject(IdentityService);
+    #blockUi = inject(BlockUiService);
   #fb = inject(FormBuilder);
   #routeHelper = inject(ROUTE_HELPER);
   layoutService = inject(LayoutService);
@@ -49,11 +49,10 @@ export class RegisterComponent {
   { validators: [confirmPasswordValidator("password", "confirmPassword")] }
 );
 
-  blockUi = false;
   errors: Array<string> = [];
 
   register() {
-    this.blockUi = true;
+    this.#blockUi.show({ message: "Registering..." });
 
     this.#identityService.register({
         email: this.form.value.email,
@@ -76,7 +75,7 @@ export class RegisterComponent {
           this.#routeHelper.navigate("home");
         }
       },
-      complete: () => (this.blockUi = false),
+      complete: () => this.#blockUi.hide(),
     });
   }
 }

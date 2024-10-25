@@ -1,24 +1,23 @@
 import { Component, inject } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { ROUTE_HELPER, RoutePipe } from "@core";
-import { IdentityService } from "@core/services/identity.service";
-import { BlockUIModule } from "primeng/blockui";
+import { BlockUiService, ErrorListComponent, ROUTE_HELPER, RoutePipe } from "@core";
+import { IdentityService } from "src/app/identity/services/identity.service";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
 import { take } from "rxjs";
 import { FocusContentLayout } from "src/app/layout/components/layouts/focus-content-layout/focus-content-layout.component";
 import { LayoutService } from "src/app/layout/services/layout.service";
-import { ErrorListComponent } from "../../../controls/error-list/error-list.component";
 
 @Component({
   standalone: true,
   templateUrl: "./reset-password.component.html",
-  imports: [ReactiveFormsModule, RouterModule, ButtonModule, PasswordModule, InputTextModule, RoutePipe, FocusContentLayout, BlockUIModule, ErrorListComponent],
+  imports: [ReactiveFormsModule, RouterModule, ButtonModule, PasswordModule, InputTextModule, RoutePipe, FocusContentLayout, ErrorListComponent],
 })
 export class ResetPasswordComponent {
   #identityService = inject(IdentityService);
+  #blockUi = inject(BlockUiService);
   #fb = inject(FormBuilder);
   #routeHelper = inject(ROUTE_HELPER);
   layoutService = inject(LayoutService);
@@ -27,11 +26,10 @@ export class ResetPasswordComponent {
     email: this.#fb.control("", [Validators.required, Validators.email]),
   });
 
-  blockUi = false;
   errors: Array<string> = [];
 
   resetPassword() {
-    this.blockUi = true;
+    this.#blockUi.show({ message: "Resetting password..." });
     this.#identityService
       .resetPassword({ email: this.form.value.email })
       .pipe(take(1))
@@ -47,7 +45,7 @@ export class ResetPasswordComponent {
             }
           }
         },
-        complete: () => (this.blockUi = false),
+        complete: () => this.#blockUi.hide(),
       });
   }
 }

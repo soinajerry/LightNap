@@ -1,6 +1,6 @@
 import { effect, inject, Injectable, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { IdentityService } from "@core/services/identity.service";
+import { IdentityService } from "src/app/identity/services/identity.service";
 import { StyleSettings } from "@profile";
 import { ProfileService } from "@profile/services/profile.service";
 import { filter, Subject } from "rxjs";

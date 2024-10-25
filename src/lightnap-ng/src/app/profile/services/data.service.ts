@@ -8,7 +8,7 @@ import { BrowserSettings, ChangePasswordRequest, Device, Profile, UpdateProfileR
 })
 export class DataService {
   #http = inject(HttpClient);
-  #apiUrlRoot = `${inject(API_URL_ROOT)}public/`;
+  #apiUrlRoot = `${inject(API_URL_ROOT)}profile/`;
 
   changePassword(changePasswordRequest: ChangePasswordRequest) {
     return this.#http.post<ApiResponse<string>>(`${this.#apiUrlRoot}change-password`, changePasswordRequest);
