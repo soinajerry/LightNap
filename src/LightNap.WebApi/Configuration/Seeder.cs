@@ -1,5 +1,5 @@
 ﻿using LightNap.Core.Configuration;
-using LightNap.Core.Identity;
+using LightNap.Core.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Data;

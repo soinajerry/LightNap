@@ -7,7 +7,7 @@ import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
-import { FocusContentLayout } from "src/app/layout/components/controls/focus-content-layout/focus-content-layout.component";
+import { FocusContentLayout } from "src/app/layout/components/layouts/focus-content-layout/focus-content-layout.component";
 import { LayoutService } from "src/app/layout/services/layout.service";
 import { ErrorListComponent } from "../../../controls/error-list/error-list.component";
 import { BlockUIModule } from "primeng/blockui";

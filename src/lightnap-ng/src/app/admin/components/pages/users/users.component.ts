@@ -91,7 +91,7 @@ export class UsersComponent {
 
   deleteUser(event: any, userId: string) {
     this.#confirmationService.confirm({
-      header: "Confirm Delete?",
+      header: "Confirm Delete",
       message: `Are you sure that you want to delete this user?`,
       key: userId,
       target: event.target,

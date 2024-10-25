@@ -1,5 +1,5 @@
-﻿using LightNap.Core.Profile;
-using LightNap.Core.Profile.Dto.Response;
+﻿using LightNap.Core.Profile.Dto.Response;
+using LightNap.Core.Profile.Helpers;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System.Text.Json;
 

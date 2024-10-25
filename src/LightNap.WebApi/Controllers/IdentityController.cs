@@ -1,7 +1,7 @@
 using LightNap.Core.Api;
 using LightNap.Core.Identity.Dto.Request;
 using LightNap.Core.Identity.Dto.Response;
-using LightNap.Core.Interfaces;
+using LightNap.Core.Identity.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LightNap.WebApi.Controllers

@@ -12,7 +12,7 @@ import { AppConfigComponent } from "src/app/layout/components/controls/app-confi
 import { LayoutService } from "src/app/layout/services/layout.service";
 import { BlockUIModule } from "primeng/blockui";
 import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
-import { FocusContentLayout } from "src/app/layout/components/controls/focus-content-layout/focus-content-layout.component";
+import { FocusContentLayout } from "src/app/layout/components/layouts/focus-content-layout/focus-content-layout.component";
 import { confirmPasswordValidator } from "@core/helpers/form-helpers";
 
 @Component({

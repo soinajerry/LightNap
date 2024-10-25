@@ -1,4 +1,4 @@
-using LightNap.Core.Interfaces;
+using LightNap.Core.Public.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LightNap.WebApi.Controllers

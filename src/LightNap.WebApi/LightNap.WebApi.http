@@ -2,7 +2,7 @@
 
 # This will set the token based on the response to the login request. If you're using a tool that
 # does not yet support parsing responses (like VS 2022), then you can set the token here manually.
-#@_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIzYzE0NWJkYy0xNjE2LTQyMWItOTlmZS04OWYyMTFkZjU1MDYiLCJzdWIiOiJUZXN0IiwiZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwianRpIjoiMmQ4ZmM3ZjgtYTkzOS00NGQ0LWExZGMtYzI1YWMzNzE0Nzk1IiwiZXhwIjoxNzI5ODEwOTcwLCJpc3MiOiJodHRwczovL3d3dy55b3VyZG9tYWluLmNvbSIsImF1ZCI6Imh0dHBzOi8vd3d3LnlvdXJkb21haW4uY29tIn0.ck-NAKaBzu7GQmfehFMr2b9G4-ZNekUrhtNi_T5puJo
+#@_token = LiteralTokenWithoutQuotes
 @_token = {{GetToken.response.body.result}}
 
 ### Get a new bearer token. You will need to call login or register first so the

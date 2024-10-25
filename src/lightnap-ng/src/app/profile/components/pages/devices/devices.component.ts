@@ -24,7 +24,7 @@ export class DevicesComponent {
 
   revokeDevice(event: any, deviceId: string) {
     this.#confirmationService.confirm({
-        header: "Confirm Revoke?",
+        header: "Confirm Revoke",
         message: `Are you sure that you want to revoke this device?`,
         target: event.target,
         key: deviceId,

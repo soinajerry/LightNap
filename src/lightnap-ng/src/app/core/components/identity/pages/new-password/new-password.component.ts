@@ -11,7 +11,7 @@ import { CheckboxModule } from "primeng/checkbox";
 import { PasswordModule } from "primeng/password";
 import { take } from "rxjs";
 import { AppConfigComponent } from "src/app/layout/components/controls/app-config/app-config.component";
-import { FocusContentLayout } from "src/app/layout/components/controls/focus-content-layout/focus-content-layout.component";
+import { FocusContentLayout } from "src/app/layout/components/layouts/focus-content-layout/focus-content-layout.component";
 import { LayoutService } from "src/app/layout/services/layout.service";
 
 @Component({

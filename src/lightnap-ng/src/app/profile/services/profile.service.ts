@@ -10,6 +10,20 @@ import { ApiResponse, ErrorApiResponse } from "@core";
 export class ProfileService {
   #dataService = inject(DataService);
 
+  #defaultBrowserSettings: BrowserSettings = {
+    style: {
+      ripple: true,
+      inputStyle: "outlined",
+      menuMode: "static",
+      colorScheme: "light",
+      theme: "lara-light-indigo",
+      scale: 14,
+    },
+    extended: {},
+    features: {},
+    preferences: {}
+  };
+
   #settingsResponse?: ApiResponse<BrowserSettings>;
 
   getProfile() {
@@ -39,6 +53,7 @@ export class ProfileService {
       tap(response => {
         if (response.result) {
           this.#settingsResponse = response;
+          this.#settingsResponse.result = { ...this.#defaultBrowserSettings, ...response.result };
         }
       })
     );

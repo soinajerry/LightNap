@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { adminGuard } from '@core/guards/admin.guard';
 import { authGuard } from '@core/guards/auth.guard';
-import { AppLayoutComponent } from './layout/components/controls/app-layout/app-layout.component';
+import { AppLayoutComponent } from './layout/components/layouts/app-layout/app-layout.component';
 
 @NgModule({
     imports: [
@@ -12,7 +12,7 @@ import { AppLayoutComponent } from './layout/components/controls/app-layout/app-
                 component: AppLayoutComponent,
                 canActivate: [authGuard],
                 children: [
-                    { path: "home", data: { breadcrumb: "Home" }, loadChildren: () => import("./secure/components/pages/routes").then(m => m.ROUTES) },
+                    { path: "home", data: { breadcrumb: "Home" }, loadChildren: () => import("./user/components/pages/routes").then(m => m.ROUTES) },
                     { path: "profile", data: { breadcrumb: "Profile" }, loadChildren: () => import("./profile/components/pages/routes").then(m => m.ROUTES) },
                 ]
             },

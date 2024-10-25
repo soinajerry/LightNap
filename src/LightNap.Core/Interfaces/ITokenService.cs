@@ -1,4 +1,4 @@
-﻿using LightNap.Core.Identity;
+﻿using LightNap.Core.Identity.Models;
 
 namespace LightNap.Core.Interfaces
 {

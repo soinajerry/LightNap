@@ -1,4 +1,5 @@
-﻿using LightNap.Core.Api;
+﻿using LightNap.Core.Administrator.Models;
+using LightNap.Core.Api;
 using LightNap.Core.Identity;
 
 namespace LightNap.Core.Administrator.Dto.Request
@@ -6,7 +7,7 @@ namespace LightNap.Core.Administrator.Dto.Request
     /// <summary>
     /// Represents a request to search users.
     /// </summary>
-    public class SearchUsersRequestDto : PaginationRequestBase
+    public class SearchUsersRequestDto : PaginationRequestDtoBase
     {
         /// <summary>
         /// Gets or sets the email of the user.

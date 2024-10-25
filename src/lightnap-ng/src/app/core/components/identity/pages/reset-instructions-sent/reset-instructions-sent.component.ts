@@ -1,15 +1,11 @@
-
-import { Component, inject } from "@angular/core";
+import { Component } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { RoutePipe } from "@core";
-import { AppConfigComponent } from "src/app/layout/components/controls/app-config/app-config.component";
-import { LayoutService } from "src/app/layout/services/layout.service";
+import { FocusContentLayout } from "src/app/layout/components/layouts/focus-content-layout/focus-content-layout.component";
 
 @Component({
   standalone: true,
   templateUrl: "./reset-instructions-sent.component.html",
-  imports: [AppConfigComponent, RouterModule, RoutePipe],
+  imports: [RouterModule, RoutePipe, FocusContentLayout],
 })
-export class ResetInstructionsSentComponent {
-  layoutService = inject(LayoutService);
-}
+export class ResetInstructionsSentComponent {}

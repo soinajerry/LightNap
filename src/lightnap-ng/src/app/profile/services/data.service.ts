@@ -1,9 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import {
-    API_URL_ROOT,
-    ApiResponse,
-} from "@core";
+import { API_URL_ROOT, ApiResponse } from "@core";
 import { BrowserSettings, ChangePasswordRequest, Device, Profile, UpdateProfileRequest } from "@profile";
 
 @Injectable({
@@ -11,7 +8,7 @@ import { BrowserSettings, ChangePasswordRequest, Device, Profile, UpdateProfileR
 })
 export class DataService {
   #http = inject(HttpClient);
-  #apiUrlRoot = `${inject(API_URL_ROOT)}profile/`;
+  #apiUrlRoot = `${inject(API_URL_ROOT)}public/`;
 
   changePassword(changePasswordRequest: ChangePasswordRequest) {
     return this.#http.post<ApiResponse<string>>(`${this.#apiUrlRoot}change-password`, changePasswordRequest);
@@ -40,5 +37,4 @@ export class DataService {
   updateSettings(browserSettings: BrowserSettings) {
     return this.#http.put<ApiResponse<boolean>>(`${this.#apiUrlRoot}settings`, browserSettings);
   }
-
 }

@@ -1,9 +1,9 @@
 using LightNap.Core.Administrator.Dto.Request;
 using LightNap.Core.Administrator.Dto.Response;
+using LightNap.Core.Administrator.Interfaces;
 using LightNap.Core.Api;
-using LightNap.Core.Identity;
 using LightNap.Core.Identity.Dto.Response;
-using LightNap.Core.Interfaces;
+using LightNap.Core.Identity.Models;
 using LightNap.WebApi.Configuration;
 using LightNap.WebApi.Extensions;
 using Microsoft.AspNetCore.Authorization;

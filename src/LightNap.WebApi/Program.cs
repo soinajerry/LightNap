@@ -1,6 +1,6 @@
 using LightNap.Core.Configuration;
 using LightNap.Core.Data;
-using LightNap.Core.Identity;
+using LightNap.Core.Identity.Models;
 using LightNap.WebApi.Configuration;
 using LightNap.WebApi.Extensions;
 using LightNap.WebApi.Middleware;
