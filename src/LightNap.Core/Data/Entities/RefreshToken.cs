@@ -1,4 +1,4 @@
-﻿namespace LightNap.Core.Identity.Models
+﻿namespace LightNap.Core.Data.Entities
 {
     /// <summary>
     /// Represents a refresh token used for authentication.

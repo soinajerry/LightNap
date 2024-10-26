@@ -1,6 +1,6 @@
 ﻿using LightNap.Core.Administrator.Dto.Request;
 using LightNap.Core.Administrator.Dto.Response;
-using LightNap.Core.Identity.Models;
+using LightNap.Core.Data.Entities;
 using LightNap.Core.Profile.Dto.Request;
 using LightNap.Core.Profile.Dto.Response;
 

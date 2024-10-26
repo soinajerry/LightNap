@@ -1,10 +1,10 @@
 ﻿using LightNap.Core.Api;
 using LightNap.Core.Configuration;
 using LightNap.Core.Data;
+using LightNap.Core.Data.Entities;
 using LightNap.Core.Identity.Dto.Request;
 using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Identity.Interfaces;
-using LightNap.Core.Identity.Models;
 using LightNap.Core.Interfaces;
 using LightNap.Core.Profile.Dto.Response;
 using Microsoft.AspNetCore.Identity;

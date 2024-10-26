@@ -1,4 +1,5 @@
-﻿using LightNap.Core.Identity.Models;
+﻿using LightNap.Core.Data.Converters;
+using LightNap.Core.Data.Entities;
 using LightNap.Core.Profile.Dto.Response;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

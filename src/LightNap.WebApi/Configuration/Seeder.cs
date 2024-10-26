@@ -1,5 +1,5 @@
 ﻿using LightNap.Core.Configuration;
-using LightNap.Core.Identity.Models;
+using LightNap.Core.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Data;
@@ -12,12 +12,27 @@ namespace LightNap.WebApi.Configuration
     public static class Seeder
     {
         /// <summary>
+        /// Seeds application content for development purposes.
+        /// </summary>
+        /// <param name="services">The service provider.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public static Task SeedDevelopmentContentAsync(
+        // Suppress CS9113 warning for unused parameter 'services'. Remove this when actually using the parameter.
+#pragma warning disable CS9113
+        IServiceProvider services
+#pragma warning restore CS9113
+            )
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
         /// Seeds the roles in the application.
         /// </summary>
         /// <param name="roleManager">The role manager.</param>
         /// <param name="logger">The logger.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public static async Task SeedRoles(RoleManager<ApplicationRole> roleManager, ILogger logger)
+        public static async Task SeedRolesAsync(RoleManager<ApplicationRole> roleManager, ILogger logger)
         {
             foreach (ApplicationRole role in ApplicationRoles.All)
             {
@@ -46,7 +61,7 @@ namespace LightNap.WebApi.Configuration
         /// <param name="applicationSettings">Settings for the application.</param>
         /// <param name="logger">The logger.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public static async Task SeedAdministrators(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IOptions<List<AdministratorConfiguration>> administratorConfigurations, IOptions<ApplicationSettings> applicationSettings, ILogger logger)
+        public static async Task SeedAdministratorsAsync(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IOptions<List<AdministratorConfiguration>> administratorConfigurations, IOptions<ApplicationSettings> applicationSettings, ILogger logger)
         {
             if (administratorConfigurations.Value is null) { return; }
 

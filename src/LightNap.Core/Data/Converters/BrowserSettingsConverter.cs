@@ -3,7 +3,7 @@ using LightNap.Core.Profile.Helpers;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System.Text.Json;
 
-namespace LightNap.Core.Data
+namespace LightNap.Core.Data.Converters
 {
     internal class BrowserSettingsConverter : ValueConverter<BrowserSettingsDto, string>
     {

@@ -1,6 +1,6 @@
 using LightNap.Core.Configuration;
 using LightNap.Core.Data;
-using LightNap.Core.Identity.Models;
+using LightNap.Core.Data.Entities;
 using LightNap.WebApi.Configuration;
 using LightNap.WebApi.Extensions;
 using LightNap.WebApi.Middleware;
@@ -77,11 +77,16 @@ try
     }
 
     var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
-    await Seeder.SeedRoles(roleManager, logger);
+    await Seeder.SeedRolesAsync(roleManager, logger);
 
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var administratorSettings = services.GetRequiredService<IOptions<List<AdministratorConfiguration>>>();
-    await Seeder.SeedAdministrators(userManager, roleManager, administratorSettings, applicationSettings, logger);
+    await Seeder.SeedAdministratorsAsync(userManager, roleManager, administratorSettings, applicationSettings, logger);
+
+    if (app.Environment.IsDevelopment())
+    {
+        await Seeder.SeedDevelopmentContentAsync(services);
+    }
 }
 catch (Exception ex)
 {

@@ -1,4 +1,4 @@
-﻿using LightNap.Core.Identity.Models;
+﻿using LightNap.Core.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace LightNap.Core.Tests

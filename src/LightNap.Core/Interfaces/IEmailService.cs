@@ -1,4 +1,4 @@
-﻿using LightNap.Core.Identity.Models;
+﻿using LightNap.Core.Data.Entities;
 using System.Net.Mail;
 
 namespace LightNap.Core.Interfaces

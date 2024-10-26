@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace LightNap.Core.Data
+namespace LightNap.Core.Data.Converters
 {
     /// <summary>
     /// Converts DateTime values to UTC DateTime values and vice versa. This ensures DateTimes going into EF are marked as UTC.

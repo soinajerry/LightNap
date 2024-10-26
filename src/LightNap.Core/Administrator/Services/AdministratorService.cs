@@ -4,9 +4,9 @@ using LightNap.Core.Administrator.Interfaces;
 using LightNap.Core.Administrator.Models;
 using LightNap.Core.Api;
 using LightNap.Core.Data;
+using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;
 using LightNap.Core.Identity.Dto.Response;
-using LightNap.Core.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -159,7 +159,7 @@ namespace LightNap.Core.Administrator.Services
         /// <returns>True if the user was successfully added to the role.</returns>
         public async Task<ApiResponseDto<bool>> AddUserToRoleAsync(string role, string userId)
         {
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await db.Users.FindAsync(userId);
             if (user is null) { return ApiResponseDto<bool>.CreateError("The specified user was not found."); }
 
             var result = await userManager.AddToRoleAsync(user, role);
@@ -179,7 +179,7 @@ namespace LightNap.Core.Administrator.Services
         /// <returns>True if the user was successfully removed from the role.</returns>
         public async Task<ApiResponseDto<bool>> RemoveUserFromRoleAsync(string role, string userId)
         {
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await db.Users.FindAsync(userId);
             if (user is null) { return ApiResponseDto<bool>.CreateError("The specified user was not found."); }
 
             var result = await userManager.RemoveFromRoleAsync(user, role);

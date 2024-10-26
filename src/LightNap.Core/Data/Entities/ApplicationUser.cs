@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using System.Diagnostics.CodeAnalysis;
 
-namespace LightNap.Core.Identity.Models
+namespace LightNap.Core.Data.Entities
 {
     /// <summary>
     /// Represents an application user with additional properties.

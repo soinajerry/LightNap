@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Identity\Models\" />
     <Folder Include="Profile\Models\" />
     <Folder Include="Public\Models\" />
     <Folder Include="Public\Dto\" />

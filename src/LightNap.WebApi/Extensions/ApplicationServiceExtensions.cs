@@ -1,9 +1,9 @@
 ﻿using LightNap.Core.Administrator.Interfaces;
 using LightNap.Core.Administrator.Services;
 using LightNap.Core.Data;
+using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;
 using LightNap.Core.Identity.Interfaces;
-using LightNap.Core.Identity.Models;
 using LightNap.Core.Identity.Services;
 using LightNap.Core.Interfaces;
 using LightNap.Core.Profile.Interfaces;

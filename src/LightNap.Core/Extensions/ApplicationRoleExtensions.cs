@@ -1,5 +1,5 @@
-﻿using LightNap.Core.Identity.Dto.Response;
-using LightNap.Core.Identity.Models;
+﻿using LightNap.Core.Data.Entities;
+using LightNap.Core.Identity.Dto.Response;
 
 namespace LightNap.Core.Extensions
 {

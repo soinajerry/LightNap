@@ -1,4 +1,4 @@
-﻿using LightNap.Core.Identity.Models;
+﻿using LightNap.Core.Data.Entities;
 using LightNap.Core.Profile.Dto.Response;
 
 namespace LightNap.Core.Extensions
