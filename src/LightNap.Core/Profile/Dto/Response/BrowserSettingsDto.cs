@@ -29,5 +29,15 @@
         /// Contains extended settings that might be less commonly set and/or temporary.
         /// </summary>
         public Dictionary<string, object> Extended { get; set; } = [];
+
+        public BrowserSettingsDto()
+        {
+            this.Style["colorScheme"] = "light";
+            this.Style["ripple"] = true;
+            this.Style["inputStyle"] = "outlined";
+            this.Style["menuMode"] = "static";
+            this.Style["theme"] = "lara-light-indigo";
+            this.Style["scale"] = 14;
+        }
     }
 }

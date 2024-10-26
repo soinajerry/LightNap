@@ -58,6 +58,9 @@ namespace LightNap.WebApi.Extensions
             string databaseProvider = configuration.GetRequiredSetting("DatabaseProvider");
             switch (databaseProvider)
             {
+                case "InMemory":
+                    services.AddLightNapInMemoryDatabase();
+                    break;
                 case "Sqlite":
                     services.AddLightNapSqlite(configuration);
                     break;

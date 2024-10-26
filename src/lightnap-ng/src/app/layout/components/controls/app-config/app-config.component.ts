@@ -33,40 +33,40 @@ export class AppConfigComponent {
     get scale(): number {
         return this.layoutService.config().scale;
     }
-    set scale(_val: number) {
+    set scale(val: number) {
         this.layoutService.config.update((config) => ({
             ...config,
-            scale: _val,
+            scale: val,
         }));
     }
 
     get menuMode(): string {
         return this.layoutService.config().menuMode;
     }
-    set menuMode(_val: string) {
+    set menuMode(val: string) {
         this.layoutService.config.update((config) => ({
             ...config,
-            menuMode: _val,
+            menuMode: val,
         }));
     }
 
     get inputStyle(): string {
         return this.layoutService.config().inputStyle;
     }
-    set inputStyle(_val: string) {
+    set inputStyle(val: string) {
         this.layoutService.config.update((config) => ({
             ...config,
-            inputStyle: _val,
+            inputStyle: val,
         }));
     }
 
     get ripple(): boolean {
         return this.layoutService.config().ripple;
     }
-    set ripple(_val: boolean) {
+    set ripple(val: boolean) {
         this.layoutService.config.update((config) => ({
             ...config,
-            ripple: _val,
+            ripple: val,
         }));
     }
 

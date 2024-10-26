@@ -2,6 +2,7 @@ using LightNap.Core.Administrator.Dto.Request;
 using LightNap.Core.Administrator.Services;
 using LightNap.Core.Api;
 using LightNap.Core.Data;
+using LightNap.Core.Extensions;
 using LightNap.Core.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -25,11 +26,11 @@ namespace LightNap.Core.Tests
         public void TestInitialize()
         {
             var services = new ServiceCollection();
-            services.AddLogging();
-            services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("InMemoryDb"));
-            services.AddIdentity<ApplicationUser, ApplicationRole>()
-                    .AddEntityFrameworkStores<ApplicationDbContext>()
-                    .AddDefaultTokenProviders();
+            services.AddLogging()
+                .AddLightNapInMemoryDatabase()
+                .AddIdentity<ApplicationUser, ApplicationRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             var serviceProvider = services.BuildServiceProvider();
             this._dbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();

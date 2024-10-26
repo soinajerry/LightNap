@@ -6,11 +6,14 @@ import { Observable, catchError, of } from "rxjs";
 import { environment } from "src/environments/environment";
 
 export function apiResponseInterceptor(request: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
+  const identityService = inject(IdentityService);
+  const routeHelper = inject(ROUTE_HELPER);
+
   return next(request).pipe(
     catchError(error => {
       if (error.status === 401) {
-        inject(IdentityService).logOut();
-        inject(ROUTE_HELPER).navigate("login");
+        identityService.logOut();
+        routeHelper.navigate("login");
       }
 
       if (!environment.production) {

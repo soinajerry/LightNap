@@ -21,14 +21,7 @@ export class LayoutService {
   identityService = inject(IdentityService);
   profileService = inject(ProfileService);
 
-  #styleSettings: StyleSettings = {
-    ripple: true,
-    inputStyle: "outlined",
-    menuMode: "static",
-    colorScheme: "light",
-    theme: "lara-light-indigo",
-    scale: 14,
-  };
+  #styleSettings = this.profileService.getDefaultStyleSettings();
 
   config = signal<StyleSettings>(this.#styleSettings);
 
@@ -59,16 +52,15 @@ export class LayoutService {
 
     this.identityService
       .watchLoggedIn$()
-      .pipe(
-        takeUntilDestroyed(),
-        filter(loggedIn => loggedIn)
-      )
-      .subscribe(() => {
-        this.profileService.getSettings().subscribe(response => {
-          if (response.result.style) {
+      .pipe(takeUntilDestroyed())
+      .subscribe(loggedIn => {
+        if (loggedIn) {
+          this.profileService.getSettings().subscribe(response => {
             this.config.set(response.result.style);
-          }
-        });
+          });
+        } else {
+          this.config.set(this.profileService.getDefaultStyleSettings());
+        }
       });
   }
 
@@ -123,13 +115,13 @@ export class LayoutService {
     this.#configUpdate.next(this.config());
 
     if (this.profileService.hasLoadedStyleSettings()) {
-        this.profileService.updateStyleSettings(this.#styleSettings).subscribe({
-          next: response => {
-            if (!response.result) {
-              console.error("Unable to save settings", response.errorMessages);
-            }
-          },
-        });
+      this.profileService.updateStyleSettings(this.#styleSettings).subscribe({
+        next: response => {
+          if (!response.result) {
+            console.error("Unable to save settings", response.errorMessages);
+          }
+        },
+      });
     }
   }
 

@@ -1,15 +1,18 @@
 import { inject, Injectable } from "@angular/core";
+import { ApiResponse, IdentityService } from "@core";
 import { BrowserSettings, ChangePasswordRequest, StyleSettings, UpdateProfileRequest } from "@profile";
+import { filter, of, switchMap, tap } from "rxjs";
 import { DataService } from "./data.service";
-import { delay, map, of, switchMap, tap } from "rxjs";
-import { ApiResponse, ErrorApiResponse } from "@core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Injectable({
   providedIn: "root",
 })
 export class ProfileService {
   #dataService = inject(DataService);
+  #identityService = inject(IdentityService);
 
+  // This should be kept in sync with the server-side BrowserSettings class.
   #defaultBrowserSettings: BrowserSettings = {
     style: {
       ripple: true,
@@ -21,10 +24,22 @@ export class ProfileService {
     },
     extended: {},
     features: {},
-    preferences: {}
+    preferences: {},
   };
 
   #settingsResponse?: ApiResponse<BrowserSettings>;
+
+  constructor() {
+    this.#identityService
+      .watchLoggedIn$()
+      .pipe(
+        takeUntilDestroyed(),
+        filter(loggedIn => !loggedIn)
+      )
+      .subscribe(() => {
+        this.#settingsResponse = undefined;
+      });
+  }
 
   getProfile() {
     return this.#dataService.getProfile();
@@ -51,10 +66,7 @@ export class ProfileService {
 
     return this.#dataService.getSettings().pipe(
       tap(response => {
-        if (response.result) {
-          this.#settingsResponse = response;
-          this.#settingsResponse.result = { ...this.#defaultBrowserSettings, ...response.result };
-        }
+        this.#settingsResponse = JSON.parse(JSON.stringify(response));
       })
     );
   }
@@ -67,12 +79,16 @@ export class ProfileService {
   }
 
   updateStyleSettings(styleSettings: StyleSettings) {
-    return this.#dataService.getSettings().pipe(
+    return this.getSettings().pipe(
       switchMap(response => {
         if (!response.result || JSON.stringify(response.result.style) === JSON.stringify(styleSettings)) return of(response);
         return this.updateSettings({ ...response.result, style: styleSettings });
       })
     );
+  }
+
+  getDefaultStyleSettings() {
+    return JSON.parse(JSON.stringify(this.#defaultBrowserSettings.style));
   }
 
   hasLoadedStyleSettings() {
