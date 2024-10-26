@@ -1,0 +1,287 @@
+using LightNap.Core.Administrator.Dto.Request;
+using LightNap.Core.Administrator.Services;
+using LightNap.Core.Api;
+using LightNap.Core.Data;
+using LightNap.Core.Identity.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System.Data;
+
+namespace LightNap.Core.Tests
+{
+    [TestClass]
+    public class AdministratorServiceTests
+    {
+        // These will be initialized during TestInitialize.
+#pragma warning disable CS8618
+        private RoleManager<ApplicationRole> _roleManager;
+        private UserManager<ApplicationUser> _userManager;
+        private ApplicationDbContext _dbContext;
+        private AdministratorService _administratorService;
+#pragma warning restore CS8618
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            var services = new ServiceCollection();
+            services.AddLogging();
+            services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("InMemoryDb"));
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
+                    .AddEntityFrameworkStores<ApplicationDbContext>()
+                    .AddDefaultTokenProviders();
+
+            var serviceProvider = services.BuildServiceProvider();
+            this._dbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            this._userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            this._roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+            this._administratorService = new AdministratorService(this._userManager, this._dbContext);
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            this._dbContext.Database.EnsureDeleted();
+            this._dbContext.Dispose();
+        }
+
+        [TestMethod]
+        public async Task GetUserAsync_UserExists_ReturnsUser()
+        {
+            // Arrange
+            var userId = "test-user-id";
+            await TestHelper.CreateTestUserAsync(this._userManager, userId);
+
+            // Act
+            var result = await this._administratorService.GetUserAsync(userId);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(ApiResponseType.Success, result.Type);
+            Assert.IsNotNull(result.Result);
+            Assert.AreEqual(userId, result.Result.Id);
+        }
+
+        [TestMethod]
+        public async Task GetUserAsync_UserDoesNotExist_ReturnsNull()
+        {
+            // Arrange
+            var userId = "non-existent-user-id";
+
+            // Act
+            var result = await this._administratorService.GetUserAsync(userId);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(ApiResponseType.Success, result.Type);
+            Assert.IsNull(result.Result);
+        }
+
+        [TestMethod]
+        public async Task UpdateUserAsync_UserExists_UpdatesUser()
+        {
+            // Arrange
+            var userId = "test-user-id";
+            UpdateAdminUserDto updateDto = new();
+            await TestHelper.CreateTestUserAsync(this._userManager, userId);
+
+            // Act
+            var result = await this._administratorService.UpdateUserAsync(userId, updateDto);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(ApiResponseType.Success, result.Type);
+            Assert.IsNotNull(result.Result);
+            Assert.AreEqual(userId, result.Result.Id);
+        }
+
+        [TestMethod]
+        public async Task UpdateUserAsync_UserDoesNotExist_ReturnsError()
+        {
+            // Arrange
+            var userId = "non-existent-user-id";
+            var updateDto = new UpdateAdminUserDto();
+
+            // Act
+            var result = await this._administratorService.UpdateUserAsync(userId, updateDto);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(ApiResponseType.Error, result.Type);
+            Assert.IsNull(result.Result);
+        }
+
+        [TestMethod]
+        public async Task DeleteUserAsync_UserExists_DeletesUser()
+        {
+            // Arrange
+            var userId = "test-user-id";
+            await TestHelper.CreateTestUserAsync(this._userManager, userId);
+
+            // Act
+            var result = await this._administratorService.DeleteUserAsync(userId);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(ApiResponseType.Success, result.Type);
+            Assert.IsTrue(result.Result);
+        }
+
+        [TestMethod]
+        public async Task DeleteUserAsync_UserDoesNotExist_ReturnsError()
+        {
+            // Arrange
+            var userId = "non-existent-user-id";
+
+            // Act
+            var result = await this._administratorService.DeleteUserAsync(userId);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(ApiResponseType.Error, result.Type);
+            Assert.IsFalse(result.Result);
+        }
+
+        [TestMethod]
+        public async Task AddUserToRoleAsync_UserAndRoleExist_AddsUserToRole()
+        {
+            // Arrange
+            var userId = "test-user-id";
+            var role = "test-role";
+            await TestHelper.CreateTestUserAsync(this._userManager, userId);
+            await TestHelper.CreateTestRoleAsync(this._roleManager, role);
+
+            // Act
+            var result = await this._administratorService.AddUserToRoleAsync(role, userId);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(ApiResponseType.Success, result.Type);
+            Assert.IsTrue(result.Result);
+        }
+
+        [TestMethod]
+        public async Task AddUserToRoleAsync_UserDoesNotExist_ReturnsError()
+        {
+            // Arrange
+            var userId = "non-existent-user-id";
+            var role = "test-role";
+
+            // Act
+            var result = await this._administratorService.AddUserToRoleAsync(role, userId);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(ApiResponseType.Error, result.Type);
+            Assert.IsFalse(result.Result);
+        }
+
+        [TestMethod]
+        public async Task SearchUsersAsync_ValidRequest_ReturnsPagedResponse()
+        {
+            // Arrange
+            var requestDto = new SearchUsersRequestDto { Email = "example" };
+            List<ApplicationUser> users =
+            [
+                new("testuser1", "test1@example.com", true) { Id = "test-user-id1" },
+                new("testuser2", "test2@exNOTample.com", true) { Id = "test-user-id2" },
+                new("testuser3", "test3@example.com", true) { Id = "test-user-id3" }
+            ];
+
+            await Task.WhenAll(users.Select(user => this._userManager.CreateAsync(user)));
+
+            // Act
+            var result = await this._administratorService.SearchUsersAsync(requestDto);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(ApiResponseType.Success, result.Type);
+            Assert.IsNotNull(result.Result);
+            Assert.AreEqual(2, result.Result.TotalCount);
+        }
+
+        [TestMethod]
+        public void GetRoles_ReturnsRoles()
+        {
+            // Arrange
+            var roles = ApplicationRoles.All;
+
+            // Act
+            var result = this._administratorService.GetRoles();
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(ApiResponseType.Success, result.Type);
+            Assert.AreEqual(roles.Count, result.Result!.Count);
+
+            for (int i = 0; i < roles.Count; i++)
+            {
+                Assert.AreEqual(roles[i].Name, result.Result[i].Name);
+                Assert.AreEqual(roles[i].DisplayName, result.Result[i].DisplayName);
+                Assert.AreEqual(roles[i].Description, result.Result[i].Description);
+            }
+        }
+
+        [TestMethod]
+        public async Task GetRolesForUserAsync_UserExists_ReturnsRoles()
+        {
+            // Arrange
+            var userId = "test-user-id";
+            List<string> roles = ["Admin", "User"];
+            var user = await TestHelper.CreateTestUserAsync(this._userManager, userId);
+
+            await TestHelper.CreateTestRoleAsync(this._roleManager, roles[0]);
+            await TestHelper.CreateTestRoleAsync(this._roleManager, roles[1]);
+            await this._userManager.AddToRolesAsync(user, roles);
+
+            // Act
+            var result = await this._administratorService.GetRolesForUserAsync(userId);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(ApiResponseType.Success, result.Type);
+            Assert.AreEqual(2, result.Result!.Count);
+        }
+
+        [TestMethod]
+        public async Task GetUsersInRoleAsync_RoleExists_ReturnsUsers()
+        {
+            // Arrange
+            var role = "test-role";
+            await TestHelper.CreateTestRoleAsync(this._roleManager, role);
+            var user1 = await TestHelper.CreateTestUserAsync(this._userManager, "test-user-id-1");
+            var user2 = await TestHelper.CreateTestUserAsync(this._userManager, "test-user-id-2");
+            await this._userManager.AddToRoleAsync(user1, role);
+            await this._userManager.AddToRoleAsync(user2, role);
+
+            // Act
+            var result = await this._administratorService.GetUsersInRoleAsync(role);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(ApiResponseType.Success, result.Type);
+            Assert.AreEqual(2, result.Result!.Count);
+        }
+
+        [TestMethod]
+        public async Task RemoveUserFromRoleAsync_UserAndRoleExist_RemovesUserFromRole()
+        {
+            // Arrange
+            var userId = "test-user-id";
+            var role = "test-role";
+            await TestHelper.CreateTestRoleAsync(this._roleManager, role);
+            var user = await TestHelper.CreateTestUserAsync(this._userManager, userId);
+            await this._userManager.AddToRoleAsync(user, role);
+
+            // Act
+            var result = await this._administratorService.RemoveUserFromRoleAsync(role, userId);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(ApiResponseType.Success, result.Type);
+            Assert.IsTrue(result.Result);
+        }
+
+
+    }
+}

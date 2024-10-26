@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.DataProviders.SqlS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.MaintenanceService", "LightNap.MaintenanceService\LightNap.MaintenanceService.csproj", "{BFE9336E-F171-40B7-8887-1BC7A0242E2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightNap.DataProviders.Sqlite", "LightNap.DataProviders.Sqlite\LightNap.DataProviders.Sqlite.csproj", "{2346CF84-901E-40EC-8970-318CA75D6B83}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.DataProviders.Sqlite", "LightNap.DataProviders.Sqlite\LightNap.DataProviders.Sqlite.csproj", "{2346CF84-901E-40EC-8970-318CA75D6B83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightNap.Core.Tests", "LightNap.Core.Tests\LightNap.Core.Tests.csproj", "{129FA762-2B43-4190-96C6-3D6065B273BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{2346CF84-901E-40EC-8970-318CA75D6B83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2346CF84-901E-40EC-8970-318CA75D6B83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2346CF84-901E-40EC-8970-318CA75D6B83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{129FA762-2B43-4190-96C6-3D6065B273BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{129FA762-2B43-4190-96C6-3D6065B273BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{129FA762-2B43-4190-96C6-3D6065B273BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{129FA762-2B43-4190-96C6-3D6065B273BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
