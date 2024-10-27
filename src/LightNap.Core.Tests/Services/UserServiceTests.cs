@@ -1,21 +1,21 @@
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;
-using LightNap.Core.Public.Services;
+using LightNap.Core.User.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LightNap.Core.Tests
+namespace LightNap.Core.Tests.Services
 {
     [TestClass]
-    public class PublicServiceTests
+    public class UserServiceTests
     {
         // These will be initialized during TestInitialize.
 #pragma warning disable CS8618
         private ApplicationDbContext _dbContext;
         // Remove when using this member.
 #pragma warning disable IDE0052
-        private PublicService _publicService;
+        private UserService _userService;
 #pragma warning restore IDE0052
 #pragma warning restore CS8618
 
@@ -30,16 +30,16 @@ namespace LightNap.Core.Tests
                 .AddDefaultTokenProviders();
 
             var serviceProvider = services.BuildServiceProvider();
-            this._dbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            _dbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
 
-            this._publicService = new PublicService();
+            _userService = new UserService();
         }
 
         [TestCleanup]
         public void TestCleanup()
         {
-            this._dbContext.Database.EnsureDeleted();
-            this._dbContext.Dispose();
+            _dbContext.Database.EnsureDeleted();
+            _dbContext.Dispose();
         }
 
     }

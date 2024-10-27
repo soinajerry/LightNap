@@ -9,6 +9,7 @@ using LightNap.Core.Interfaces;
 using LightNap.Core.Profile.Dto.Request;
 using LightNap.Core.Profile.Dto.Response;
 using LightNap.Core.Profile.Services;
+using LightNap.Core.Tests.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -48,6 +49,11 @@ namespace LightNap.Core.Tests
 
             this._userManager = this._serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             await TestHelper.CreateTestUserAsync(this._userManager, ProfileServiceTests._userId, ProfileServiceTests._userName, ProfileServiceTests._userEmail);
+
+            this._userContext = new TestUserContext()
+            {
+                UserId = ProfileServiceTests._userId
+            };
 
             var userContextMock = new Mock<IUserContext>();
             userContextMock.Setup(uc => uc.GetUserId()).Returns(ProfileServiceTests._userId);
@@ -126,7 +132,7 @@ namespace LightNap.Core.Tests
             // Also confirm user can log in with new password.
             var tokenServiceMock = new Mock<ITokenService>();
             tokenServiceMock.Setup(ts => ts.GenerateRefreshToken()).Returns("refresh-token");
-            tokenServiceMock.Setup(ts => ts.GenerateAccessTokenAsync(user!)).ReturnsAsync("access-token");
+            tokenServiceMock.Setup(ts => ts.GenerateAccessTokenAsync(It.IsAny<ApplicationUser>())).ReturnsAsync("access-token");
 
             var emailServiceMock = new Mock<IEmailService>();
             var signInManager = this._serviceProvider.GetRequiredService<SignInManager<ApplicationUser>>();

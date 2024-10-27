@@ -1,7 +1,7 @@
 ﻿using LightNap.Core.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 
-namespace LightNap.Core.Tests
+namespace LightNap.Core.Tests.Utilities
 {
     /// <summary>
     /// Provides helper methods for creating test users and roles.

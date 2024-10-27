@@ -4,6 +4,7 @@ using LightNap.Core.Api;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;
+using LightNap.Core.Tests.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System.Data;
