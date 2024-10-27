@@ -1,4 +1,3 @@
-using LightNap.Core.Api;
 using LightNap.Core.Configuration;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
@@ -6,8 +5,8 @@ using LightNap.Core.Extensions;
 using LightNap.Core.Identity.Dto.Request;
 using LightNap.Core.Identity.Services;
 using LightNap.Core.Interfaces;
-using LightNap.Core.Services;
 using LightNap.Core.Tests.Utilities;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -30,6 +29,7 @@ namespace LightNap.Core.Tests
         private IdentityService _identityService;
         private ICookieManager _cookieManager;
         private Mock<IEmailService> _emailServiceMock;
+        private Mock<ITokenService> _tokenServiceMock;
 #pragma warning restore CS8618
 
         [TestInitialize]
@@ -42,15 +42,18 @@ namespace LightNap.Core.Tests
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            // Use EphemeralDataProtectionProvider for testing things like generating a password reset token.
+            services.AddSingleton<IDataProtectionProvider, EphemeralDataProtectionProvider>();
+
             var serviceProvider = services.BuildServiceProvider();
             this._dbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
             this._userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var signInManager = serviceProvider.GetRequiredService<SignInManager<ApplicationUser>>();
             var logger = serviceProvider.GetRequiredService<ILogger<IdentityService>>();
 
-            var tokenServiceMock = new Mock<ITokenService>();
-            tokenServiceMock.Setup(ts => ts.GenerateRefreshToken()).Returns("refresh-token");
-            tokenServiceMock.Setup(ts => ts.GenerateAccessTokenAsync(It.IsAny<ApplicationUser>())).ReturnsAsync("access-token");
+            this._tokenServiceMock = new Mock<ITokenService>();
+            this._tokenServiceMock.Setup(ts => ts.GenerateRefreshToken()).Returns("refresh-token");
+            this._tokenServiceMock.Setup(ts => ts.GenerateAccessTokenAsync(It.IsAny<ApplicationUser>())).ReturnsAsync("access-token");
 
             this._emailServiceMock = new Mock<IEmailService>();
 
@@ -69,7 +72,7 @@ namespace LightNap.Core.Tests
                 IpAddress = "127.0.0.1"
             };
 
-            this._identityService = new IdentityService(logger, this._userManager, signInManager, tokenServiceMock.Object, this._emailServiceMock.Object,
+            this._identityService = new IdentityService(logger, this._userManager, signInManager, this._tokenServiceMock.Object, this._emailServiceMock.Object,
                 applicationSettings, this._dbContext, this._cookieManager, userContext);
         }
 
@@ -99,13 +102,97 @@ namespace LightNap.Core.Tests
             var result = await _identityService.LogInAsync(requestDto);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(ApiResponseType.Success, result.Type);
-            Assert.IsNotNull(result.Result);
-            Assert.IsFalse(result.Result.TwoFactorRequired);
+            TestHelper.AssertSuccess(result);
+            Assert.IsFalse(result.Result!.TwoFactorRequired);
             Assert.IsNotNull(result.Result.BearerToken);
+            
             var cookie = this._cookieManager.GetCookie(IdentityServiceTests._refreshTokenCookieName);
             Assert.IsNotNull(cookie);
+        }
+
+        [TestMethod]
+        public async Task LogInAsync_BadEmail_ReturnsError()
+        {
+            // Arrange
+            var requestDto = new LoginRequestDto
+            {
+                Email = "test@test.com",
+                Password = "ValidPassword123!",
+                RememberMe = true,
+                DeviceDetails = "TestDevice",
+            };
+
+            // Act
+            var result = await _identityService.LogInAsync(requestDto);
+
+            // Assert
+            TestHelper.AssertError(result);
+
+            var cookie = this._cookieManager.GetCookie(IdentityServiceTests._refreshTokenCookieName);
+            Assert.IsNull(cookie);
+        }
+
+        [TestMethod]
+        public async Task LogInAsync_BadPassword_ReturnsError()
+        {
+            // Arrange
+            var requestDto = new LoginRequestDto
+            {
+                Email = "test@test.com",
+                Password = "BadPassword123!",
+                RememberMe = true,
+                DeviceDetails = "TestDevice",
+            };
+
+            var user = await TestHelper.CreateTestUserAsync(this._userManager, "user-id", "UserName", requestDto.Email);
+            await this._userManager.AddPasswordAsync(user, "GoodPassword123!");
+
+            // Act
+            var result = await _identityService.LogInAsync(requestDto);
+
+            // Assert
+            TestHelper.AssertError(result);
+
+            var cookie = this._cookieManager.GetCookie(IdentityServiceTests._refreshTokenCookieName);
+            Assert.IsNull(cookie);
+        }
+
+        [TestMethod]
+        public async Task GetAccessTokenAsync_LoggedIn_ReturnsSuccess()
+        {
+            // Arrange
+            var requestDto = new LoginRequestDto
+            {
+                Email = "test@test.com",
+                Password = "ValidPassword123!",
+                RememberMe = true,
+                DeviceDetails = "TestDevice",
+            };
+            var user = await TestHelper.CreateTestUserAsync(this._userManager, "user-id", "UserName", requestDto.Email);
+            await this._userManager.AddPasswordAsync(user, requestDto.Password);
+            var loginResult = await _identityService.LogInAsync(requestDto);
+            var newToken = "new-token";
+            Assert.AreNotEqual(newToken, loginResult.Result!.BearerToken);
+            this._tokenServiceMock.Setup(ts => ts.GenerateAccessTokenAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(newToken);
+
+            // Act
+            var accessTokenResult = await this._identityService.GetAccessTokenAsync();
+
+            // Assert
+            TestHelper.AssertSuccess(accessTokenResult);
+            Assert.AreEqual(newToken, accessTokenResult.Result);
+        }
+
+        [TestMethod]
+        public async Task GetAccessTokenAsync_NotLoggedIn_ReturnsError()
+        {
+            // Arrange
+
+            // Act
+            var accessTokenResult = await this._identityService.GetAccessTokenAsync();
+
+            // Assert
+            TestHelper.AssertError(accessTokenResult);
         }
 
         [TestMethod]
@@ -128,10 +215,8 @@ namespace LightNap.Core.Tests
             var result = await this._identityService.RegisterAsync(requestDto);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(ApiResponseType.Success, result.Type);
-            Assert.IsNotNull(result.Result);
-            Assert.IsFalse(result.Result.TwoFactorRequired);
+            TestHelper.AssertSuccess(result);
+            Assert.IsFalse(result.Result!.TwoFactorRequired);
             Assert.IsNotNull(result.Result.BearerToken);
 
             var user = await this._userManager.FindByEmailAsync(requestDto.Email);
@@ -164,84 +249,98 @@ namespace LightNap.Core.Tests
             var result = await _identityService.LogOutAsync();
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(ApiResponseType.Success, result.Type);
-            Assert.IsTrue(result.Result);
+            TestHelper.AssertSuccess(result);
 
             cookie = this._cookieManager.GetCookie("refreshCookie");
             Assert.IsNull(cookie);
         }
 
-        // TODO: Hit a crypto error working on these tests and will need to dig in another time. May require backing out to shallow mocks.
-        //[TestMethod]
-        //public async Task ResetPasswordAsync_ValidData_ReturnsSuccess()
-        //{
-        //    // Arrange
-        //    var requestDto = new ResetPasswordRequestDto
-        //    {
-        //        Email = "test@test.com"
-        //    };
+        [TestMethod]
+        public async Task ResetPasswordAsync_ValidData_ReturnsSuccess()
+        {
+            // Arrange
+            var requestDto = new ResetPasswordRequestDto
+            {
+                Email = "test@test.com"
+            };
 
-        //    var user = await TestHelper.CreateTestUserAsync(this._userManager, "user-id", "UserName", requestDto.Email);
-        //    await this._userManager.AddPasswordAsync(user, "OldPassword123!");
+            var user = await TestHelper.CreateTestUserAsync(this._userManager, "user-id", "UserName", requestDto.Email);
+            await this._userManager.AddPasswordAsync(user, "OldPassword123!");
 
-        //    string capturedPasswordResetUrl = string.Empty;
-        //    this._emailServiceMock
-        //        .Setup(ts => ts.SendPasswordResetEmailAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
-        //        .Callback<ApplicationUser, string>((user, url) => capturedPasswordResetUrl = url)
-        //        .Returns(Task.CompletedTask);
+            string capturedPasswordResetUrl = string.Empty;
+            this._emailServiceMock
+                .Setup(ts => ts.SendPasswordResetEmailAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
+                .Callback<ApplicationUser, string>((user, url) => capturedPasswordResetUrl = url)
+                .Returns(Task.CompletedTask);
 
-        //    // Act
-        //    var result = await this._identityService.ResetPasswordAsync(requestDto);
+            // Act
+            var result = await this._identityService.ResetPasswordAsync(requestDto);
 
-        //    // Assert
-        //    Assert.IsNotNull(result);
-        //    Assert.AreEqual(ApiResponseType.Success, result.Type);
-        //    Assert.IsTrue(result.Result);
+            // Assert
+            TestHelper.AssertSuccess(result);
 
-        //    this._emailServiceMock.Verify(ts => ts.SendPasswordResetEmailAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()), Times.Once);
-        //    Assert.IsFalse(string.IsNullOrEmpty(capturedPasswordResetUrl), "Password reset URL should be captured.");
-        //}
+            this._emailServiceMock.Verify(ts => ts.SendPasswordResetEmailAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()), Times.Once);
+            Assert.IsFalse(string.IsNullOrEmpty(capturedPasswordResetUrl), "Password reset URL should be captured.");
+        }
 
-        //[TestMethod]
-        //public async Task NewPasswordAsync_ValidData_ReturnsSuccess()
-        //{
-        //    // Arrange
-        //    var passwordResetRequestDto = new ResetPasswordRequestDto
-        //    {
-        //        Email = "test@test.com"
-        //    };
+        [TestMethod]
+        public async Task NewPasswordAsync_ValidData_ReturnsSuccess()
+        {
+            // Arrange
+            var passwordResetRequestDto = new ResetPasswordRequestDto
+            {
+                Email = "test@test.com"
+            };
 
-        //    var user = await TestHelper.CreateTestUserAsync(this._userManager, "user-id", "UserName", passwordResetRequestDto.Email);
-        //    await this._userManager.AddPasswordAsync(user, "OldPassword123!");
+            var user = await TestHelper.CreateTestUserAsync(this._userManager, "user-id", "UserName", passwordResetRequestDto.Email);
+            await this._userManager.AddPasswordAsync(user, "OldPassword123!");
 
-        //    string capturedPasswordResetUrl = string.Empty;
-        //    this._emailServiceMock
-        //        .Setup(ts => ts.SendPasswordResetEmailAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
-        //        .Callback<ApplicationUser, string>((user, url) => capturedPasswordResetUrl = url)
-        //        .Returns(Task.CompletedTask);
+            string capturedPasswordResetUrl = string.Empty;
+            this._emailServiceMock
+                .Setup(ts => ts.SendPasswordResetEmailAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
+                .Callback<ApplicationUser, string>((user, url) => capturedPasswordResetUrl = url)
+                .Returns(Task.CompletedTask);
 
-        //    // Not ideal since it's hardcoded to a very specific URL format, so expect to discover this comment if that gets changed.
-        //    string passwordResetToken = HttpUtility.UrlDecode(capturedPasswordResetUrl.Substring(capturedPasswordResetUrl.LastIndexOf('/') + 1));
+            await this._identityService.ResetPasswordAsync(passwordResetRequestDto);
 
-        //    await this._identityService.ResetPasswordAsync(passwordResetRequestDto);
+            // Not ideal since it's hardcoded to a very specific URL format, so expect to discover this comment if that gets changed.
+            string passwordResetToken = HttpUtility.UrlDecode(capturedPasswordResetUrl.Substring(capturedPasswordResetUrl.LastIndexOf('/') + 1));
 
-        //    var newPasswordRequestDto = new NewPasswordRequestDto
-        //    {
-        //        Email = "test@test.com",
-        //        DeviceDetails = "TestDevice",
-        //        Password = "NewPassword123!",
-        //        RememberMe = true,
-        //        Token = passwordResetToken
-        //    };
+            var newPasswordRequestDto = new NewPasswordRequestDto
+            {
+                Email = passwordResetRequestDto.Email,
+                DeviceDetails = "TestDevice",
+                Password = "NewPassword123!",
+                RememberMe = true,
+                Token = passwordResetToken
+            };
 
-        //    // Act
-        //    var result = await this._identityService.NewPasswordAsync(newPasswordRequestDto);
+            // Act
+            var result = await this._identityService.NewPasswordAsync(newPasswordRequestDto);
 
-        //    // Assert
-        //    Assert.IsNotNull(result);
-        //    Assert.AreEqual(ApiResponseType.Success, result.Type);
-        //    Assert.IsNull(result.Result);
-        //}
+            // Assert
+            TestHelper.AssertSuccess(result);
+        }
+
+        [TestMethod]
+        public async Task NewPasswordAsync_InvalidData_ReturnsError()
+        {
+            // Arrange
+            var newPasswordRequestDto = new NewPasswordRequestDto
+            {
+                Email = "test@test.com",
+                DeviceDetails = "TestDevice",
+                Password = "NewPassword123!",
+                RememberMe = true,
+                Token = "bad-token"
+            };
+
+            // Act
+            var result = await this._identityService.NewPasswordAsync(newPasswordRequestDto);
+
+            // Assert
+            TestHelper.AssertError(result);
+        }
+
     }
 }

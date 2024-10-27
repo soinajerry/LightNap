@@ -276,10 +276,10 @@ namespace LightNap.Core.Identity.Services
         }
 
         /// <summary>
-        /// Refreshes the access token using the refresh token.
+        /// Gets a new access token using the refresh token.
         /// </summary>
         /// <returns>The API response containing the new access token.</returns>
-        public async Task<ApiResponseDto<string>> RefreshTokenAsync()
+        public async Task<ApiResponseDto<string>> GetAccessTokenAsync()
         {
             var user = await this.ValidateRefreshTokenAsync();
 

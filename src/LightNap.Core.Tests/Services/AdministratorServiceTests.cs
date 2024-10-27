@@ -57,10 +57,8 @@ namespace LightNap.Core.Tests
             var result = await this._administratorService.GetUserAsync(userId);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(ApiResponseType.Success, result.Type);
-            Assert.IsNotNull(result.Result);
-            Assert.AreEqual(userId, result.Result.Id);
+            TestHelper.AssertSuccess(result);
+            Assert.AreEqual(userId, result.Result!.Id);
         }
 
         [TestMethod]
@@ -73,9 +71,7 @@ namespace LightNap.Core.Tests
             var result = await this._administratorService.GetUserAsync(userId);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(ApiResponseType.Success, result.Type);
-            Assert.IsNull(result.Result);
+            TestHelper.AssertSuccess(result, true);
         }
 
         [TestMethod]
@@ -90,10 +86,8 @@ namespace LightNap.Core.Tests
             var result = await this._administratorService.UpdateUserAsync(userId, updateDto);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(ApiResponseType.Success, result.Type);
-            Assert.IsNotNull(result.Result);
-            Assert.AreEqual(userId, result.Result.Id);
+            TestHelper.AssertSuccess(result);
+            Assert.AreEqual(userId, result.Result!.Id);
         }
 
         [TestMethod]
@@ -107,9 +101,7 @@ namespace LightNap.Core.Tests
             var result = await this._administratorService.UpdateUserAsync(userId, updateDto);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(ApiResponseType.Error, result.Type);
-            Assert.IsNull(result.Result);
+            TestHelper.AssertError(result);
         }
 
         [TestMethod]
@@ -123,9 +115,7 @@ namespace LightNap.Core.Tests
             var result = await this._administratorService.DeleteUserAsync(userId);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(ApiResponseType.Success, result.Type);
-            Assert.IsTrue(result.Result);
+            TestHelper.AssertSuccess(result);
         }
 
         [TestMethod]
@@ -138,9 +128,7 @@ namespace LightNap.Core.Tests
             var result = await this._administratorService.DeleteUserAsync(userId);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(ApiResponseType.Error, result.Type);
-            Assert.IsFalse(result.Result);
+            TestHelper.AssertError(result);
         }
 
         [TestMethod]
@@ -156,9 +144,7 @@ namespace LightNap.Core.Tests
             var result = await this._administratorService.AddUserToRoleAsync(role, userId);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(ApiResponseType.Success, result.Type);
-            Assert.IsTrue(result.Result);
+            TestHelper.AssertSuccess(result);
         }
 
         [TestMethod]
@@ -172,9 +158,7 @@ namespace LightNap.Core.Tests
             var result = await this._administratorService.AddUserToRoleAsync(role, userId);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(ApiResponseType.Error, result.Type);
-            Assert.IsFalse(result.Result);
+            TestHelper.AssertError(result);
         }
 
         [TestMethod]
@@ -195,10 +179,8 @@ namespace LightNap.Core.Tests
             var result = await this._administratorService.SearchUsersAsync(requestDto);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(ApiResponseType.Success, result.Type);
-            Assert.IsNotNull(result.Result);
-            Assert.AreEqual(2, result.Result.TotalCount);
+            TestHelper.AssertSuccess(result);
+            Assert.AreEqual(2, result.Result!.TotalCount);
         }
 
         [TestMethod]
@@ -211,8 +193,7 @@ namespace LightNap.Core.Tests
             var result = this._administratorService.GetRoles();
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(ApiResponseType.Success, result.Type);
+            TestHelper.AssertSuccess(result);
             Assert.AreEqual(roles.Count, result.Result!.Count);
 
             for (int i = 0; i < roles.Count; i++)
@@ -239,8 +220,7 @@ namespace LightNap.Core.Tests
             var result = await this._administratorService.GetRolesForUserAsync(userId);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(ApiResponseType.Success, result.Type);
+            TestHelper.AssertSuccess(result);
             Assert.AreEqual(2, result.Result!.Count);
         }
 
@@ -259,8 +239,7 @@ namespace LightNap.Core.Tests
             var result = await this._administratorService.GetUsersInRoleAsync(role);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(ApiResponseType.Success, result.Type);
+            TestHelper.AssertSuccess(result);
             Assert.AreEqual(2, result.Result!.Count);
         }
 
@@ -278,11 +257,8 @@ namespace LightNap.Core.Tests
             var result = await this._administratorService.RemoveUserFromRoleAsync(role, userId);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(ApiResponseType.Success, result.Type);
+            TestHelper.AssertSuccess(result);
             Assert.IsTrue(result.Result);
         }
-
-
     }
 }

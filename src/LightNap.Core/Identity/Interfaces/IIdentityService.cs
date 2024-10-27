@@ -15,6 +15,6 @@ namespace LightNap.Core.Identity.Interfaces
         Task<ApiResponseDto<bool>> ResetPasswordAsync(ResetPasswordRequestDto requestDto);
         Task<ApiResponseDto<string>> NewPasswordAsync(NewPasswordRequestDto requestDto);
         Task<ApiResponseDto<string>> VerifyCodeAsync(VerifyCodeRequestDto requestDto);
-        Task<ApiResponseDto<string>> RefreshTokenAsync();
+        Task<ApiResponseDto<string>> GetAccessTokenAsync();
     }
 }
