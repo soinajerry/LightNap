@@ -6,7 +6,6 @@ using LightNap.Core.Identity.Dto.Request;
 using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Identity.Interfaces;
 using LightNap.Core.Interfaces;
-using LightNap.Core.Profile.Dto.Response;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -46,7 +45,7 @@ namespace LightNap.Core.Identity.Services
                     return ApiResponseDto<LoginResultDto>.CreateSuccess(new LoginResultDto() { TwoFactorRequired = true });
                 }
 
-                await CreateRefreshTokenAsync(user, rememberMe, deviceDetails);
+                await this.CreateRefreshTokenAsync(user, rememberMe, deviceDetails);
                 return ApiResponseDto<LoginResultDto>.CreateSuccess(
                     new LoginResultDto()
                     {
@@ -142,7 +141,7 @@ namespace LightNap.Core.Identity.Services
                 return ApiResponseDto<LoginResultDto>.CreateError("Invalid email/password combination.");
             }
 
-            return await HandleUserLoginAsync(user, requestDto.RememberMe, requestDto.DeviceDetails);
+            return await this.HandleUserLoginAsync(user, requestDto.RememberMe, requestDto.DeviceDetails);
         }
 
         /// <summary>
@@ -174,7 +173,7 @@ namespace LightNap.Core.Identity.Services
 
             logger.LogInformation("New user '{userName}' ('{email}') registered!", user.Email, user.UserName);
 
-            return await HandleUserLoginAsync(user, requestDto.RememberMe, requestDto.DeviceDetails);
+            return await this.HandleUserLoginAsync(user, requestDto.RememberMe, requestDto.DeviceDetails);
         }
 
         /// <summary>
@@ -246,7 +245,7 @@ namespace LightNap.Core.Identity.Services
                 return ApiResponseDto<string>.CreateError("Unable to set new password.");
             }
 
-            await CreateRefreshTokenAsync(user, requestDto.RememberMe, requestDto.DeviceDetails);
+            await this.CreateRefreshTokenAsync(user, requestDto.RememberMe, requestDto.DeviceDetails);
 
             return ApiResponseDto<string>.CreateSuccess(await tokenService.GenerateAccessTokenAsync(user));
         }
@@ -271,7 +270,7 @@ namespace LightNap.Core.Identity.Services
                 await emailService.SendRegistrationEmailAsync(user);
             }
 
-            await CreateRefreshTokenAsync(user, requestDto.RememberMe, requestDto.DeviceDetails);
+            await this.CreateRefreshTokenAsync(user, requestDto.RememberMe, requestDto.DeviceDetails);
 
             return ApiResponseDto<string>.CreateSuccess(await tokenService.GenerateAccessTokenAsync(user));
         }
@@ -282,7 +281,7 @@ namespace LightNap.Core.Identity.Services
         /// <returns>The API response containing the new access token.</returns>
         public async Task<ApiResponseDto<string>> RefreshTokenAsync()
         {
-            var user = await ValidateRefreshTokenAsync();
+            var user = await this.ValidateRefreshTokenAsync();
 
             if (user is null) { return ApiResponseDto<string>.CreateError("This account needs to sign in."); }
 

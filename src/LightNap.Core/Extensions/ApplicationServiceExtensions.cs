@@ -18,7 +18,7 @@ namespace LightNap.Core.Extensions
         /// <returns>The updated service collection.</returns>
         public static IServiceCollection AddLightNapInMemoryDatabase(this IServiceCollection services)
         {
-            return services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("LightMap"));
+            return services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("LightNap"));
         }
 
         /// <summary>

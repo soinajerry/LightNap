@@ -1,5 +1,4 @@
 using LightNap.Core.Api;
-using LightNap.Core.Identity.Dto.Request;
 using LightNap.Core.Profile.Dto.Request;
 using LightNap.Core.Profile.Dto.Response;
 using LightNap.Core.Profile.Interfaces;
