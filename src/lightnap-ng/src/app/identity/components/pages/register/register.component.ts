@@ -2,18 +2,18 @@
 import { Component, inject } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { RoutePipe, ROUTE_HELPER, BlockUiService } from "@core";
-import { IdentityService } from "src/app/identity/services/identity.service";
+import { BlockUiService } from "@core";
+import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
+import { confirmPasswordValidator } from "@core/helpers/form-helpers";
+import { RouteAliasService, RoutePipe } from "@routing";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
+import { IdentityService } from "src/app/identity/services/identity.service";
 import { AppConfigComponent } from "src/app/layout/components/controls/app-config/app-config.component";
-import { LayoutService } from "src/app/layout/services/layout.service";
-import { BlockUIModule } from "primeng/blockui";
-import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
 import { FocusContentLayout } from "src/app/layout/components/layouts/focus-content-layout/focus-content-layout.component";
-import { confirmPasswordValidator } from "@core/helpers/form-helpers";
+import { LayoutService } from "src/app/layout/services/layout.service";
 
 @Component({
   standalone: true,
@@ -35,7 +35,7 @@ export class RegisterComponent {
   #identityService = inject(IdentityService);
     #blockUi = inject(BlockUiService);
   #fb = inject(FormBuilder);
-  #routeHelper = inject(ROUTE_HELPER);
+  #routeAliasService = inject(RouteAliasService);
   layoutService = inject(LayoutService);
 
   form = this.#fb.nonNullable.group({
@@ -70,9 +70,9 @@ export class RegisterComponent {
             this.errors = ["An unexpected error occurred."];
           }
         } else if (response.result.twoFactorRequired) {
-          this.#routeHelper.navigate("verify-code", this.form.value.email);
+          this.#routeAliasService.navigate("verify-code", this.form.value.email);
         } else {
-          this.#routeHelper.navigate("home");
+          this.#routeAliasService.navigate("home");
         }
       },
       complete: () => this.#blockUi.hide(),

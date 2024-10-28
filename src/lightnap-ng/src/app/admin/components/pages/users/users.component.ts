@@ -5,15 +5,8 @@ import { Component, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import {
-    ApiResponseComponent,
-    ConfirmPopupComponent,
-    EmptyPagedResponse,
-    ErrorListComponent,
-    ListItem,
-    RoutePipe,
-    SuccessApiResponse
-} from "@core";
+import { ApiResponseComponent, ConfirmPopupComponent, EmptyPagedResponse, ErrorListComponent, ListItem, SuccessApiResponse } from "@core";
+import { RoutePipe } from "@routing";
 import { ConfirmationService, LazyLoadEvent } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
@@ -37,7 +30,7 @@ import { debounceTime, startWith, Subject, switchMap } from "rxjs";
     DropdownModule,
     ErrorListComponent,
     InputTextModule,
-    ConfirmPopupComponent
+    ConfirmPopupComponent,
   ],
 })
 export class UsersComponent {

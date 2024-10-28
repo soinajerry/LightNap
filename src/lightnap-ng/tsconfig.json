@@ -25,8 +25,12 @@
             "@admin/*": ["src/app/admin/*"],
             "@core": ["src/app/core"],
             "@core/*": ["src/app/core/*"],
+            "@layout": ["src/app/layout"],
+            "@layout/*": ["src/app/layout/*"],
             "@profile": ["src/app/profile"],
-            "@profile/*": ["src/app/profile/*"]
+            "@profile/*": ["src/app/profile/*"],
+            "@routing": ["src/app/routing"],
+            "@routing/*": ["src/app/routing/*"]
         }
     },
     "exclude": ["node_modules", "**/node_modules/*"],

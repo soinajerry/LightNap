@@ -1,16 +1,18 @@
-export type SupportedRoutes =
+export type RouteAlias =
     // Public
     | 'landing'
     | 'about'
     | 'terms-and-conditions'
     | 'privacy-policy'
     | 'access-denied'
+    | 'error'
+    | 'not-found'
 
     // Secure
     | 'home'
 
     // Admin
-    | 'admin'
+    | 'admin-home'
     | 'admin-users'
     | 'admin-user'
     | 'admin-roles'
@@ -24,7 +26,6 @@ export type SupportedRoutes =
     | 'login'
     | 'reset-password'
     | 'reset-instructions-sent'
-    | 'new-password'
     | 'change-password'
     | 'verify-code'
     | 'register';

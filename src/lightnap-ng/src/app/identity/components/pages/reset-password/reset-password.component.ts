@@ -1,12 +1,13 @@
 import { Component, inject } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { BlockUiService, ErrorListComponent, ROUTE_HELPER, RoutePipe } from "@core";
-import { IdentityService } from "src/app/identity/services/identity.service";
+import { BlockUiService, ErrorListComponent } from "@core";
+import { RouteAliasService, RoutePipe } from "@routing";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
 import { take } from "rxjs";
+import { IdentityService } from "src/app/identity/services/identity.service";
 import { FocusContentLayout } from "src/app/layout/components/layouts/focus-content-layout/focus-content-layout.component";
 import { LayoutService } from "src/app/layout/services/layout.service";
 
@@ -19,7 +20,7 @@ export class ResetPasswordComponent {
   #identityService = inject(IdentityService);
   #blockUi = inject(BlockUiService);
   #fb = inject(FormBuilder);
-  #routeHelper = inject(ROUTE_HELPER);
+  #routeAliasService = inject(RouteAliasService);
   layoutService = inject(LayoutService);
 
   form = this.#fb.nonNullable.group({
@@ -36,7 +37,7 @@ export class ResetPasswordComponent {
       .subscribe({
         next: response => {
           if (response.result) {
-            this.#routeHelper.getRoute("reset-instructions-sent");
+            this.#routeAliasService.getRoute("reset-instructions-sent");
           } else {
             if (response.errorMessages?.length) {
               this.errors = response.errorMessages;

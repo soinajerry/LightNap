@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
-import { RoutePipe } from '@core';
+import { RoutePipe } from '@routing';
 import { LayoutService } from 'src/app/layout/services/layout.service';
 
 @Component({

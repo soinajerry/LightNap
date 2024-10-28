@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Router, RouterLink } from "@angular/router";
-import { RoutePipe } from "@core";
+import { RoutePipe } from "@routing";
 import { IdentityService } from "src/app/identity/services/identity.service";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";

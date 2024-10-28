@@ -2,7 +2,7 @@ import { AdminService } from "@admin/services/admin.service";
 import { CommonModule } from "@angular/common";
 import { Component, inject, Input, OnInit } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import { ApiResponse, ConfirmPopupComponent, RoutePipe, SuccessApiResponse } from "@core";
+import { ApiResponse, ConfirmPopupComponent, SuccessApiResponse } from "@core";
 import { ApiResponseComponent } from "@core/components/controls/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
 import { ConfirmationService } from "primeng/api";
@@ -11,6 +11,7 @@ import { CardModule } from "primeng/card";
 import { TableModule } from "primeng/table";
 import { combineLatest, map, Observable } from "rxjs";
 import { RoleViewModel } from "./role-view-model";
+import { RoutePipe } from "@routing";
 
 @Component({
   standalone: true,

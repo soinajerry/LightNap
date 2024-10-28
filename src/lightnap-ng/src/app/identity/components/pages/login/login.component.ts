@@ -1,12 +1,13 @@
 import { Component, inject } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { BlockUiService, ErrorListComponent, ROUTE_HELPER, RoutePipe } from "@core";
-import { IdentityService } from "src/app/identity/services/identity.service";
+import { BlockUiService, ErrorListComponent } from "@core";
+import { RouteAliasService, RoutePipe } from "@routing";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
+import { IdentityService } from "src/app/identity/services/identity.service";
 import { FocusContentLayout } from "src/app/layout/components/layouts/focus-content-layout/focus-content-layout.component";
 import { LayoutService } from "src/app/layout/services/layout.service";
 
@@ -30,7 +31,7 @@ export class LoginComponent {
   #identityService = inject(IdentityService);
   #blockUi = inject(BlockUiService);
   #fb = inject(FormBuilder);
-  #routeHelper = inject(ROUTE_HELPER);
+  #routeAliasService = inject(RouteAliasService);
 
   form = this.#fb.nonNullable.group({
     email: this.#fb.control("", [Validators.required, Validators.email]),
@@ -59,9 +60,9 @@ export class LoginComponent {
               this.errors = ["An unexpected error occurred."];
             }
           } else if (response.result.twoFactorRequired) {
-            this.#routeHelper.navigate("verify-code", this.form.value.email);
+            this.#routeAliasService.navigate("verify-code", this.form.value.email);
           } else {
-            this.#routeHelper.navigate("home");
+            this.#routeAliasService.navigate("home");
           }
         },
         complete: () => this.#blockUi.hide(),

@@ -1,14 +1,14 @@
 import { Component, Input, inject } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { BlockUiService, ROUTE_HELPER, RoutePipe } from "@core";
+import { BlockUiService } from "@core";
 import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
 import { confirmPasswordValidator } from "@core/helpers/form-helpers";
-import { IdentityService } from "src/app/identity/services/identity.service";
+import { RouteAliasService, RoutePipe } from "@routing";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { PasswordModule } from "primeng/password";
-import { take } from "rxjs";
+import { IdentityService } from "src/app/identity/services/identity.service";
 import { AppConfigComponent } from "src/app/layout/components/controls/app-config/app-config.component";
 import { FocusContentLayout } from "src/app/layout/components/layouts/focus-content-layout/focus-content-layout.component";
 import { LayoutService } from "src/app/layout/services/layout.service";
@@ -33,7 +33,7 @@ export class NewPasswordComponent {
   #blockUi = inject(BlockUiService);
   layoutService = inject(LayoutService);
   #fb = inject(FormBuilder);
-  #routeHelper = inject(ROUTE_HELPER);
+  #routeAliasService = inject(RouteAliasService);
 
   @Input() email = "";
   @Input() token = "";
@@ -59,11 +59,10 @@ export class NewPasswordComponent {
         deviceDetails: navigator.userAgent,
         rememberMe: this.form.value.rememberMe,
       })
-      .pipe(take(1))
       .subscribe({
         next: response => {
           if (response?.result) {
-            this.#routeHelper.navigate("home");
+            this.#routeAliasService.navigate("home");
           } else if (response?.errorMessages?.length) {
             this.errors = response?.errorMessages;
           } else {

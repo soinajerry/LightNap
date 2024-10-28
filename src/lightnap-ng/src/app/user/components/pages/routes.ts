@@ -1,5 +1,5 @@
-import { Route } from "@angular/router";
+import { AppRoute } from "@routing";
 
-export const ROUTES: Route[] = [
-  { path: "", loadComponent: () => import("./index/index.component").then(m => m.IndexComponent) },
+export const Routes: AppRoute[] = [
+  { path: "", data: { alias: "home" }, loadComponent: () => import("./index/index.component").then(m => m.IndexComponent) },
 ];

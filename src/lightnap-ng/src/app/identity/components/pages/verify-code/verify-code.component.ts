@@ -1,11 +1,12 @@
 import { Component, Input, inject } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { RoutePipe, ROUTE_HELPER, BlockUiService, ErrorListComponent } from "@core";
-import { IdentityService } from "src/app/identity/services/identity.service";
+import { BlockUiService, ErrorListComponent } from "@core";
+import { RouteAliasService, RoutePipe } from "@routing";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputTextModule } from "primeng/inputtext";
+import { IdentityService } from "src/app/identity/services/identity.service";
 import { AppConfigComponent } from "src/app/layout/components/controls/app-config/app-config.component";
 import { FocusContentLayout } from "src/app/layout/components/layouts/focus-content-layout/focus-content-layout.component";
 import { LayoutService } from "src/app/layout/services/layout.service";
@@ -29,7 +30,7 @@ export class VerifyCodeComponent {
   #identityService = inject(IdentityService);
   #blockUi = inject(BlockUiService);
   #fb = inject(FormBuilder);
-  #routeHelper = inject(ROUTE_HELPER);
+  #routeAliasService = inject(RouteAliasService);
   layoutService = inject(LayoutService);
 
   @Input() email = "";
@@ -114,7 +115,7 @@ export class VerifyCodeComponent {
             return;
           }
 
-          this.#routeHelper.navigate("home");
+          this.#routeAliasService.navigate("home");
         },
         complete: () => this.#blockUi.hide(),
       });

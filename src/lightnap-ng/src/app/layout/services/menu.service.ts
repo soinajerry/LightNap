@@ -2,15 +2,15 @@ import { inject, Injectable } from "@angular/core";
 import { BehaviorSubject, combineLatest, debounceTime, of, startWith, Subject, tap } from "rxjs";
 import { MenuChangeEvent } from "../models/menu-change-event";
 import { MenuItem } from "primeng/api";
-import { ROUTE_HELPER } from "@core";
 import { IdentityService } from "src/app/identity/services/identity.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { RouteAliasService } from "@routing";
 
 @Injectable({
   providedIn: "root",
 })
 export class MenuService {
-  #routeHelper = inject(ROUTE_HELPER);
+  #routeAliasService = inject(RouteAliasService);
   #identityService = inject(IdentityService);
 
   #menuSource = new Subject<MenuChangeEvent>();
@@ -18,24 +18,24 @@ export class MenuService {
 
   #defaultMenuItems = new Array<MenuItem>({
     label: "Home",
-    items: [{ label: "Home", icon: "pi pi-fw pi-home", routerLink: this.#routeHelper.getRoute("home") }],
+    items: [{ label: "Home", icon: "pi pi-fw pi-home", routerLink: this.#routeAliasService.getRoute("home") }],
   });
 
   #loggedInMenuItems = new Array<MenuItem>({
     label: "Profile",
     items: [
-      { label: "Profile", icon: "pi pi-fw pi-user", routerLink: this.#routeHelper.getRoute("profile") },
-      { label: "Devices", icon: "pi pi-fw pi-mobile", routerLink: this.#routeHelper.getRoute("devices") },
-      { label: "Change Password", icon: "pi pi-fw pi-lock", routerLink: this.#routeHelper.getRoute("change-password") },
+      { label: "Profile", icon: "pi pi-fw pi-user", routerLink: this.#routeAliasService.getRoute("profile") },
+      { label: "Devices", icon: "pi pi-fw pi-mobile", routerLink: this.#routeAliasService.getRoute("devices") },
+      { label: "Change Password", icon: "pi pi-fw pi-lock", routerLink: this.#routeAliasService.getRoute("change-password") },
     ],
   });
 
   #adminMenuItems = new Array<MenuItem>({
     label: "Admin",
     items: [
-      { label: "Home", icon: "pi pi-fw pi-home", routerLink: this.#routeHelper.getRoute("admin") },
-      { label: "Users", icon: "pi pi-fw pi-users", routerLink: this.#routeHelper.getRoute("admin-users") },
-      { label: "Roles", icon: "pi pi-fw pi-lock", routerLink: this.#routeHelper.getRoute("admin-roles") },
+      { label: "Home", icon: "pi pi-fw pi-home", routerLink: this.#routeAliasService.getRoute("admin-home") },
+      { label: "Users", icon: "pi pi-fw pi-users", routerLink: this.#routeAliasService.getRoute("admin-users") },
+      { label: "Roles", icon: "pi pi-fw pi-lock", routerLink: this.#routeAliasService.getRoute("admin-roles") },
     ],
   });
 

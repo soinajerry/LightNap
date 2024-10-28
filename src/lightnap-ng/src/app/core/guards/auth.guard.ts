@@ -1,12 +1,12 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, createUrlTreeFromSnapshot } from "@angular/router";
-import { ROUTE_HELPER } from "@core/helpers";
 import { IdentityService } from "src/app/identity/services/identity.service";
-import { map } from "rxjs";
+import { map, take } from "rxjs";
+import { RouteAliasService } from "@routing";
 
 export const authGuard = (next: ActivatedRouteSnapshot) => {
-  const routeHelper = inject(ROUTE_HELPER);
+  const routeAliasService = inject(RouteAliasService);
   return inject(IdentityService)
     .watchLoggedIn$()
-    .pipe(map(isLoggedIn => (isLoggedIn ? true : createUrlTreeFromSnapshot(next, routeHelper.getRoute("login")))));
+    .pipe(take(1), map(isLoggedIn => (isLoggedIn ? true : createUrlTreeFromSnapshot(next, routeAliasService.getRoute("login")))));
 };
