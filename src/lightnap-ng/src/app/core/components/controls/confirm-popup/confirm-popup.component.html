@@ -3,8 +3,8 @@
         <div class="border-round p-3">
             <span>{{ message.message }}</span>
             <div class="flex align-items-center gap-2 mt-3">
-                <p-button icon="{{confirmIcon}}" label="{{confirmText}}" severity="{{confirmSeverity}}" (onClick)="confirmPopup.accept()" size="small" />
-                <p-button icon="{{rejectIcon}}" label="{{rejectText}}" severity="{{rejectSeverity}}" (onClick)="confirmPopup.reject()" size="small" />
+                <p-button [icon]="confirmIcon" [label]="confirmText" [severity]="confirmSeverity" (onClick)="confirmPopup.accept()" size="small" />
+                <p-button [icon]="rejectIcon" [label]="rejectText" [severity]="rejectSeverity" (onClick)="confirmPopup.reject()" size="small" />
             </div>
         </div>
     </ng-template>

@@ -2,7 +2,7 @@ import { animate, state, style, transition, trigger } from "@angular/animations"
 import { CommonModule } from "@angular/common";
 import { ChangeDetectorRef, Component, HostBinding, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { NavigationEnd, Router, RouterLink } from "@angular/router";
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { RippleModule } from "primeng/ripple";
 import { filter } from "rxjs/operators";
 import { LayoutService } from "src/app/layout/services/layout.service";
@@ -30,7 +30,7 @@ import { MenuService } from "src/app/layout/services/menu.service";
       transition("collapsed <=> expanded", animate("400ms cubic-bezier(0.86, 0, 0.07, 1)")),
     ]),
   ],
-  imports: [CommonModule, RouterLink, RippleModule],
+  imports: [CommonModule, RouterLink, RippleModule, RouterLinkActive],
 })
 export class AppMenuItemComponent implements OnInit {
   #cd = inject(ChangeDetectorRef);

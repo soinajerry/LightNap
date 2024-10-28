@@ -12,7 +12,7 @@ import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { DropdownModule } from "primeng/dropdown";
 import { InputTextModule } from "primeng/inputtext";
-import { TableModule } from "primeng/table";
+import { TableLazyLoadEvent, TableModule } from "primeng/table";
 import { debounceTime, startWith, Subject, switchMap } from "rxjs";
 
 @Component({
@@ -48,7 +48,7 @@ export class UsersComponent {
 
   errors = new Array<string>();
 
-  #lazyLoadEventSubject = new Subject<LazyLoadEvent>();
+  #lazyLoadEventSubject = new Subject<TableLazyLoadEvent>();
   users$ = this.#lazyLoadEventSubject.pipe(
     switchMap(event =>
       this.#adminService.searchUsers({
@@ -78,7 +78,7 @@ export class UsersComponent {
     });
   }
 
-  loadUsersLazy(event: LazyLoadEvent) {
+  loadUsersLazy(event: TableLazyLoadEvent) {
     this.#lazyLoadEventSubject.next(event);
   }
 

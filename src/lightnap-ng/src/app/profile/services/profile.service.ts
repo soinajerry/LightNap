@@ -1,9 +1,10 @@
 import { inject, Injectable } from "@angular/core";
-import { ApiResponse, IdentityService } from "@core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { IdentityService } from "@identity";
 import { BrowserSettings, ChangePasswordRequest, StyleSettings, UpdateProfileRequest } from "@profile";
 import { filter, of, switchMap, tap } from "rxjs";
 import { DataService } from "./data.service";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { ApiResponse, SuccessApiResponse } from "@core";
 
 @Injectable({
   providedIn: "root",
@@ -27,7 +28,7 @@ export class ProfileService {
     preferences: {},
   };
 
-  #settingsResponse?: ApiResponse<BrowserSettings>;
+  #settings?: BrowserSettings;
 
   constructor() {
     this.#identityService
@@ -37,7 +38,7 @@ export class ProfileService {
         filter(loggedIn => !loggedIn)
       )
       .subscribe(() => {
-        this.#settingsResponse = undefined;
+        this.#settings = undefined;
       });
   }
 
@@ -62,25 +63,25 @@ export class ProfileService {
   }
 
   getSettings() {
-    if (this.#settingsResponse) return of(this.#settingsResponse);
+    if (this.#settings) return of(new SuccessApiResponse(this.#settings) as ApiResponse<BrowserSettings>);
 
     return this.#dataService.getSettings().pipe(
       tap(response => {
-        this.#settingsResponse = JSON.parse(JSON.stringify(response));
+        this.#settings = JSON.parse(JSON.stringify(response));
       })
     );
   }
 
   updateSettings(browserSettings: BrowserSettings) {
-    if (this.#settingsResponse) {
-      this.#settingsResponse.result = browserSettings;
+    if (this.#settings) {
+      this.#settings = browserSettings;
     }
     return this.#dataService.updateSettings(browserSettings);
   }
 
   updateStyleSettings(styleSettings: StyleSettings) {
     return this.getSettings().pipe(
-      switchMap(response => {
+      switchMap((response) => {
         if (!response.result || JSON.stringify(response.result.style) === JSON.stringify(styleSettings)) return of(response);
         return this.updateSettings({ ...response.result, style: styleSettings });
       })
@@ -92,6 +93,6 @@ export class ProfileService {
   }
 
   hasLoadedStyleSettings() {
-    return !!this.#settingsResponse;
+    return !!this.#settings;
   }
 }

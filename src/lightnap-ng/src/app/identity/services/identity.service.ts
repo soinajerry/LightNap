@@ -99,6 +99,7 @@ export class IdentityService {
   }
 
   getBearerToken() {
+    if (!this.#token) return undefined;
     return `Bearer ${this.#token}`;
   }
 

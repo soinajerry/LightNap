@@ -25,6 +25,8 @@
             "@admin/*": ["src/app/admin/*"],
             "@core": ["src/app/core"],
             "@core/*": ["src/app/core/*"],
+            "@identity": ["src/app/identity"],
+            "@identity/*": ["src/app/identity/*"],
             "@layout": ["src/app/layout"],
             "@layout/*": ["src/app/layout/*"],
             "@profile": ["src/app/profile"],
@@ -36,8 +38,8 @@
     "exclude": ["node_modules", "**/node_modules/*"],
     "angularCompilerOptions": {
         "enableI18nLegacyMessageIdFormat": false,
-        "strictInjectionParameters": false,
-        "strictInputAccessModifiers": false,
-        "strictTemplates": false
+        "strictInjectionParameters": true,
+        "strictInputAccessModifiers": true,
+        "strictTemplates": true
     }
 }
