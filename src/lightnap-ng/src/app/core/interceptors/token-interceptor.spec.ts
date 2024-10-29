@@ -49,6 +49,7 @@ describe('TokenInterceptor', () => {
 
         const req = httpMock.expectOne('http://otherapi.example.com/data');
         expect(req.request.headers.has('Authorization')).toBeFalsy();
+        expect(req.request.withCredentials).toBeFalsy();
         req.flush({});
     });
 
@@ -59,6 +60,7 @@ describe('TokenInterceptor', () => {
 
         const req = httpMock.expectOne('http://api.example.com/data');
         expect(req.request.headers.has('Authorization')).toBeFalsy();
+        expect(req.request.withCredentials).toBeTrue();
         req.flush({});
     });
 });

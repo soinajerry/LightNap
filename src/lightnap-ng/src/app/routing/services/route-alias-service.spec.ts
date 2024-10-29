@@ -15,8 +15,8 @@ describe("RouteAliasService", () => {
       path: "admin",
       data: { alias: "admin-home" },
       children: [
-        { path: "user", data: { alias: "admin-user" } },
-        { path: "role", data: { alias: "admin-role" } },
+        { path: "user/:userId", data: { alias: "admin-user" } },
+        { path: "role/:roleId", data: { alias: "admin-role" } },
       ],
     },
   ];

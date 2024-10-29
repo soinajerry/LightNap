@@ -17,10 +17,10 @@ namespace LightNap.WebApi.Configuration
         /// <param name="services">The service provider.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
         public static Task SeedDevelopmentContentAsync(
-        // Suppress CS9113 warning for unused parameter 'services'. Remove this when actually using the parameter.
-#pragma warning disable CS9113
+        // Suppress IDE0060 warning for unused parameter 'services'. Remove this when actually using the parameter.
+#pragma warning disable IDE0060
         IServiceProvider services
-#pragma warning restore CS9113
+#pragma warning restore IDE0060
             )
         {
             return Task.CompletedTask;
@@ -38,7 +38,11 @@ namespace LightNap.WebApi.Configuration
             {
                 if (!await roleManager.RoleExistsAsync(role.Name!))
                 {
-                    await roleManager.CreateAsync(role);
+                    var result = await roleManager.CreateAsync(role);
+                    if (!result.Succeeded)
+                    {
+                        throw new ArgumentException($"Unable to create role '{role.Name}': {string.Join("; ", result.Errors.Select(error => error.Description))}");
+                    }
                     logger.LogInformation("Added role '{roleName}'", role.Name);
                 }
             }
@@ -47,7 +51,11 @@ namespace LightNap.WebApi.Configuration
 
             foreach (var role in roleManager.Roles.Where(role => role.Name != null && !roleSet.Contains(role.Name)))
             {
-                await roleManager.DeleteAsync(role);
+                var result = await roleManager.DeleteAsync(role);
+                if (!result.Succeeded)
+                {
+                    throw new ArgumentException($"Unable to remove role '{role.Name}': {string.Join("; ", result.Errors.Select(error => error.Description))}");
+                }
                 logger.LogInformation("Removed role '{roleName}'", role.Name);
             }
         }
@@ -56,44 +64,78 @@ namespace LightNap.WebApi.Configuration
         /// Seeds the administrators in the application.
         /// </summary>
         /// <param name="userManager">The user manager.</param>
-        /// <param name="roleManager">The role manager.</param>
         /// <param name="administratorConfigurations">The administrators to create and promote.</param>
         /// <param name="applicationSettings">Settings for the application.</param>
         /// <param name="logger">The logger.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public static async Task SeedAdministratorsAsync(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IOptions<List<AdministratorConfiguration>> administratorConfigurations, IOptions<ApplicationSettings> applicationSettings, ILogger logger)
+        public static async Task SeedAdministratorsAsync(UserManager<ApplicationUser> userManager, IOptions<List<AdministratorConfiguration>> administratorConfigurations,
+            IOptions<ApplicationSettings> applicationSettings, ILogger logger)
         {
             if (administratorConfigurations.Value is null) { return; }
 
             foreach (var administrator in administratorConfigurations.Value)
             {
-                ApplicationUser? user = await userManager.FindByEmailAsync(administrator.Email);
-
-                if (user is null)
-                {
-                    user = new ApplicationUser(administrator.UserName, administrator.Email, applicationSettings.Value.RequireTwoFactorForNewUsers);
-
-                    bool passwordProvided = !string.IsNullOrWhiteSpace(administrator.Password);
-                    string password = passwordProvided ? administrator.Password! : $"P@ssw0rd{Guid.NewGuid()}";
-                    var identity = await userManager.CreateAsync(user, password);
-                    if (identity.Succeeded)
-                    {
-                        logger.LogInformation("Created administrator user '{userName}' ('{email}'): {passwordText}", administrator.UserName, administrator.Email,
-                            passwordProvided ? "Provided password was used" : "Reset password to log in");
-                    }
-                    else
-                    {
-                        logger.LogError("Unable to create Administrator user for '{userName}' ('{email}'): {errors}", administrator.UserName, administrator.Email, string.Join("; ", identity.Errors.Select(error => error.Description)));
-                        continue;
-                    }
-                }
-
-                if (!await userManager.IsInRoleAsync(user, ApplicationRoles.Administrator.Name!))
-                {
-                    await userManager.AddToRoleAsync(user, ApplicationRoles.Administrator.Name!);
-                    logger.LogInformation("Added administrator role for '{userName}' ('{email}')", administrator.UserName, administrator.Email);
-                }
+                ApplicationUser user = await Seeder.GetOrCreateUserAsync(userManager, administrator.UserName, administrator.Email, administrator.Password,
+                    applicationSettings.Value.RequireTwoFactorForNewUsers, logger);
+                await Seeder.AddUserToRole(userManager, user, ApplicationRoles.Administrator.Name!, logger);
             }
         }
+
+        /// <summary>
+        /// Creates a new user in the application.
+        /// </summary>
+        /// <param name="userManager">The user manager.</param>
+        /// <param name="userName">The user name.</param>
+        /// <param name="email">The email address.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="requireTwoFactor">Indicates whether two-factor authentication is required.</param>
+        /// <param name="logger">The logger.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public static async Task<ApplicationUser> GetOrCreateUserAsync(UserManager<ApplicationUser> userManager, string userName, string email, string? password, bool requireTwoFactor, ILogger logger)
+        {
+            ApplicationUser? user = await userManager.FindByEmailAsync(email);
+
+            if (user is null)
+            {
+                user = new ApplicationUser(userName, email, requireTwoFactor);
+
+                bool passwordProvided = !string.IsNullOrWhiteSpace(password);
+                string passwordToSet = passwordProvided ? password! : $"P@ssw0rd{Guid.NewGuid()}";
+
+                var result = await userManager.CreateAsync(user, passwordToSet);
+                if (!result.Succeeded)
+                {
+                    throw new ArgumentException($"Unable to create user '{userName}' ('{email}'): {string.Join("; ", result.Errors.Select(error => error.Description))}");
+                }
+
+                logger.LogInformation("Created user '{userName}' ('{email}')", userName, email);
+            }
+
+            return user;
+        }
+
+        /// <summary>
+        /// Adds a user to a specified role if they're not already in it.
+        /// </summary>
+        /// <param name="userManager">The user manager.</param>
+        /// <param name="user">The user to add to the role.</param>
+        /// <param name="role">The role to add the user to.</param>
+        /// <param name="logger">The logger.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        private static async Task AddUserToRole(UserManager<ApplicationUser> userManager, ApplicationUser user, string role, ILogger logger)
+        {
+            if (!await userManager.IsInRoleAsync(user, role))
+            {
+                var result = await userManager.AddToRoleAsync(user, role);
+                if (!result.Succeeded)
+                {
+                    throw new ArgumentException(
+                        $"Unable to add user '{user.UserName}' ('{user.Email}') to role '{role}': {string.Join("; ", result.Errors.Select(error => error.Description))}");
+                }
+            }
+
+            logger.LogInformation("Added user '{userName}' ('{email}') to role '{roleName}'", user.UserName, user.Email, role);
+        }
+
     }
 }

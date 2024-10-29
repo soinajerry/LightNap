@@ -1,4 +1,9 @@
-﻿# SQL Server Data Provider
+---
+title: SQL Server Data Provider
+layout: home
+parent: Database Providers
+nav_order: 1
+---
 
 The `LightNap.DataProviders.SqlServer` project contains the migrations for a SQL Server database. This project should never need to be manually edited as the migrations are handled by the `dotnet ef migrations` commands.
 
@@ -42,7 +47,7 @@ Note that the `LightNap.WebApi` project also offers automatic migrations by sett
 
 ### Pre-Initial Deployment Changes
 
-Prior to deploying a database you may want to regenerate the entire schema to include your initial changes as a single InitialCreate migration.
+Prior to deploying a database you may want to regenerate the entire schema to include your initial changes as a single `InitialCreate` migration.
 
 To do this, use the following commands:
 

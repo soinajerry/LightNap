@@ -66,6 +66,16 @@ export class RouteAliasService {
   }
 
   /**
+   * Navigates to the route associated with the given alias using the replace option.
+   * @param {RouteAlias} view - The alias of the route to navigate to.
+   * @param {any} [value] - Optional value to pass to the route.
+   * @returns {Promise<boolean>} A promise that resolves to true if navigation is successful, false otherwise.
+   */
+  navigateWithReplace(view: RouteAlias, value?: any) {
+    return this.#router.navigate(this.getRoute(view, value), { replaceUrl: true });
+  }
+
+  /**
    * Retrieves the route path associated with the given alias.
    * @param {RouteAlias} alias - The alias of the route.
    * @param {any} [value] - Optional value/array to pass to the route as ordered params.
@@ -76,7 +86,7 @@ export class RouteAliasService {
   getRoute(alias: RouteAlias, value?: any): Array<string> {
     const path = this.#routeMap.get(alias);
     if (!path) {
-      throw new Error(`Route alias '${alias}' not found.`);
+      throw new Error(`Unexpected route alias '${alias}'.`);
     }
 
     if (!value) return path;

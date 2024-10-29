@@ -35,6 +35,7 @@ namespace LightNap.WebApi.Extensions
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddCors();
+            services.AddHttpContextAccessor();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserContext, WebUserContext>();
             services.AddScoped<ICookieManager, WebCookieManager>();

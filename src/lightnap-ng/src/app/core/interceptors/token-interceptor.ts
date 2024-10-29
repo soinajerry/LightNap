@@ -25,6 +25,12 @@ export function tokenInterceptor(request: HttpRequest<unknown>, next: HttpHandle
         })
       );
     }
+
+    return next(
+      request.clone({
+        withCredentials: true,
+      })
+    );
   }
 
   return next(request);

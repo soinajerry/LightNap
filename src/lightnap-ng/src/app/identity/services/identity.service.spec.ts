@@ -1,9 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { ErrorApiResponse, NewPasswordRequest, RegisterRequest, ResetPasswordRequest, SuccessApiResponse, TimerService, VerifyCodeRequest } from '@core';
+import { ErrorApiResponse, SuccessApiResponse, TimerService } from '@core';
 import { of } from 'rxjs';
 import { DataService } from './data.service';
 import { IdentityService } from './identity.service';
+import { RegisterRequest, VerifyCodeRequest, ResetPasswordRequest, NewPasswordRequest } from '@identity';
 
 describe('IdentityService', () => {
     let service: IdentityService;
