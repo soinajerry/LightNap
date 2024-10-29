@@ -72,7 +72,7 @@ export class RegisterComponent {
         } else if (response.result.twoFactorRequired) {
           this.#routeAliasService.navigate("verify-code", this.form.value.email);
         } else {
-          this.#routeAliasService.navigate("home");
+          this.#routeAliasService.navigate("user-home");
         }
       },
       complete: () => this.#blockUi.hide(),

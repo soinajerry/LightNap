@@ -1,10 +1,10 @@
 import { inject, Injectable } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { JwtHelperService } from "@auth0/angular-jwt";
-import { LoginRequest, NewPasswordRequest, RegisterRequest, ResetPasswordRequest, VerifyCodeRequest } from "@core";
 import { distinctUntilChanged, filter, map, ReplaySubject, take, tap } from "rxjs";
 import { DataService } from "./data.service";
 import { TimerService } from "../../core/services/timer.service";
+import { LoginRequest, RegisterRequest, VerifyCodeRequest, ResetPasswordRequest, NewPasswordRequest } from "@identity/models";
 
 @Injectable({
   providedIn: "root",

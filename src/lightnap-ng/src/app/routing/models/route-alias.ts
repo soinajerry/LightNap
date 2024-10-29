@@ -1,3 +1,7 @@
+/**
+ * Known route aliases for the app. Add more here and then associate them with routes set up for a given
+ * page using the AppRoute.data.alias property.
+ */
 export type RouteAlias =
     // Public
     | 'landing'

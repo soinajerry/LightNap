@@ -1,9 +1,12 @@
-import { Role, SearchAdminUsersRequest, UpdateAdminUserRequest } from "@admin/models";
-import { inject, Injectable } from "@angular/core";
+import { AdminUser, Role, SearchAdminUsersRequest, UpdateAdminUserRequest } from "@admin/models";
+import { Injectable, inject } from "@angular/core";
 import { ApiResponse, SuccessApiResponse } from "@core";
 import { combineLatest, map, of, tap } from "rxjs";
 import { DataService } from "./data.service";
 
+/**
+ * Service for Administrator management of users, roles, and other data.
+ */
 @Injectable({
   providedIn: "root",
 })
@@ -11,22 +14,47 @@ export class AdminService {
   #dataService = inject(DataService);
   #rolesResponse?: ApiResponse<Array<Role>>;
 
+  /**
+   * Gets a user by their ID.
+   * @param {string} userId - The ID of the user to retrieve.
+   * @returns {Observable<ApiResponse<AdminUser>>} An observable containing the user data.
+   */
   getUser(userId: string) {
     return this.#dataService.getUser(userId);
   }
 
+  /**
+   * Updates a user by their ID.
+   * @param {string} userId - The ID of the user to update.
+   * @param {UpdateAdminUserRequest} updateAdminUser - The update request object.
+   * @returns {Observable<ApiResponse<AdminUser>>} An observable with the updated user.
+   */
   updateUser(userId: string, updateAdminUser: UpdateAdminUserRequest) {
     return this.#dataService.updateUser(userId, updateAdminUser);
   }
 
+  /**
+   * Deletes a user by their ID.
+   * @param {string} userId - The ID of the user to delete.
+   * @returns {Observable<ApiResponse<boolean>>} An observable indicating the deletion result.
+   */
   deleteUser(userId: string) {
     return this.#dataService.deleteUser(userId);
   }
 
+  /**
+   * Searches for users based on the search criteria.
+   * @param {SearchAdminUsersRequest} searchAdminUsers - The search criteria.
+   * @returns {Observable<ApiResponse<Array<AdminUser>>>} An observable containing the search results.
+   */
   searchUsers(searchAdminUsers: SearchAdminUsersRequest) {
     return this.#dataService.searchUsers(searchAdminUsers);
   }
 
+  /**
+   * Gets the list of roles.
+   * @returns {Observable<ApiResponse<Array<Role>>>} An observable containing the roles.
+   */
   getRoles() {
     if (this.#rolesResponse) return of(this.#rolesResponse);
     return this.#dataService.getRoles().pipe(
@@ -38,6 +66,11 @@ export class AdminService {
     );
   }
 
+  /**
+   * Gets a role by its name.
+   * @param {string} roleName - The name of the role to retrieve.
+   * @returns {Observable<ApiResponse<Role>>} An observable containing the role data.
+   */
   getRole(roleName: string) {
     return this.getRoles().pipe(
       map(response => {
@@ -47,6 +80,11 @@ export class AdminService {
     );
   }
 
+  /**
+   * Gets the roles a user belongs to.
+   * @param {string} userId - The user.
+   * @returns {Observable<ApiResponse<Array<Role>>>} An observable containing the roles.
+   */
   getUserRoles(userId: string) {
     return combineLatest([this.getRoles(), this.#dataService.getUserRoles(userId)]).pipe(
       map(([rolesResponse, userRolesResponse]) => {
@@ -57,14 +95,31 @@ export class AdminService {
     );
   }
 
+  /**
+   * Gets users in the specified role.
+   * @param {string} role - The role.
+   * @returns {Observable<ApiResponse<Array<AdminUser>>>} An observable containing the members.
+   */
   getUsersInRole(role: string) {
     return this.#dataService.getUsersInRole(role);
   }
 
+  /**
+   * Adds a user to a role.
+   * @param {string} userId - The user to add to the role.
+   * @param {string} role - The role.
+   * @returns {Observable<ApiResponse<boolean>>} An observable with a result of true if successful.
+   */
   addUserToRole(userId: string, role: string) {
     return this.#dataService.addUserToRole(userId, role);
   }
 
+  /**
+   * Removes a user from a role.
+   * @param {string} userId - The user to remove from the role.
+   * @param {string} role - The role.
+   * @returns {Observable<ApiResponse<Role>>} An observable with a result of true if successful.
+   */
   removeUserFromRole(userId: string, role: string) {
     return this.#dataService.removeUserFromRole(userId, role);
   }

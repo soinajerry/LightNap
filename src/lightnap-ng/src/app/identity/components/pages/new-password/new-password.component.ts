@@ -62,7 +62,7 @@ export class NewPasswordComponent {
       .subscribe({
         next: response => {
           if (response?.result) {
-            this.#routeAliasService.navigate("home");
+            this.#routeAliasService.navigate("user-home");
           } else if (response?.errorMessages?.length) {
             this.errors = response?.errorMessages;
           } else {

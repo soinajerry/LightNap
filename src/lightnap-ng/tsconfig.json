@@ -31,8 +31,12 @@
             "@layout/*": ["src/app/layout/*"],
             "@profile": ["src/app/profile"],
             "@profile/*": ["src/app/profile/*"],
+            "@public": ["src/app/public"],
+            "@public/*": ["src/app/public/*"],
             "@routing": ["src/app/routing"],
-            "@routing/*": ["src/app/routing/*"]
+            "@routing/*": ["src/app/routing/*"],
+            "@user": ["src/app/user"],
+            "@user/*": ["src/app/user/*"]
         }
     },
     "exclude": ["node_modules", "**/node_modules/*"],

@@ -115,7 +115,7 @@ export class VerifyCodeComponent {
             return;
           }
 
-          this.#routeAliasService.navigate("home");
+          this.#routeAliasService.navigate("user-home");
         },
         complete: () => this.#blockUi.hide(),
       });

@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { SuccessApiResponse, TimerService } from '@core';
 import { IdentityService } from '@identity';
-import { BrowserSettings, ChangePasswordRequest, StyleSettings, UpdateProfileRequest } from '@profile';
+import { ApplicationSettings, ChangePasswordRequest, StyleSettings, UpdateProfileRequest } from '@profile';
 import { of } from 'rxjs';
 import { DataService } from './data.service';
 import { ProfileService } from './profile.service';
@@ -94,7 +94,7 @@ describe('ProfileService', () => {
     });
 
     it('should update settings', () => {
-        const browserSettings: BrowserSettings = { } as any;
+        const browserSettings: ApplicationSettings = { } as any;
         dataServiceSpy.updateSettings.and.returnValue(of({} as any));
 
         service.updateSettings(browserSettings).subscribe();
@@ -104,7 +104,7 @@ describe('ProfileService', () => {
 
     it('should update style settings', () => {
         const styleSettings: StyleSettings = {} as any;
-        const expectedSettings: BrowserSettings = {} as any;
+        const expectedSettings: ApplicationSettings = {} as any;
         dataServiceSpy.getSettings.and.returnValue(of(new SuccessApiResponse(expectedSettings)));
         dataServiceSpy.updateSettings.and.returnValue(of({} as any));
 

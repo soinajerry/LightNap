@@ -1,14 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import {
-    API_URL_ROOT,
-    ApiResponse,
-    LoginRequest,
-    LoginResult,
-    NewPasswordRequest,
-    ResetPasswordRequest,
-    VerifyCodeRequest,
-} from "@core";
+import { API_URL_ROOT, ApiResponse } from "@core";
+import { LoginRequest, LoginResult, ResetPasswordRequest, NewPasswordRequest, VerifyCodeRequest } from "@identity";
 
 @Injectable({
   providedIn: "root",

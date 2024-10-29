@@ -1,22 +1,43 @@
 import { inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { RouteAlias } from "../models/route-alias";
-import { AppRoute } from "../models/app-route";
+import { RouteAlias, AppRoute } from "@routing/models";
 
 @Injectable({
   providedIn: "root",
 })
+/**
+ * Service to manage route aliases and their corresponding paths.
+ *
+ * This service provides functionality to map route aliases to their paths,
+ * navigate to routes using aliases, and retrieve paths associated with aliases.
+ */
 export class RouteAliasService {
   #router = inject(Router);
+
+  /**
+   * Map to store route aliases and their corresponding paths.
+   * @type {Map<RouteAlias, Array<string>>}
+   * @private
+   */
   #routeMap = new Map<RouteAlias, Array<string>>();
 
+  /**
+   * Constructs the RouteAliasService and initializes the route map.
+   */
   constructor() {
     this.#router.config.forEach(route => this.#buildRoutes(route, ["/"]));
   }
 
+  /**
+   * Recursively builds the route map from the router configuration.
+   * @param {AppRoute} route - The current route being processed.
+   * @param {Array<string>} path - The accumulated path segments.
+   * @private
+   * @throws {Error} If a duplicate route alias is found.
+   */
   #buildRoutes(route: AppRoute, path: Array<string>) {
     if (route.path?.length) {
-      path.push(route.path);
+      path.push(...route.path.split("/"));
     }
 
     const alias = route.data?.alias;
@@ -34,26 +55,52 @@ export class RouteAliasService {
     }
   }
 
+  /**
+   * Navigates to the route associated with the given alias.
+   * @param {RouteAlias} view - The alias of the route to navigate to.
+   * @param {any} [value] - Optional value to pass to the route.
+   * @returns {Promise<boolean>} A promise that resolves to true if navigation is successful, false otherwise.
+   */
   navigate(view: RouteAlias, value?: any) {
     return this.#router.navigate(this.getRoute(view, value));
   }
 
-  navigateWithReplace(view: RouteAlias, value?: any) {
-    return this.#router.navigate(this.getRoute(view, value), { replaceUrl: true });
-  }
-
-  getRoute(view: RouteAlias, value?: any) {
-    const route = this.#routeMap.get(view);
-    if (!route) throw new Error(`Unexpected route alias '${view}'.`);
-
-    // Append the value to the route if it's a dynamic route. This can be improved later on
-    switch (view) {
-      case "verify-code":
-      case "admin-user":
-      case "admin-role":
-        return [...route, value];
+  /**
+   * Retrieves the route path associated with the given alias.
+   * @param {RouteAlias} alias - The alias of the route.
+   * @param {any} [value] - Optional value/array to pass to the route as ordered params.
+   * @returns {Array<string>} The route path segments.
+   * @private
+   * @throws {Error} If the wrong number of parameters is provided for the route.
+   */
+  getRoute(alias: RouteAlias, value?: any): Array<string> {
+    const path = this.#routeMap.get(alias);
+    if (!path) {
+      throw new Error(`Route alias '${alias}' not found.`);
     }
 
-    return route;
+    if (!value) return path;
+    value = Array.isArray(value) ? value : [value];
+
+    const pathList = [...path];
+    const paramList = [...value];
+
+    for (let i = 0; i < pathList.length; i++) {
+      if (pathList[i].startsWith(":")) {
+        if (pathList[i].endsWith("?")) {
+          pathList[i] = paramList.length ? paramList.shift() : "";
+        } else if (paramList.length) {
+          pathList[i] = paramList.shift();
+        } else {
+          throw new Error(`Not enough parameters provided for route alias '${alias}'  ('${path.join("/")}'). Only received '${value.join("/")}'.`);
+        }
+      }
+    }
+
+    if (paramList.length) {
+      throw new Error(`Too many parameters provided for route alias '${alias}' ('${path.join("/")}'). Received '${value.join("/")}'.`);
+    }
+
+    return pathList;
   }
 }
