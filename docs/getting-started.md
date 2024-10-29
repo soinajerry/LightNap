@@ -103,7 +103,8 @@ All back-end configuration can be done from the `appsettings.json` in `LightNap.
 #### ApplicationSettings
 
 - **ApplicationSettings.AutomaticallyApplyEfMigrations**: `true` to automatically apply Entity Framework migrations.
-  If this is set to false, EF migrations must be manually applied
+  If this is set to false, EF migrations must be manually applied.
+- **ApplicationSettings.LogOutInactiveDeviceDays**: The number of days of inactivity (no contact) before a device is logged out.
 - **ApplicationSettings.RequireTwoFactorForNewUsers**: `true` to require two-factor email authentication for new users.
   It does not change existing users.
 - **ApplicationSettings.SiteUrlRootForEmails**: The root URL used in emails. This should be the base URL where the Angular app

@@ -60,6 +60,8 @@ namespace LightNap.Core.Tests
             var applicationSettings = Options.Create(
                 new ApplicationSettings
                 {
+                    AutomaticallyApplyEfMigrations = false,
+                    LogOutInactiveDeviceDays = 30,
                     RequireTwoFactorForNewUsers = false,
                     SiteUrlRootForEmails = "https://example.com/",
                     UseSameSiteStrictCookies = true
@@ -92,20 +94,20 @@ namespace LightNap.Core.Tests
                 Email = "test@test.com",
                 Password = "ValidPassword123!",
                 RememberMe = true,
-                DeviceDetails = "TestDevice",                
+                DeviceDetails = "TestDevice",
             };
 
             var user = await TestHelper.CreateTestUserAsync(this._userManager, "user-id", "UserName", requestDto.Email);
             await this._userManager.AddPasswordAsync(user, requestDto.Password);
 
             // Act
-            var result = await _identityService.LogInAsync(requestDto);
+            var result = await this._identityService.LogInAsync(requestDto);
 
             // Assert
             TestHelper.AssertSuccess(result);
             Assert.IsFalse(result.Result!.TwoFactorRequired);
             Assert.IsNotNull(result.Result.BearerToken);
-            
+
             var cookie = this._cookieManager.GetCookie(IdentityServiceTests._refreshTokenCookieName);
             Assert.IsNotNull(cookie);
         }
@@ -123,7 +125,7 @@ namespace LightNap.Core.Tests
             };
 
             // Act
-            var result = await _identityService.LogInAsync(requestDto);
+            var result = await this._identityService.LogInAsync(requestDto);
 
             // Assert
             TestHelper.AssertError(result);
@@ -148,7 +150,7 @@ namespace LightNap.Core.Tests
             await this._userManager.AddPasswordAsync(user, "GoodPassword123!");
 
             // Act
-            var result = await _identityService.LogInAsync(requestDto);
+            var result = await this._identityService.LogInAsync(requestDto);
 
             // Assert
             TestHelper.AssertError(result);
@@ -170,7 +172,7 @@ namespace LightNap.Core.Tests
             };
             var user = await TestHelper.CreateTestUserAsync(this._userManager, "user-id", "UserName", requestDto.Email);
             await this._userManager.AddPasswordAsync(user, requestDto.Password);
-            var loginResult = await _identityService.LogInAsync(requestDto);
+            var loginResult = await this._identityService.LogInAsync(requestDto);
             var newToken = "new-token";
             Assert.AreNotEqual(newToken, loginResult.Result!.BearerToken);
             this._tokenServiceMock.Setup(ts => ts.GenerateAccessTokenAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(newToken);
@@ -246,7 +248,7 @@ namespace LightNap.Core.Tests
             Assert.IsNotNull(cookie);
 
             // Act
-            var result = await _identityService.LogOutAsync();
+            var result = await this._identityService.LogOutAsync();
 
             // Assert
             TestHelper.AssertSuccess(result);

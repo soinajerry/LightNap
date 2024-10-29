@@ -73,7 +73,7 @@ namespace LightNap.Core.Identity.Services
 
             refreshToken.LastSeen = DateTime.UtcNow;
             refreshToken.IpAddress = userContext.GetIpAddress() ?? Constants.RefreshTokens.NoIpProvided;
-            refreshToken.Expires = DateTime.UtcNow.AddDays(30);
+            refreshToken.Expires = DateTime.UtcNow.AddDays(applicationSettings.Value.LogOutInactiveDeviceDays);
             refreshToken.Token = tokenService.GenerateRefreshToken();
 
             await db.SaveChangesAsync();
@@ -95,7 +95,7 @@ namespace LightNap.Core.Identity.Services
         /// <returns>A task that represents the asynchronous operation.</returns>
         private async Task CreateRefreshTokenAsync(ApplicationUser user, bool rememberMe, string deviceDetails)
         {
-            DateTime expires = DateTime.UtcNow.AddDays(30);
+            DateTime expires = DateTime.UtcNow.AddDays(applicationSettings.Value.LogOutInactiveDeviceDays);
             string refreshToken = tokenService.GenerateRefreshToken();
 
             db.RefreshTokens.Add(

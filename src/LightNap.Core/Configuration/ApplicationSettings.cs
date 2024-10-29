@@ -6,22 +6,27 @@
     public class ApplicationSettings
     {
         /// <summary>
-        /// Gets or sets a value indicating whether to automatically apply Entity Framework migrations.
+        /// True to automatically apply Entity Framework migrations on startup.
         /// </summary>
         public bool AutomaticallyApplyEfMigrations { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to require two-factor authentication for new users.
+        /// How long a device can stay logged in without refreshing an access token. In other words, how far out we push refresh token expirations.
+        /// </summary>
+        public int LogOutInactiveDeviceDays { get; set; }
+
+        /// <summary>
+        /// True to require two-factor authentication for new users. This does not affect existing users.
         /// </summary>
         public bool RequireTwoFactorForNewUsers { get; set; }
 
         /// <summary>
-        /// Gets or sets the root URL for emails sent by the site.
+        /// The root URL for emails sent by the site.
         /// </summary>
         public required string SiteUrlRootForEmails { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to use SameSite strict cookies.
+        /// True to use SameSite strict cookies. Set to false if you are debugging an Angular UI from a different base URL.
         /// </summary>
         public bool UseSameSiteStrictCookies { get; set; }
     }
