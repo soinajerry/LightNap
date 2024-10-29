@@ -5,24 +5,29 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: '3.3'
-
-    - name: Install dependencies
-      run: |
-        cd docs
-        gem install bundler
-        bundle install
+        bundler-cache: true
+        cache-version: 0
 
     - name: Setup Pages
       id: pages
@@ -50,5 +55,3 @@ jobs:
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v2
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
