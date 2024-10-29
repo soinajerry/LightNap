@@ -11,7 +11,7 @@ describe('IdentityService', () => {
     let timerServiceSpy: jasmine.SpyObj<TimerService>;
     // Using a valid JWT token for testing purposes. IdentityService will try to parse it so it might as well work.
     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-    
+
     beforeEach(() => {
         const dataSpy = jasmine.createSpyObj('DataService', ['getAccessToken', 'logIn', 'register', 'logOut', 'verifyCode', 'resetPassword', 'newPassword']);
         const timerSpy = jasmine.createSpyObj('TimerService', ['watchTimer$']);
@@ -45,7 +45,7 @@ describe('IdentityService', () => {
     });
 
     it('should log in and set token', () => {
-        const loginRequest = <any>{};
+        const loginRequest = {} as any;
         dataServiceSpy.logIn.and.returnValue(of(new SuccessApiResponse({ bearerToken: token, twoFactorRequired: false })));
         service.logIn(loginRequest).subscribe(() => {
             expect(service.getBearerToken()).toBe(`Bearer ${token}`);
@@ -62,7 +62,7 @@ describe('IdentityService', () => {
     });
 
     it('should register and set token', () => {
-        const registerRequest: RegisterRequest = <any>{};
+        const registerRequest: RegisterRequest = {} as any;
         dataServiceSpy.register.and.returnValue(of(new SuccessApiResponse({ bearerToken: token, twoFactorRequired: false })));
         service.register(registerRequest).subscribe(() => {
             expect(service.getBearerToken()).toBe(`Bearer ${token}`);
@@ -71,7 +71,7 @@ describe('IdentityService', () => {
     });
 
     it('should verify code and set token', () => {
-        const verifyCodeRequest: VerifyCodeRequest = <any>{};
+        const verifyCodeRequest: VerifyCodeRequest = {} as any;
         dataServiceSpy.verifyCode.and.returnValue(of(new SuccessApiResponse(token)));
         service.verifyCode(verifyCodeRequest).subscribe(() => {
             expect(service.getBearerToken()).toBe(`Bearer ${token}`);
@@ -81,13 +81,13 @@ describe('IdentityService', () => {
 
     it('should reset password', () => {
         const resetPasswordRequest: ResetPasswordRequest = <any>{ };
-        dataServiceSpy.resetPassword.and.returnValue(of(<any>{}));
+        dataServiceSpy.resetPassword.and.returnValue(of({} as any));
         service.resetPassword(resetPasswordRequest).subscribe();
         expect(dataServiceSpy.resetPassword).toHaveBeenCalledWith(resetPasswordRequest);
     });
 
     it('should set new password and set token', () => {
-        const newPasswordRequest: NewPasswordRequest = <any>{};
+        const newPasswordRequest: NewPasswordRequest = {} as any;
         dataServiceSpy.newPassword.and.returnValue(of(new SuccessApiResponse(token)));
         service.newPassword(newPasswordRequest).subscribe(() => {
             expect(service.getBearerToken()).toBe(`Bearer ${token}`);

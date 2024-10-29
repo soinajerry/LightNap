@@ -8,8 +8,8 @@ export type RouteAlias =
     | 'error'
     | 'not-found'
 
-    // Secure
-    | 'home'
+    // User
+    | 'user-home'
 
     // Admin
     | 'admin-home'

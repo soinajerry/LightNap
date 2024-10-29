@@ -89,7 +89,7 @@ export class ProfileService {
   }
 
   getDefaultStyleSettings() {
-    return JSON.parse(JSON.stringify(this.#defaultBrowserSettings.style));
+    return JSON.parse(JSON.stringify(this.#defaultBrowserSettings.style)) as StyleSettings;
   }
 
   hasLoadedStyleSettings() {
