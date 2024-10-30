@@ -47,7 +47,7 @@ jobs:
       - name: Run tests
         run: |
           cd src/lightnap-ng
-          npm test
+          npm test -- --watch=false --browsers=ChromeHeadless
 
       - name: Build Angular app
         run: |
