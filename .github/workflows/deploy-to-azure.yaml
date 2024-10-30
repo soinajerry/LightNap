@@ -1,8 +1,5 @@
 name: Deploy to Azure App Service
 
-env:
-  AZURE_APP_SERVICE_NAME: "lightnap"
-
 on:
   workflow_run:
     workflows: "Build, Test, and Publish"
@@ -20,22 +17,34 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Get the run ID of the latest completed build
+        id: get-run-id
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const runs = await github.actions.listWorkflowRuns({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'build-test-publish.yaml',
+              branch: 'main',
+              status: 'completed',
+              per_page: 1
+            });
+            const runId = runs.data.workflow_runs[0].id;
+            core.setOutput('run-id', runId);
+
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           name: build-artifacts
           path: ./build
+          run-id: ${{ steps.get-run-id.outputs.run-id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set up .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8'
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.AZURE_APP_SERVICE_NAME }}
+          app-name: ${{ secrets.AZURE_APP_SERVICE_NAME }}
           slot-name:
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: ./build
