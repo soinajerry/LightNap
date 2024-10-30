@@ -13,3 +13,5 @@ LightNap (**light**weight .**N**ET Core/**A**ngular/**P**rimeNG) is a full stack
 - **PrimeNG**: Rich set of UI components for Angular.
 
 Check out [the docs](https://lightnap.sharplogic.com).
+
+Check out [the baseline demo site](https://lightnap.azurewebsites.net).

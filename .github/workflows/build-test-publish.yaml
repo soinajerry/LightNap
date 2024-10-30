@@ -1,0 +1,63 @@
+name: Build, Test, and Publish
+
+env:
+  DOTNET_VERSION: '8'
+  NODE_VERSION: '22'
+  WEBAPI_PROJECT_NAME: 'LightNap.WebApi'
+  ANGULAR_PROJECT_NAME: 'lightnap-ng'
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Build and test the back-end
+        working-directory: src
+        run: |
+          dotnet restore
+          dotnet test
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install front-end dependencies
+        working-directory: src/${{ env.ANGULAR_PROJECT_NAME }}
+        run: npm install
+
+      - name: Run front-end tests
+        working-directory: src/${{ env.ANGULAR_PROJECT_NAME }}
+        run: npm test -- --watch=false --browsers=ChromeHeadless
+
+      - name: Build front-end app and deploy into back-end site
+        working-directory: src/${{ env.ANGULAR_PROJECT_NAME }}
+        run: npm run deploy
+
+      - name: Publish back-end app
+        working-directory: src
+        run: dotnet publish --configuration Release
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: src/${{ env.WEBAPI_PROJECT_NAME }}/bin/Release/net8.0/publish
