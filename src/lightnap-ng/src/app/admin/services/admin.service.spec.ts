@@ -1,9 +1,9 @@
+import { AdminUser, Role, SearchAdminUsersRequest, UpdateAdminUserRequest } from "@admin/models";
 import { TestBed } from "@angular/core/testing";
+import { SuccessApiResponse } from "@core";
 import { of } from "rxjs";
 import { AdminService } from "./admin.service";
 import { DataService } from "./data.service";
-import { AdminUser, Role, SearchAdminUsersRequest, UpdateAdminUserRequest } from "@admin/models";
-import { SuccessApiResponse } from "@core";
 
 describe("AdminService", () => {
   let service: AdminService;
@@ -20,6 +20,8 @@ describe("AdminService", () => {
       "getUsersInRole",
       "addUserToRole",
       "removeUserFromRole",
+      "lockUserAccount",
+      "unlockUserAccount",
     ]);
 
     TestBed.configureTestingModule({
@@ -45,7 +47,7 @@ describe("AdminService", () => {
 
   it("should update user", () => {
     const userId = "user-id";
-    const updateRequest: UpdateAdminUserRequest = { };
+    const updateRequest: UpdateAdminUserRequest = {};
     dataServiceSpy.updateUser.and.returnValue(of({} as any));
 
     service.updateUser(userId, updateRequest).subscribe();
@@ -62,32 +64,32 @@ describe("AdminService", () => {
     expect(dataServiceSpy.deleteUser).toHaveBeenCalledWith(userId);
   });
 
-it("should search users", () => {
+  it("should search users", () => {
     const searchRequest: SearchAdminUsersRequest = { sortBy: "userName", reverseSort: false };
     dataServiceSpy.searchUsers.and.returnValue(of({} as any));
 
     service.searchUsers(searchRequest).subscribe();
 
     expect(dataServiceSpy.searchUsers).toHaveBeenCalledWith(searchRequest);
-});
+  });
 
-it("should get roles", () => {
+  it("should get roles", () => {
     dataServiceSpy.getRoles.and.returnValue(of({} as any));
 
     service.getRoles().subscribe();
 
     expect(dataServiceSpy.getRoles).toHaveBeenCalled();
-});
+  });
 
-it("should get role by name", () => {
+  it("should get role by name", () => {
     dataServiceSpy.getRoles.and.returnValue(of({} as any));
 
     service.getRoles().subscribe();
 
     expect(dataServiceSpy.getRoles).toHaveBeenCalled();
-});
+  });
 
-it("should get user roles", () => {
+  it("should get user roles", () => {
     const role = "Administrator";
     const userId = "user-id";
     const rolesResponse = new SuccessApiResponse<Role[]>([{ name: role } as Role]);
@@ -99,18 +101,18 @@ it("should get user roles", () => {
 
     expect(dataServiceSpy.getRoles).toHaveBeenCalled();
     expect(dataServiceSpy.getUserRoles).toHaveBeenCalledWith(userId);
-});
+  });
 
-it("should get users in role", () => {
+  it("should get users in role", () => {
     const role = "Administrator";
     dataServiceSpy.getUsersInRole.and.returnValue(of({} as any));
 
     service.getUsersInRole(role).subscribe();
 
     expect(dataServiceSpy.getUsersInRole).toHaveBeenCalledWith(role);
-});
+  });
 
-it("should add user to role", () => {
+  it("should add user to role", () => {
     const userId = "user-id";
     const role = "admin";
     dataServiceSpy.addUserToRole.and.returnValue(of({} as any));
@@ -118,9 +120,9 @@ it("should add user to role", () => {
     service.addUserToRole(userId, role).subscribe();
 
     expect(dataServiceSpy.addUserToRole).toHaveBeenCalledWith(userId, role);
-});
+  });
 
-it("should remove user from role", () => {
+  it("should remove user from role", () => {
     const userId = "user-id";
     const role = "admin";
     dataServiceSpy.removeUserFromRole.and.returnValue(of({} as any));
@@ -128,5 +130,44 @@ it("should remove user from role", () => {
     service.removeUserFromRole(userId, role).subscribe();
 
     expect(dataServiceSpy.removeUserFromRole).toHaveBeenCalledWith(userId, role);
-});
+  });
+
+  it("should lock user account", () => {
+    const userId = "user-id";
+    dataServiceSpy.lockUserAccount.and.returnValue(of({} as any));
+
+    service.lockUserAccount(userId).subscribe();
+
+    expect(dataServiceSpy.lockUserAccount).toHaveBeenCalledWith(userId);
+  });
+
+  it("should unlock user account", () => {
+    const userId = "user-id";
+    dataServiceSpy.unlockUserAccount.and.returnValue(of({} as any));
+
+    service.unlockUserAccount(userId).subscribe();
+
+    expect(dataServiceSpy.unlockUserAccount).toHaveBeenCalledWith(userId);
+  });
+
+  it("should get user with roles", () => {
+    const userId = "user-id";
+    const userResponse = new SuccessApiResponse<AdminUser>({ id: userId, userName: "testUser" } as AdminUser);
+    const rolesResponse = new SuccessApiResponse<Role[]>([{ name: "admin" } as Role]);
+    const userRolesResponse = new SuccessApiResponse<string[]>(["admin"]);
+
+    dataServiceSpy.getUser.and.returnValue(of(userResponse));
+    dataServiceSpy.getUserRoles.and.returnValue(of(userRolesResponse));
+    dataServiceSpy.getRoles.and.returnValue(of(rolesResponse));
+
+    service.getUserWithRoles(userId).subscribe(response => {
+      expect(response.result).toBeDefined();
+      expect(response.result.user).toEqual(userResponse.result);
+      expect(response.result.roles).toEqual(rolesResponse.result);
+    });
+
+    expect(dataServiceSpy.getUser).toHaveBeenCalledWith(userId);
+    expect(dataServiceSpy.getUserRoles).toHaveBeenCalledWith(userId);
+    expect(dataServiceSpy.getRoles).toHaveBeenCalled();
+  });
 });

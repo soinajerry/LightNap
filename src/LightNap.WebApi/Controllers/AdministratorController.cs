@@ -146,5 +146,37 @@ namespace LightNap.WebApi.Controllers
 
             return await administratorService.RemoveUserFromRoleAsync(role, userId);
         }
+
+        /// <summary>
+        /// Locks a user account.
+        /// </summary>
+        /// <param name="userId">The ID of the user to lock.</param>
+        /// <returns>True if the user account was successfully locked.</returns>
+        /// <response code="200">User account successfully locked.</response>
+        /// <response code="400">If there was an error locking the user account.</response>
+        [HttpPost("users/{userId}/lock")]
+        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult<ApiResponseDto<bool>>> LockUserAccount(string userId)
+        {
+            return await administratorService.LockUserAccountAsync(userId);
+        }
+
+        /// <summary>
+        /// Unlocks a user account.
+        /// </summary>
+        /// <param name="userId">The ID of the user to unlock.</param>
+        /// <returns>True if the user account was successfully unlocked.</returns>
+        /// <response code="200">User account successfully unlocked.</response>
+        /// <response code="400">If there was an error unlocking the user account.</response>
+        [HttpPost("users/{userId}/unlock")]
+        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult<ApiResponseDto<bool>>> UnlockUserAccount(string userId)
+        {
+            return await administratorService.UnlockUserAccountAsync(userId);
+        }
+
+
     }
 }

@@ -49,23 +49,14 @@ namespace LightNap.Core.Administrator.Services
                 query = query.Where(user => EF.Functions.Like(user.UserName!.ToLower(), $"%{requestDto.UserName.ToLower()}%"));
             }
 
-            switch (requestDto.SortBy)
+            query = requestDto.SortBy switch
             {
-                case ApplicationUserSortBy.Email:
-                    query = requestDto.ReverseSort ? query.OrderByDescending(user => user.Email) : query.OrderBy(user => user.Email);
-                    break;
-                case ApplicationUserSortBy.UserName:
-                    query = requestDto.ReverseSort ? query.OrderByDescending(user => user.UserName) : query.OrderBy(user => user.UserName);
-                    break;
-                case ApplicationUserSortBy.CreatedDate:
-                    query = requestDto.ReverseSort ? query.OrderByDescending(user => user.CreatedDate) : query.OrderBy(user => user.CreatedDate);
-                    break;
-                case ApplicationUserSortBy.LastModifiedDate:
-                    query = requestDto.ReverseSort ? query.OrderByDescending(user => user.LastModifiedDate) : query.OrderBy(user => user.LastModifiedDate);
-                    break;
-                default: throw new ArgumentException($"Invalid sort field: '{requestDto.SortBy}'", nameof(requestDto.SortBy));
-            }
-
+                ApplicationUserSortBy.Email => requestDto.ReverseSort ? query.OrderByDescending(user => user.Email) : query.OrderBy(user => user.Email),
+                ApplicationUserSortBy.UserName => requestDto.ReverseSort ? query.OrderByDescending(user => user.UserName) : query.OrderBy(user => user.UserName),
+                ApplicationUserSortBy.CreatedDate => requestDto.ReverseSort ? query.OrderByDescending(user => user.CreatedDate) : query.OrderBy(user => user.CreatedDate),
+                ApplicationUserSortBy.LastModifiedDate => requestDto.ReverseSort ? query.OrderByDescending(user => user.LastModifiedDate) : query.OrderBy(user => user.LastModifiedDate),
+                _ => throw new ArgumentException("Invalid sort field: '{sortBy}'", requestDto.SortBy.ToString()),
+            };
             int totalCount = await query.CountAsync();
 
             if (requestDto.PageNumber > 1)
@@ -183,6 +174,50 @@ namespace LightNap.Core.Administrator.Services
             if (user is null) { return ApiResponseDto<bool>.CreateError("The specified user was not found."); }
 
             var result = await userManager.RemoveFromRoleAsync(user, role);
+            if (!result.Succeeded)
+            {
+                return ApiResponseDto<bool>.CreateError(result.Errors.Select(error => error.Description));
+            }
+
+            return ApiResponseDto<bool>.CreateSuccess(true);
+        }
+
+        /// <summary>
+        /// Locks a user account.
+        /// </summary>
+        /// <param name="userId">The ID of the user to lock.</param>
+        /// <returns>True if the user was successfully locked.</returns>
+        public async Task<ApiResponseDto<bool>> LockUserAccountAsync(string userId)
+        {
+            var user = await db.Users.FindAsync(userId);
+            if (user is null) { return ApiResponseDto<bool>.CreateError("The specified user was not found."); }
+
+            if (await userManager.IsInRoleAsync(user, ApplicationRoles.Administrator.Name!)) { return ApiResponseDto<bool>.CreateError("You may not lock an Administrator account."); }
+
+            user.LockoutEnd = DateTimeOffset.MaxValue;
+
+            var result = await userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                return ApiResponseDto<bool>.CreateError(result.Errors.Select(error => error.Description));
+            }
+
+            return ApiResponseDto<bool>.CreateSuccess(true);
+        }
+
+        /// <summary>
+        /// Unlocks a user account.
+        /// </summary>
+        /// <param name="userId">The ID of the user to unlock.</param>
+        /// <returns>True if the user was successfully unlocked.</returns>
+        public async Task<ApiResponseDto<bool>> UnlockUserAccountAsync(string userId)
+        {
+            var user = await db.Users.FindAsync(userId);
+            if (user is null) { return ApiResponseDto<bool>.CreateError("The specified user was not found."); }
+
+            user.LockoutEnd = null;
+
+            var result = await userManager.UpdateAsync(user);
             if (!result.Succeeded)
             {
                 return ApiResponseDto<bool>.CreateError(result.Errors.Select(error => error.Description));

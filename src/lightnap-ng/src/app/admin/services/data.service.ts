@@ -45,4 +45,12 @@ export class DataService {
   removeUserFromRole(userId: string, role: string) {
     return this.#http.delete<ApiResponse<boolean>>(`${this.#apiUrlRoot}roles/${role}/${userId}`);
   }
+
+  lockUserAccount(userId: string) {
+    return this.#http.post<ApiResponse<boolean>>(`${this.#apiUrlRoot}users/${userId}/lock`, null);
+  }
+
+  unlockUserAccount(userId: string) {
+    return this.#http.post<ApiResponse<boolean>>(`${this.#apiUrlRoot}users/${userId}/unlock`, null);
+  }
 }

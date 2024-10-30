@@ -49,12 +49,15 @@ namespace LightNap.Core.Extensions
         /// <returns>An AdminUserDto object representing the ApplicationUser object.</returns>
         public static AdminUserDto ToAdminUserDto(this ApplicationUser user)
         {
+            long? lockoutEnd = (user.LockoutEnd.GetValueOrDefault(DateTime.MinValue) < DateTime.UtcNow) ? null : user.LockoutEnd?.ToUnixTimeMilliseconds();
+
             return new AdminUserDto()
             {
                 CreatedDate = new DateTimeOffset(user.CreatedDate).ToUnixTimeMilliseconds(),
                 LastModifiedDate = new DateTimeOffset(user.LastModifiedDate).ToUnixTimeMilliseconds(),
                 Email = user.Email!,
                 Id = user.Id,
+                LockoutEnd = lockoutEnd,
                 UserName = user.UserName!
             };
         }

@@ -1,4 +1,4 @@
-import { AdminUser, Role, SearchAdminUsersRequest, UpdateAdminUserRequest } from "@admin/models";
+import { AdminUser, AdminUserWithRoles, Role, SearchAdminUsersRequest, UpdateAdminUserRequest } from "@admin/models";
 import { Injectable, inject } from "@angular/core";
 import { ApiResponse, SuccessApiResponse } from "@core";
 import { combineLatest, map, of, tap } from "rxjs";
@@ -122,5 +122,42 @@ export class AdminService {
    */
   removeUserFromRole(userId: string, role: string) {
     return this.#dataService.removeUserFromRole(userId, role);
+  }
+
+  /**
+   * Locks a user account.
+   * @param {string} userId - The user to lock.
+   * @returns {Observable<ApiResponse<boolean>>} An observable with a result of true if successful.
+   */
+  lockUserAccount(userId: string) {
+    return this.#dataService.lockUserAccount(userId);
+  }
+
+  /**
+   * Unlocks a user account.
+   * @param {string} userId - The user to lock.
+   * @returns {Observable<ApiResponse<boolean>>} An observable with a result of true if successful.
+   */
+  unlockUserAccount(userId: string) {
+    return this.#dataService.unlockUserAccount(userId);
+  }
+
+  /**
+   * Gets a user with their roles.
+   * @param {string} userId - The user.
+   * @returns {Observable<ApiResponse<AdminUserWithRoles>>} An observable containing the user and roles.
+   */
+  getUserWithRoles(userId: string) {
+    return combineLatest([this.getUser(userId), this.getUserRoles(userId)]).pipe(
+      map(([userResponse, rolesResponse]) => {
+        if (!userResponse.result) return userResponse as any as ApiResponse<AdminUserWithRoles>;
+        if (!rolesResponse.result) return rolesResponse as any as ApiResponse<AdminUserWithRoles>;
+
+        return new SuccessApiResponse<AdminUserWithRoles>({
+          user: userResponse.result,
+          roles: rolesResponse.result,
+        });
+      })
+    );
   }
 }

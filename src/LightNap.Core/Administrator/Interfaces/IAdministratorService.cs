@@ -74,5 +74,19 @@ namespace LightNap.Core.Administrator.Interfaces
         /// <param name="userId">The user ID.</param>  
         /// <returns>A task that represents the asynchronous operation. The task result contains the API response indicating whether the removal was successful.</returns>  
         Task<ApiResponseDto<bool>> RemoveUserFromRoleAsync(string role, string userId);
+
+        /// <summary>  
+        /// Locks a user account asynchronously by user ID.  
+        /// </summary>  
+        /// <param name="userId">The user ID.</param>  
+        /// <returns>A task that represents the asynchronous operation. The task result contains the API response indicating whether the lock was successful.</returns>  
+        Task<ApiResponseDto<bool>> LockUserAccountAsync(string userId);
+
+        /// <summary>  
+        /// Unlocks a user account asynchronously by user ID.  
+        /// </summary>  
+        /// <param name="userId">The user ID.</param>  
+        /// <returns>A task that represents the asynchronous operation. The task result contains the API response indicating whether the unlock was successful.</returns>  
+        Task<ApiResponseDto<bool>> UnlockUserAccountAsync(string userId);
     }
 }

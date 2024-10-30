@@ -211,3 +211,20 @@ Authorization: Bearer {{_token}}
 DELETE {{_hostAddress}}/api/administrator/roles/{{_adminRoleMethodsRole}}/{{_adminRoleMethodsUserId}}
 Authorization: Bearer {{_token}}
 
+### Lock a user account.
+# @name LockUserAccount
+POST {{_hostAddress}}/api/administrator/users/{{_adminUserMethodsUserId}}/lock
+Authorization: Bearer {{_token}}
+Content-Type: application/json
+
+{
+}
+
+### Unlock a user account.
+# @name UnlockUserAccount
+POST {{_hostAddress}}/api/administrator/users/{{_adminUserMethodsUserId}}/unlock
+Authorization: Bearer {{_token}}
+Content-Type: application/json
+
+{
+}

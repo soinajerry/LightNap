@@ -31,4 +31,10 @@ export interface AdminUser {
      * @type {number}
      */
     createdDate: number;
+
+    /**
+     * The timestamp when the user lockout ends. If the user is not locked out, this value is undefined.
+     * @type {number}
+     */
+    lockoutEnd: number;
 }

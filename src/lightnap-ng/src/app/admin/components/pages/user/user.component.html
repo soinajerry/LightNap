@@ -1,8 +1,40 @@
-<p-card [header]="header" [subheader]="subHeader">
-  <api-response [apiResponse]="viewModel$" errorMessage="Error loading user" loadingMessage="Loading user...">
-    <ng-template #success let-viewModel>
+<api-response [apiResponse]="userWithRoles$" errorMessage="Error loading user" loadingMessage="Loading user...">
+  <ng-template #success let-userWithRoles>
+    <p-card>
+      <ng-template pTemplate="header">
+        <div class="p-card-body flex justify-content-between">
+          <div class="flex flex-column gap-1">
+            <div class="p-card-title">
+              {{ userWithRoles.user.userName }}
+              @if(userWithRoles.user.lockoutEnd) {
+              <p-tag class="ml-1" severity="danger" value="Locked" />
+              }
+            </div>
+            <div class="p-card-subtitle">{{ userWithRoles.user.email }}</div>
+          </div>
+          <div>
+            <confirm-popup key="lock" />
+            <p-button
+              severity="danger"
+              title="Lock user account"
+              (onClick)="lockUserAccount($event)"
+              icon="pi pi-lock"
+              [hidden]="userWithRoles.user.lockoutEnd"
+            />
+            <confirm-popup key="unlock" />
+            <p-button
+              severity="success"
+              title="Unlock user account"
+              (onClick)="unlockUserAccount($event)"
+              icon="pi pi-unlock"
+              [hidden]="!userWithRoles.user.lockoutEnd"
+            />
+          </div>
+        </div>
+      </ng-template>
+
       <div class="flex flex-column gap-1">
-        <p-table [value]="viewModel.roles">
+        <p-table [value]="userWithRoles.roles">
           <ng-template pTemplate="header">
             <tr>
               <th><i class="pi pi-trash"></i></th>
@@ -14,7 +46,7 @@
               <td>
                 <confirm-popup [key]="role.name" />
                 <p-button severity="danger" icon="pi pi-trash" title="Remove user from role" (onClick)="removeUserFromRole($event, role.name)" />
-            </td>
+              </td>
               <td>
                 <div class="flex flex-column">
                   <a [routerLink]="'admin-role' | route : role.name"> {{ role.name }}</a>
@@ -52,6 +84,6 @@
 
         <error-list [errors]="errors" />
       </div>
-    </ng-template>
-  </api-response>
-</p-card>
+    </p-card>
+  </ng-template>
+</api-response>
