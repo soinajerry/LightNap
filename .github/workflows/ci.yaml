@@ -32,7 +32,6 @@ jobs:
           cd src
           dotnet restore
           dotnet test
-          dotnet build --configuration Release
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -53,3 +52,14 @@ jobs:
         run: |
           cd src/lightnap-ng
           npm run deploy
+
+      - name: Publish back-end app
+        run: |
+          cd src
+          dotnet publish --configuration Release --output ./publish
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: src/publish
