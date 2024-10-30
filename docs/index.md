@@ -4,7 +4,7 @@ layout: home
 nav_order: 1
 ---
 
-[Getting Started](./getting-started)
+[Getting Started](./getting-started.md)
 
 [Web API](./web-api/)
 
