@@ -1,0 +1,55 @@
+name: Build and test
+
+env:
+  DOTNET_VERSION: '8'
+  NODE_VERSION: '22'
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Build and test the back-end
+        run: |
+          cd src
+          dotnet restore
+          dotnet test
+          dotnet build --configuration Release
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          cd src/lightnap-ng
+          npm install
+
+      - name: Run tests
+        run: |
+          cd src/lightnap-ng
+          npm test
+
+      - name: Build Angular app
+        run: |
+          cd src/lightnap-ng
+          npm run deploy
