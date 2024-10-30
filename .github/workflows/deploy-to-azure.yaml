@@ -25,6 +25,7 @@ jobs:
         with:
           name: build-artifacts
           path: ./build
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
