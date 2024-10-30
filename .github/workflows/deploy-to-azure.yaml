@@ -17,18 +17,34 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Get the run ID of the latest completed build
+        id: get-run-id
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const runs = await github.actions.listWorkflowRuns({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'Build, Test, and Publish',
+              branch: 'main',
+              status: 'completed',
+              per_page: 1
+            });
+            const runId = runs.data.workflow_runs[0].id;
+            core.setOutput('run-id', runId);
+
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           name: build-artifacts
           path: ./build
-          run-id: 11586620464
+          run-id: ${{ steps.get-run-id.outputs.run-id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ secrets.AZURE_APP_SERVICE_NAME }}
-          slot-name:
+          slot-name: 'production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: ./build
