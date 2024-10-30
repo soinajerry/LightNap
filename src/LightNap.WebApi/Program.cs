@@ -71,7 +71,7 @@ try
 {
     var context = services.GetRequiredService<ApplicationDbContext>();
     var applicationSettings = services.GetRequiredService<IOptions<ApplicationSettings>>();
-    if (applicationSettings.Value.AutomaticallyApplyEfMigrations)
+    if (applicationSettings.Value.AutomaticallyApplyEfMigrations && context.Database.IsRelational())
     {
         await context.Database.MigrateAsync();
     }
