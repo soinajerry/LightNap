@@ -39,17 +39,17 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Install dependencies
+      - name: Install front-end dependencies
         run: |
           cd src/lightnap-ng
           npm install
 
-      - name: Run tests
+      - name: Run front-end tests
         run: |
           cd src/lightnap-ng
           npm test -- --watch=false --browsers=ChromeHeadless
 
-      - name: Build Angular app
+      - name: Build front-end app and deploy into back-end site
         run: |
           cd src/lightnap-ng
           npm run deploy
