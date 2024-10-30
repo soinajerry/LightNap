@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Angular deployment path
+/src/LightNap.WebApi/wwwroot
+
 # Configuration files
 appsettings.*.json
 
