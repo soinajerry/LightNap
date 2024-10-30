@@ -21,14 +21,13 @@ jobs:
         id: get-run-id
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { data: { workflow_runs } } = await github.rest.actions.listWorkflowRuns({
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 'Build, Test, and Publish',
               branch: 'main',
-              status: 'completed',
+              status: 'success',
               per_page: 1
             });
             const runId = workflow_runs[0].id;
