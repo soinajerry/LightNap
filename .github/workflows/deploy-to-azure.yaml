@@ -2,11 +2,10 @@ name: Deploy to Azure App Service
 
 env:
   AZURE_APP_SERVICE_NAME: "lightnap"
-  CI_ACTION_NAME: "Build and test"
 
 on:
   workflow_run:
-    workflows: ${{ env.CI_ACTION_NAME }}
+    workflows: "Build and test"
     types:
       - completed
   workflow_dispatch:
