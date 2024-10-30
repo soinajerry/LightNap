@@ -4,11 +4,11 @@ import { CommonModule } from "@angular/common";
 import { Component, inject, Input, OnInit } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
-import { ApiResponse, ConfirmPopupComponent } from "@core";
+import { ApiResponse, ConfirmPopupComponent, ToastService } from "@core";
 import { ApiResponseComponent } from "@core/components/controls/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
 import { TagModule } from "primeng/tag";
-import { RoutePipe } from "@routing";
+import { RouteAliasService, RoutePipe } from "@routing";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
@@ -37,6 +37,8 @@ import { Observable } from "rxjs";
 export class UserComponent implements OnInit {
   #adminService = inject(AdminService);
   #confirmationService = inject(ConfirmationService);
+  #toastService = inject(ToastService);
+  #routeAliasService = inject(RouteAliasService);
   #fb = inject(FormBuilder);
 
   @Input() userId!: string;
@@ -137,6 +139,30 @@ export class UserComponent implements OnInit {
             }
 
             this.#refreshUser();
+          },
+        });
+      },
+    });
+  }
+
+  deleteUser(event: any) {
+    this.errors = [];
+
+    this.#confirmationService.confirm({
+      header: "Confirm Delete User",
+      message: `Are you sure that you want to delete this user?`,
+      target: event.target,
+      key: "delete",
+      accept: () => {
+        this.#adminService.deleteUser(this.userId).subscribe({
+          next: response => {
+            if (!response.result) {
+              this.errors = response.errorMessages;
+              return;
+            }
+
+            this.#toastService.success("User deleted successfully.");
+            this.#routeAliasService.navigate("admin-users");
           },
         });
       },

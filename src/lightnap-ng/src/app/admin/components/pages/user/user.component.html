@@ -12,8 +12,8 @@
             </div>
             <div class="p-card-subtitle">{{ userWithRoles.user.email }}</div>
           </div>
-          <div>
-            <confirm-popup key="lock" />
+          <div class="flex gap-1">
+            <confirm-popup key="lock" confirmSeverity="danger" confirmIcon="pi pi-lock" />
             <p-button
               severity="danger"
               title="Lock user account"
@@ -21,13 +21,20 @@
               icon="pi pi-lock"
               [hidden]="userWithRoles.user.lockoutEnd"
             />
-            <confirm-popup key="unlock" />
+            <confirm-popup key="unlock" confirmSeverity="success" confirmIcon="pi pi-unlock" />
             <p-button
               severity="success"
               title="Unlock user account"
               (onClick)="unlockUserAccount($event)"
               icon="pi pi-unlock"
               [hidden]="!userWithRoles.user.lockoutEnd"
+            />
+            <confirm-popup key="delete" />
+            <p-button
+              severity="danger"
+              title="Delete user"
+              (onClick)="deleteUser($event)"
+              icon="pi pi-trash"
             />
           </div>
         </div>
