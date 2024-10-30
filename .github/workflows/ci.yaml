@@ -56,10 +56,10 @@ jobs:
       - name: Publish back-end app
         run: |
           cd src
-          dotnet publish --configuration Release --output ./publish
+          dotnet publish --configuration Release
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: build-artifacts
-          path: src/publish
+          path: src/bin/Release/net8.0/publish
