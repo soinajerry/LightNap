@@ -9,17 +9,16 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: "deploy-to-azure"
+  cancel-in-progress: true
+  
 jobs:
   deploy:
+    if: vars.RUN_DEPLOY_TO_AZURE_APP_SERVICE == 'true'
     runs-on: ubuntu-latest
 
     steps:
-      - name: Quit if RUN_DEPLOY_TO_AZURE_APP_SERVICE is not set to true
-        if: vars.RUN_DEPLOY_TO_AZURE_APP_SERVICE != 'true'
-        run: |
-          echo "Repo variable RUN_DEPLOY_TO_AZURE_APP_SERVICE is not set to 'true' so this workflow is disabled. Exiting..."
-          exit 0
-    
       - uses: actions/checkout@v4
 
       - name: Download build artifacts
