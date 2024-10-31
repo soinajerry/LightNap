@@ -18,6 +18,7 @@ concurrency:
 
 jobs:
   build:
+    if: vars.RUN_BUILD_AND_DEPLOY_DOCS == 'true'
     runs-on: ubuntu-latest
 
     steps:
