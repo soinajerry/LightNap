@@ -26,7 +26,8 @@ jobs:
         if: vars.RUN_BUILD_TEST_PUBLISH != 'true'
         run: |
           echo "Repo variable RUN_BUILD_TEST_PUBLISH is not set to 'true' so this workflow is disabled. Exiting..."
-          exit 0
+          gh run cancel ${{ github.run_id }}
+          gh run watch ${{ github.run_id }}
           
       - uses: actions/checkout@v4
 
