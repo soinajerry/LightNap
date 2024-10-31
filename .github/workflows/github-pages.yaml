@@ -13,7 +13,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: "deploy-docs"
   cancel-in-progress: true
 
 jobs:
@@ -46,7 +46,7 @@ jobs:
         JEKYLL_ENV: production
 
     - name: Upload artifact
-      uses: actions/upload-pages-artifact@v2
+      uses: actions/upload-pages-artifact@v4
       with:
         path: docs/_site
 
