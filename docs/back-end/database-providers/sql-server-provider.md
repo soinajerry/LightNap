@@ -9,7 +9,7 @@ The `LightNap.DataProviders.SqlServer` project contains the migrations for a SQL
 
 ## Configuration
 
-To use SQL Server:
+To use the SQL Server provider you will need to [configure `appsettings.json`](../../getting-started/configuring-app-settings) or your deployment host with:
 
 - Set the `DatabaseProvider` setting to `SqlServer`.
 - Set the `DefaultConnection` connections string.
