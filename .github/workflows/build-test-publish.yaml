@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   build:
-    if: vars.RUN_BUILD_TEST_PUBLISH = 'true'
+    if: vars.RUN_BUILD_TEST_PUBLISH == 'true'
     runs-on: ubuntu-latest
 
     steps:
