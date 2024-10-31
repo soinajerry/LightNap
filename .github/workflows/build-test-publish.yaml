@@ -22,6 +22,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Quit if RUN_BUILD_TEST_PUBLISH is not set to true
+        if: vars.RUN_BUILD_TEST_PUBLISH != 'true'
+        run: |
+          echo "Repo variable RUN_BUILD_TEST_PUBLISH is not set to 'true' so this workflow is disabled. Exiting..."
+          exit 0
+          
       - uses: actions/checkout@v4
 
       - name: Setup .NET
