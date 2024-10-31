@@ -18,7 +18,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: "pages"
+  group: "build-test-publish"
   cancel-in-progress: true
   
 jobs:
