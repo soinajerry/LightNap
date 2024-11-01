@@ -13,7 +13,7 @@ namespace LightNap.Core.Profile.Interfaces
         /// Retrieves the profile of the requesting user.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="ApiResponseDto{ProfileDto}"/> with the user's profile.</returns>
-        Task<ApiResponseDto<ProfileDto>> GetProfile();
+        Task<ApiResponseDto<ProfileDto>> GetProfileAsync();
 
         /// <summary>
         /// Updates the profile of the requesting user.

@@ -21,6 +21,9 @@ callouts:
 plugins:
   - jekyll-octicons
 
+mermaid:
+  version: "11.4.0"
+
 markdown: kramdown
 kramdown:
   input: GFM

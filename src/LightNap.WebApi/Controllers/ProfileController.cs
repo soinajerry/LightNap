@@ -25,7 +25,7 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(401)]
         public async Task<ActionResult<ApiResponseDto<ProfileDto>>> GetProfile()
         {
-            return await profileService.GetProfile();
+            return await profileService.GetProfileAsync();
         }
 
         /// <summary>

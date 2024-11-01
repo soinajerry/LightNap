@@ -81,7 +81,7 @@ namespace LightNap.Core.Tests
             };
 
             // Act
-            var result = await this._profileService.GetProfile();
+            var result = await this._profileService.GetProfileAsync();
 
             // Assert
             TestHelper.AssertSuccess(result);
