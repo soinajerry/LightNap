@@ -5,7 +5,7 @@ parent: GitHub Actions Workflows
 nav_order: 200
 ---
 
-The `deploy-to-azure.yaml` is configured to run after a successful [Build, Test, and Publish](./build-test-publish.md) workflow run.
+The `deploy-to-azure.yaml` is configured to run after a successful [Build, Test, and Publish](./build-test-publish) workflow run.
 It takes the build artifact and publishes it to an Azure App Service.
 
 It is disabled by default.
