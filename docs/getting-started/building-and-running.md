@@ -1,5 +1,5 @@
 ---
-title: Building and Running the App
+title: Building and Running the Application
 layout: home
 parent: Getting Started
 nav_order: 100
@@ -67,7 +67,7 @@ nav_order: 100
 ## Usage
 
 - Access the application at `http://localhost:4200`.
-- A default administrator account is created with:
+- By default, an administrator account is created with:
   - **Email**: `admin@admin.com`
   - **UserName**: `admin`
   - **Password**: `A2m!nPassword`

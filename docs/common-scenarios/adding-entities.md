@@ -1,9 +1,8 @@
 ---
-title: "Adding Entities"
-description: "A guide for extending the data model."
+title: Adding Entities
 layout: home
-parent: Back-End
-nav_order: 300
+parent: Common Scenarios
+nav_order: 100
 ---
 
 LightNap makes use of Entity Framework (EF) for database access. The `ApplicationDbContext` and supporting entities are all kept in the `Data` folder of the `LightNap.Core` project.

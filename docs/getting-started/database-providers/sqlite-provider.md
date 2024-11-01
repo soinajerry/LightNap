@@ -9,10 +9,10 @@ The `LightNap.DataProviders.Sqlite` project contains the migrations for a SQLite
 
 ## Configuration
 
-To use the SQLite provider you will need to [configure `appsettings.json`](../../getting-started/configuring-app-settings) or your deployment host with:
+To use the SQLite provider you will need to [configure `appsettings.json`](../application-configuration) or your deployment host with:
 
-- Set the `DatabaseProvider` setting to `Sqlite`.
-- Set the `DefaultConnection` connections string.
+- `DatabaseProvider` set to `Sqlite`.
+- `DefaultConnection` set to the connection string.
 
 ## Migrations
 

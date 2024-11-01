@@ -9,9 +9,9 @@ An in-memory database provider is included in the project to make it easier to d
 
 ## Configuration
 
-To use the In-Memory provider you will need to [configure `appsettings.json`](../../getting-started/configuring-app-settings) or your deployment host with:
+To use the In-Memory provider you will need to [configure `appsettings.json`](../application-configuration) or your deployment host with:
 
-- Set the `DatabaseProvider` setting to `InMemory`.
+- `DatabaseProvider` set to `InMemory`.
 
 ## Migrations
 

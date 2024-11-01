@@ -9,16 +9,10 @@ The `LightNap.DataProviders.SqlServer` project contains the migrations for a SQL
 
 ## Configuration
 
-To use the SQL Server provider you will need to [configure `appsettings.json`](../../getting-started/configuring-app-settings) or your deployment host with:
+To use the SQL Server provider you will need to [configure `appsettings.json`](../application-configuration) or your deployment host with:
 
-- Set the `DatabaseProvider` setting to `SqlServer`.
-- Set the `DefaultConnection` connections string.
-
-For example, in `LightNap.WebApi` this can be added in `Program.cs`:
-
-```csharp
-builder.Services.AddLightNapSqlServer(builder.Configuration);
-```
+- `DatabaseProvider` set to `SqlServer`.
+- `DefaultConnection` set to the connection string.
 
 ## Migrations
 

@@ -2,10 +2,10 @@
 title: Understanding the Project Structure
 layout: home
 parent: Getting Started
-nav_order: 300
+nav_order: 700
 ---
 
-Back-End
+## Back-End Projects
 
 - `LightNap.Core`: .NET shared library for common server-side components.
 - `LightNap.Core.Tests`: Test library for `LightNap.Core`.
@@ -14,6 +14,6 @@ Back-End
 - `LightNap.MaintenanceService`: .NET Core console project to run maintenance tasks.
 - `LightNap.WebApi`: .NET Core Web API project.
 
-Front-End
+## Front-End Project
 
 - `lightnap-ng`: Angular project with PrimeNG components based on the [sakai-ng](https://github.com/primefaces/sakai-ng) template.
