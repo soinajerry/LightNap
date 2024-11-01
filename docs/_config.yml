@@ -18,6 +18,9 @@ callouts:
     title: Important
     color: yellow
 
+plugins:
+  - jekyll-octicons
+
 markdown: kramdown
 kramdown:
   input: GFM

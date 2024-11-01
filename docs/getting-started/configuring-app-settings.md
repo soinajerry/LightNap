@@ -5,13 +5,11 @@ parent: Getting Started
 nav_order: 200
 ---
 
-## Configuring The Back-End
-
 All back-end configuration can be done from the `appsettings.json` in `LightNap.WebApi`.
 
 {: .important}
 
-In a production deployment it is preferable to define these settings in a secure place, like [Azure variables](https://learn.microsoft.com/en-us/azure/app-service/reference-app-settings).
+In a production deployment it is preferable to define these settings in a secure place, like [Azure app service environment variables](https://learn.microsoft.com/en-us/azure/app-service/reference-app-settings).
 
 ### Database
 
