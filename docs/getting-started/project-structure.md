@@ -2,7 +2,7 @@
 title: Understanding the Project Structure
 layout: home
 parent: Getting Started
-nav_order: 700
+nav_order: 900
 ---
 
 ## Back-End Projects
