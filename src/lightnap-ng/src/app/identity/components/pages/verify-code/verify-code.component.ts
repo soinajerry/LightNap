@@ -30,7 +30,7 @@ export class VerifyCodeComponent {
   #identityService = inject(IdentityService);
   #blockUi = inject(BlockUiService);
   #fb = inject(FormBuilder);
-  #routeAliasService = inject(RouteAliasService);
+  #routeAlias = inject(RouteAliasService);
   layoutService = inject(LayoutService);
 
   @Input() email = "";
@@ -115,7 +115,7 @@ export class VerifyCodeComponent {
             return;
           }
 
-          this.#routeAliasService.navigate("user-home");
+          this.#routeAlias.navigate("user-home");
         },
         complete: () => this.#blockUi.hide(),
       });

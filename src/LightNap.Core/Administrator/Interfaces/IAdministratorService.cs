@@ -22,7 +22,7 @@ namespace LightNap.Core.Administrator.Interfaces
         /// </summary>  
         /// <param name="requestDto">The request DTO containing search parameters.</param>  
         /// <returns>A task that represents the asynchronous operation. The task result contains the API response with the paged user data.</returns>  
-        Task<ApiResponseDto<PagedResponse<AdminUserDto>>> SearchUsersAsync(SearchUsersRequestDto requestDto);
+        Task<ApiResponseDto<PagedResponse<AdminUserDto>>> SearchUsersAsync(SearchAdminUsersRequestDto requestDto);
 
         /// <summary>  
         /// Updates a user asynchronously by user ID.  

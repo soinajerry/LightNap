@@ -164,7 +164,7 @@ namespace LightNap.Core.Tests.Services
         public async Task SearchUsersAsync_ValidRequest_ReturnsPagedResponse()
         {
             // Arrange
-            var requestDto = new SearchUsersRequestDto { Email = "example" };
+            var requestDto = new SearchAdminUsersRequestDto { Email = "example" };
             List<ApplicationUser> users =
             [
                 new("testuser1", "test1@example.com", true) { Id = "test-user-id1" },

@@ -31,7 +31,7 @@ export class LoginComponent {
   #identityService = inject(IdentityService);
   #blockUi = inject(BlockUiService);
   #fb = inject(FormBuilder);
-  #routeAliasService = inject(RouteAliasService);
+  #routeAlias = inject(RouteAliasService);
 
   form = this.#fb.nonNullable.group({
     email: this.#fb.control("", [Validators.required, Validators.email]),
@@ -60,9 +60,9 @@ export class LoginComponent {
               this.errors = ["An unexpected error occurred."];
             }
           } else if (response.result.twoFactorRequired) {
-            this.#routeAliasService.navigate("verify-code", this.form.value.email);
+            this.#routeAlias.navigate("verify-code", this.form.value.email);
           } else {
-            this.#routeAliasService.navigate("user-home");
+            this.#routeAlias.navigate("user-home");
           }
         },
         complete: () => this.#blockUi.hide(),

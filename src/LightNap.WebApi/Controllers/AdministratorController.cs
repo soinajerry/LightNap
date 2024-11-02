@@ -41,7 +41,7 @@ namespace LightNap.WebApi.Controllers
         [HttpPost("users/search")]
         [ProducesResponseType(typeof(ApiResponseDto<PagedResponse<AdminUserDto>>), 200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<ApiResponseDto<PagedResponse<AdminUserDto>>>> SearchUsers(SearchUsersRequestDto requestDto)
+        public async Task<ActionResult<ApiResponseDto<PagedResponse<AdminUserDto>>>> SearchUsers(SearchAdminUsersRequestDto requestDto)
         {
             return await administratorService.SearchUsersAsync(requestDto);
         }

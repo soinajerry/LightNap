@@ -38,7 +38,7 @@ export class UserComponent implements OnInit {
   #adminService = inject(AdminService);
   #confirmationService = inject(ConfirmationService);
   #toast = inject(ToastService);
-  #routeAliasService = inject(RouteAliasService);
+  #routeAlias = inject(RouteAliasService);
   #fb = inject(FormBuilder);
 
   @Input() userId!: string;
@@ -162,7 +162,7 @@ export class UserComponent implements OnInit {
             }
 
             this.#toast.success("User deleted successfully.");
-            this.#routeAliasService.navigate("admin-users");
+            this.#routeAlias.navigate("admin-users");
           },
         });
       },

@@ -16,7 +16,7 @@ import { RouteAliasService } from "@routing";
 export class AccessDeniedComponent {
     layoutService = inject(LayoutService);
   #identityService = inject(IdentityService);
-  #routeAliasService = inject(RouteAliasService);
+  #routeAlias = inject(RouteAliasService);
 
   loggedIn$ = this.#identityService.watchLoggedIn$();
 
@@ -24,7 +24,7 @@ export class AccessDeniedComponent {
     this.loggedIn$.pipe(take(1)).subscribe({
       next: loggedIn => {
         if (!loggedIn) {
-          this.#routeAliasService.navigate("login");
+          this.#routeAlias.navigate("login");
         }
       },
     });
@@ -34,7 +34,7 @@ export class AccessDeniedComponent {
     this.#identityService.logOut().subscribe({
       next: response => {
         if (response.result) {
-          this.#routeAliasService.navigate("login");
+          this.#routeAlias.navigate("login");
         }
       },
     });

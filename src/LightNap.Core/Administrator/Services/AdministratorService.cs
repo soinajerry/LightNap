@@ -35,7 +35,7 @@ namespace LightNap.Core.Administrator.Services
         /// </summary>
         /// <param name="requestDto">The search criteria.</param>
         /// <returns>The list of users matching the criteria.</returns>
-        public async Task<ApiResponseDto<PagedResponse<AdminUserDto>>> SearchUsersAsync(SearchUsersRequestDto requestDto)
+        public async Task<ApiResponseDto<PagedResponse<AdminUserDto>>> SearchUsersAsync(SearchAdminUsersRequestDto requestDto)
         {
             IQueryable<ApplicationUser> query = db.Users.AsQueryable();
 

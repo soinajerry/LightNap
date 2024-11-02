@@ -7,7 +7,7 @@ namespace LightNap.Core.Administrator.Dto.Request
     /// <summary>
     /// Represents a request to search users.
     /// </summary>
-    public class SearchUsersRequestDto : PaginationRequestDtoBase
+    public class SearchAdminUsersRequestDto : PaginationRequestDtoBase
     {
         /// <summary>
         /// Gets or sets the email of the user.

@@ -33,7 +33,7 @@ export class NewPasswordComponent {
   #blockUi = inject(BlockUiService);
   layoutService = inject(LayoutService);
   #fb = inject(FormBuilder);
-  #routeAliasService = inject(RouteAliasService);
+  #routeAlias = inject(RouteAliasService);
 
   @Input() email = "";
   @Input() token = "";
@@ -62,7 +62,7 @@ export class NewPasswordComponent {
       .subscribe({
         next: response => {
           if (response?.result) {
-            this.#routeAliasService.navigate("user-home");
+            this.#routeAlias.navigate("user-home");
           } else if (response?.errorMessages?.length) {
             this.errors = response?.errorMessages;
           } else {

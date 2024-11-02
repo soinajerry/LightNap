@@ -18,7 +18,7 @@ import { IdentityService } from "src/app/identity/services/identity.service";
 export class IndexComponent {
   #identityService = inject(IdentityService);
   #profileService = inject(ProfileService);
-  #routeAliasService = inject(RouteAliasService);
+  #routeAlias = inject(RouteAliasService);
   #blockUi = inject(BlockUiService);
   #toast = inject(ToastService);
   #fb = inject(FormBuilder);
@@ -49,12 +49,16 @@ export class IndexComponent {
   }
 
   logOut() {
+    this.#blockUi.show({ message: "Logging out..." });
     this.#identityService.logOut().subscribe({
       next: response => {
-        if (response.result) {
-          this.#routeAliasService.navigate("landing");
+        if (!response.result) {
+          this.errors = response.errorMessages;
+          return;
         }
+        this.#routeAlias.navigate("landing");
       },
+      complete: () => this.#blockUi.hide(),
     });
   }
 }

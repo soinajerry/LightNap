@@ -20,7 +20,7 @@ export class ResetPasswordComponent {
   #identityService = inject(IdentityService);
   #blockUi = inject(BlockUiService);
   #fb = inject(FormBuilder);
-  #routeAliasService = inject(RouteAliasService);
+  #routeAlias = inject(RouteAliasService);
   layoutService = inject(LayoutService);
 
   form = this.#fb.nonNullable.group({
@@ -37,7 +37,7 @@ export class ResetPasswordComponent {
       .subscribe({
         next: response => {
           if (response.result) {
-            this.#routeAliasService.getRoute("reset-instructions-sent");
+            this.#routeAlias.getRoute("reset-instructions-sent");
           } else {
             if (response.errorMessages?.length) {
               this.errors = response.errorMessages;

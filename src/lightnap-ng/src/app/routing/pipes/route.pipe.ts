@@ -10,7 +10,7 @@ import { RouteAlias } from "@routing/models/route-alias";
  * A pipe that transforms a given `RouteAlias` into route data that can be bound to [routerLink] in templates.
  */
 export class RoutePipe implements PipeTransform {
-    #routeAliasService = inject(RouteAliasService);
+    #routeAlias = inject(RouteAliasService);
 
     /**
      * Transforms the provided `RouteAlias` into a route string.
@@ -20,6 +20,6 @@ export class RoutePipe implements PipeTransform {
      * @returns The route string corresponding to the provided `RouteAlias`.
      */
     transform(view: RouteAlias, value?: any) {
-        return this.#routeAliasService.getRoute(view, value);
+        return this.#routeAlias.getRoute(view, value);
     }
 }
