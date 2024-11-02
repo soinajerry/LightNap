@@ -43,7 +43,6 @@ export class IndexComponent {
         }
 
         this.#toast.success("Profile updated successfully.");
-        this.form.reset();
       },
       complete: () => this.#blockUi.hide(),
     });
