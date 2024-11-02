@@ -15,6 +15,9 @@ The root route definition file is at `app/routing/routes.ts`. This file contains
 
 Route aliases are shortcodes that reference exactly one route configuration in the app. The list of supported route aliases is defined in `app/routing/models/route-alias.ts`.
 
+{: .note}
+Using route aliases is optional. Developers can still hardcode inline routes if preferred.
+
 By using a route alias you can tag an application route, such as:
 
 ``` typescript
