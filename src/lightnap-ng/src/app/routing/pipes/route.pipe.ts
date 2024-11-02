@@ -15,11 +15,12 @@ export class RoutePipe implements PipeTransform {
     /**
      * Transforms the provided `RouteAlias` into a route string.
      *
-     * @param view - The `RouteAlias` to be transformed.
+     * @param alias - The `RouteAlias` to be transformed.
      * @param value - Optional additional value to be used in the transformation.
      * @returns The route string corresponding to the provided `RouteAlias`.
      */
-    transform(view: RouteAlias, value?: any) {
-        return this.#routeAlias.getRoute(view, value);
+    transform(alias: RouteAlias, value?: any) {
+        console.log(alias, value);
+        return this.#routeAlias.getRoute(alias, value);
     }
 }

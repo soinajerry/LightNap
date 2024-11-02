@@ -4,24 +4,16 @@ import { StyleSettings } from "@profile";
 import { ProfileService } from "@profile/services/profile.service";
 import { Subject } from "rxjs";
 import { IdentityService } from "src/app/identity/services/identity.service";
-
-interface LayoutState {
-  staticMenuDesktopInactive: boolean;
-  overlayMenuActive: boolean;
-  profileSidebarVisible: boolean;
-  configSidebarVisible: boolean;
-  staticMenuMobileActive: boolean;
-  menuHoverActive: boolean;
-}
+import { LayoutState } from "../models/layout-state";
 
 @Injectable({
   providedIn: "root",
 })
 export class LayoutService {
-  identityService = inject(IdentityService);
-  profileService = inject(ProfileService);
+  #identityService = inject(IdentityService);
+  #profileService = inject(ProfileService);
 
-  #styleSettings = this.profileService.getDefaultStyleSettings();
+  #styleSettings = this.#profileService.getDefaultStyleSettings();
 
   config = signal<StyleSettings>(this.#styleSettings);
 
@@ -50,16 +42,16 @@ export class LayoutService {
       this.onConfigUpdate();
     });
 
-    this.identityService
+    this.#identityService
       .watchLoggedIn$()
       .pipe(takeUntilDestroyed())
       .subscribe(loggedIn => {
         if (loggedIn) {
-          this.profileService.getSettings().subscribe(response => {
+          this.#profileService.getSettings().subscribe(response => {
             this.config.set(response.result.style);
           });
         } else {
-          this.config.set(this.profileService.getDefaultStyleSettings());
+          this.config.set(this.#profileService.getDefaultStyleSettings());
         }
       });
   }
@@ -114,8 +106,8 @@ export class LayoutService {
     this.#styleSettings = { ...this.config() };
     this.#configUpdate.next(this.config());
 
-    if (this.profileService.hasLoadedStyleSettings()) {
-      this.profileService.updateStyleSettings(this.#styleSettings).subscribe({
+    if (this.#profileService.hasLoadedStyleSettings()) {
+      this.#profileService.updateStyleSettings(this.#styleSettings).subscribe({
         next: response => {
           if (!response.result) {
             console.error("Unable to save settings", response.errorMessages);
