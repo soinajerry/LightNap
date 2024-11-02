@@ -40,7 +40,7 @@ export class UsersComponent {
 
   #adminService = inject(AdminService);
   #confirmationService = inject(ConfirmationService);
-  #toastService = inject(ToastService);
+  #toast = inject(ToastService);
   #fb = inject(FormBuilder);
 
   form = this.#fb.group({
@@ -97,7 +97,7 @@ export class UsersComponent {
             return;
           }
 
-          this.#toastService.success("User deleted successfully.");
+          this.#toast.success("User deleted successfully.");
           this.#lazyLoadEventSubject.next({ first: 0 });
         });
       },

@@ -37,7 +37,7 @@ import { Observable } from "rxjs";
 export class UserComponent implements OnInit {
   #adminService = inject(AdminService);
   #confirmationService = inject(ConfirmationService);
-  #toastService = inject(ToastService);
+  #toast = inject(ToastService);
   #routeAliasService = inject(RouteAliasService);
   #fb = inject(FormBuilder);
 
@@ -161,7 +161,7 @@ export class UserComponent implements OnInit {
               return;
             }
 
-            this.#toastService.success("User deleted successfully.");
+            this.#toast.success("User deleted successfully.");
             this.#routeAliasService.navigate("admin-users");
           },
         });

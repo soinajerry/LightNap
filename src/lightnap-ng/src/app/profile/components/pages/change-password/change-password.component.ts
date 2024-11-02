@@ -33,7 +33,7 @@ import { TableModule } from "primeng/table";
 export class ChangePasswordComponent {
   #profileService = inject(ProfileService);
   #blockUi = inject(BlockUiService);
-  #toastService = inject(ToastService);
+  #toast = inject(ToastService);
   #fb = inject(FormBuilder);
 
   errors = new Array<string>();
@@ -62,7 +62,7 @@ export class ChangePasswordComponent {
             return;
           }
 
-          this.#toastService.success("Password changed successfully.");
+          this.#toast.success("Password changed successfully.");
           this.form.reset();
         },
         complete: () => this.#blockUi.hide(),

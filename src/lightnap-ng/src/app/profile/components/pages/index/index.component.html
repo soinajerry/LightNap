@@ -12,6 +12,14 @@
           <span id="email">{{ profile.email }}</span>
         </div>
 
+        <form [formGroup]="form" (ngSubmit)="updateProfile()" autocomplete="off">
+          <div class="flex flex-column w-20rem">
+
+            <error-list [errors]="errors" />
+            <p-button type="submit" label="Update Profile" styleClass="w-full" [disabled]="!form.valid || !form.dirty" />
+          </div>
+        </form>
+
         <div class="mt-1">
           <p-button (onClick)="logOut()" label="Log Out" />
         </div>
