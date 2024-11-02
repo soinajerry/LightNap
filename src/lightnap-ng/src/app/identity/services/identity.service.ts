@@ -25,7 +25,9 @@ export class IdentityService {
   #loggedInRolesSubject$ = new ReplaySubject<Array<string>>(1);
   #requestingRefreshToken = false;
 
-  get loggedIn() { return !!this.#token; }
+  get loggedIn() {
+    return !!this.#token;
+  }
 
   constructor() {
     this.#timer
@@ -90,10 +92,14 @@ export class IdentityService {
     return this.#loggedInBehaviorSubject$.pipe(distinctUntilChanged());
   }
 
-  watchLoggedInToRole$(role: string) {
+  watchLoggedInToRole$(allowedRole: string) {
+    return this.watchLoggedInToAnyRole$([allowedRole]);
+  }
+
+  watchLoggedInToAnyRole$(allowedRoles: Array<string>) {
     return this.#loggedInRolesSubject$.pipe(
       map(roles => {
-        return !!roles?.find(roleItem => roleItem === role);
+        return allowedRoles.some(role => roles?.includes(role));
       })
     );
   }
