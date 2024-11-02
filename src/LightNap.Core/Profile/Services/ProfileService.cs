@@ -56,7 +56,7 @@ namespace LightNap.Core.Profile.Services
         public async Task<ApiResponseDto<ProfileDto>> UpdateProfileAsync(UpdateProfileDto requestDto)
         {
             var user = await db.Users.FindAsync(userContext.GetUserId());
-            if (user is null) { return ApiResponseDto<ProfileDto>.CreateError("Unable to change password."); }
+            if (user is null) { return ApiResponseDto<ProfileDto>.CreateError("Unable to update profile."); }
 
             user.UpdateLoggedInUser(requestDto);
 

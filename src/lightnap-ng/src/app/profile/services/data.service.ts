@@ -19,7 +19,7 @@ export class DataService {
   }
 
   updateProfile(updateProfile: UpdateProfileRequest) {
-    return this.#http.post<ApiResponse<Profile>>(`${this.#apiUrlRoot}`, updateProfile);
+    return this.#http.put<ApiResponse<Profile>>(`${this.#apiUrlRoot}`, updateProfile);
   }
 
   getDevices() {
