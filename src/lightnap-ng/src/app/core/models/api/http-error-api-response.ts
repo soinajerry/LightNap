@@ -42,7 +42,7 @@ export class HttpErrorApiResponse<T> implements ApiResponse<T> {
     }
 
     if (!environment.production) {
-      this.errorMessages.push(`DEBUG: ${error.message}`);
+      this.errorMessages.push(`DEBUG: ${JSON.stringify(error)}`);
     }
   }
 }
