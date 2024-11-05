@@ -1,0 +1,15 @@
+﻿using LightNap.Core.Api;
+using LightNap.Core.<#= PascalNamePlural #>.Request.Dto;
+using LightNap.Core.<#= PascalNamePlural #>.Response.Dto;
+
+namespace LightNap.Core.<#= PascalNamePlural #>.Interfaces
+{
+    public interface I<#= PascalName #>Service
+    {
+        Task<ApiResponseDto<<#= PascalName #>Dto>> Get<#= PascalName #>Async(<#= ServerIdType #> id);
+        Task<ApiResponseDto<PagedResponse<<#= PascalName #>Dto>>> Search<#= PascalNamePlural #>Async(Search<#= PascalNamePlural #>Dto dto);
+        Task<ApiResponseDto<<#= PascalName #>Dto>> Create<#= PascalName #>Async(Create<#= PascalName #>Dto dto);
+        Task<ApiResponseDto<<#= PascalName #>Dto>> Update<#= PascalName #>Async(<#= ServerIdType #> id, Update<#= PascalName #>Dto dto);
+        Task<ApiResponseDto<bool>> Delete<#= PascalName #>Async(<#= ServerIdType #> id);
+    }
+}

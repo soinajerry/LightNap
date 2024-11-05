@@ -1,0 +1,7 @@
+﻿namespace LightNap.Core.<#= PascalNamePlural #>.Request.Dto
+{
+    public class Update<#= PascalName #>Dto
+    {
+        <#= ServerPropertiesList #>
+    }
+}

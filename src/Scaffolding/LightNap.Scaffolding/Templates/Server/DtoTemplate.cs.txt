@@ -1,0 +1,9 @@
+﻿namespace LightNap.Core.<#= PascalNamePlural #>.Response.Dto
+{
+    public class <#= PascalName #>Dto
+    {
+        public <#= ServerIdType #> Id { get; set; }
+        <#= ServerPropertiesList #>
+    }
+}
+     

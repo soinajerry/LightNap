@@ -1,0 +1,51 @@
+﻿using LightNap.Core.Api;
+using LightNap.Core.<#= PascalNamePlural #>.Interfaces;
+using LightNap.Core.<#= PascalNamePlural #>.Request.Dto;
+using LightNap.Core.<#= PascalNamePlural #>.Response.Dto;
+using Microsoft.AspNetCore.Mvc;
+
+namespace LightNap.WebApi.Controllers
+{
+    /// <summary>
+    /// Controller for handling publicly accessible data.
+    /// </summary>
+    [ApiController]
+    [Route("api/[controller]")]
+    public class <#= PascalName #>Controller(I<#= PascalName #>Service <#= CamelNamePlural #>Service) : ControllerBase
+    {
+        [HttpGet]
+        [ProducesResponseType(typeof(ApiResponseDto<<#= PascalName #>Dto>), 200)]
+        public async Task<ActionResult<ApiResponseDto<<#= PascalName #>Dto>>> Get<#= PascalName #>(<#= ServerIdType #> id)
+        {
+            return await <#= CamelNamePlural #>Service.Get<#= PascalName #>Async(id);
+        }
+
+        [HttpPost("search")]
+        [ProducesResponseType(typeof(ApiResponseDto<PagedResponse<<#= PascalName #>Dto>>), 200)]
+        public async Task<ActionResult<ApiResponseDto<PagedResponse<<#= PascalName #>Dto>>>> Search<#= PascalNamePlural #>([FromBody] Search<#= PascalNamePlural #>Dto dto)
+        {
+            return await <#= CamelNamePlural #>Service.Search<#= PascalNamePlural #>Async(dto);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(ApiResponseDto<<#= PascalName #>Dto>), 201)]
+        public async Task<ActionResult<ApiResponseDto<<#= PascalName #>Dto>>> Create<#= PascalName #>([FromBody] Create<#= PascalName #>Dto dto)
+        {
+            return await <#= CamelNamePlural #>Service.Create<#= PascalName #>Async(dto);
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(ApiResponseDto<<#= PascalName #>Dto>), 200)]
+        public async Task<ActionResult<ApiResponseDto<<#= PascalName #>Dto>>> Update<#= PascalName #>(<#= ServerIdType #> id, [FromBody] Update<#= PascalName #>Dto dto)
+        {
+            return await <#= CamelNamePlural #>Service.Update<#= PascalName #>Async(id, dto);
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
+        public async Task<ActionResult<ApiResponseDto<bool>>> Delete<#= PascalName #>(<#= ServerIdType #> id)
+        {
+            return await <#= CamelNamePlural #>Service.Delete<#= PascalName #>Async(id);
+        }
+    }
+}

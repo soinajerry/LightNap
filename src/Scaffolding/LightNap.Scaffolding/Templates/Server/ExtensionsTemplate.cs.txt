@@ -1,0 +1,29 @@
+﻿using LightNap.Core.Data.Entities;
+using LightNap.Core.<#= PascalNamePlural #>.Request.Dto;
+using LightNap.Core.<#= PascalNamePlural #>.Response.Dto;
+
+namespace LightNap.Core.<#= PascalNamePlural #>.Extensions
+{
+    public static class <#= PascalName #>Extensions
+    {
+        public static <#= PascalName #> ToCreate(this Create<#= PascalName #>Dto dto)
+        {
+            var item = new <#= PascalName #>();
+            <#= ServerPropertiesFromDto #>
+            return item;
+        }
+
+        public static <#= PascalName #>Dto ToDto(this <#= PascalName #> item)
+        {
+            var dto = new <#= PascalName #>Dto();
+            dto.Id = item.Id;
+            <#= ServerPropertiesToDto #>
+            return dto;
+        }
+
+        public static void UpdateFromDto(this <#= PascalName #> item, Update<#= PascalName #>Dto dto)
+        {
+            <#= ServerPropertiesFromDto #>
+        }
+    }
+}
