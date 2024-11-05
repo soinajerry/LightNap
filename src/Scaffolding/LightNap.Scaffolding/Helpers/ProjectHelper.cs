@@ -7,8 +7,10 @@ namespace LightNap.Scaffolding.Helpers
 {
     internal class ProjectHelper
     {
-        public static bool BuildProject(string projectPath)
+        public static string? BuildProject(string projectPath)
         {
+            Console.WriteLine($"Attempting to build project at: {projectPath}");
+
             var projectCollection = new ProjectCollection();
             var project = projectCollection.LoadProject(projectPath);
 
@@ -22,16 +24,16 @@ namespace LightNap.Scaffolding.Helpers
 
             if (buildResult.OverallResult != BuildResultCode.Success)
             {
-                Console.WriteLine("Build failed.");
                 foreach (var item in buildResult.ResultsByTarget)
                 {
                     Console.WriteLine($"{item.Key}: {item.Value.ResultCode}");
                 }
-                return false;
+                return null;
             }
 
-            Console.WriteLine("Build succeeded.");
-            return true;
+            var outputPath = project.GetPropertyValue("OutputPath");
+            var outputFileName = project.GetPropertyValue("AssemblyName") + ".dll";
+            return Path.Combine(project.DirectoryPath, outputPath, outputFileName);
         }
 
         public static void AddFileToProject(string projectPath, string filePath)
@@ -43,6 +45,5 @@ namespace LightNap.Scaffolding.Helpers
 
             project.Save();
         }
-
     }
 }

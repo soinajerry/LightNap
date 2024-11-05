@@ -8,6 +8,7 @@ namespace LightNap.Core.<#= PascalNamePlural #>.Extensions
     {
         public static <#= PascalName #> ToCreate(this Create<#= PascalName #>Dto dto)
         {
+            // TODO: Update these fields to match the DTO.
             var item = new <#= PascalName #>();
             <#= ServerPropertiesFromDto #>
             return item;
@@ -15,6 +16,7 @@ namespace LightNap.Core.<#= PascalNamePlural #>.Extensions
 
         public static <#= PascalName #>Dto ToDto(this <#= PascalName #> item)
         {
+            // TODO: Update these fields to match the DTO.
             var dto = new <#= PascalName #>Dto();
             dto.Id = item.Id;
             <#= ServerPropertiesToDto #>
@@ -23,6 +25,7 @@ namespace LightNap.Core.<#= PascalNamePlural #>.Extensions
 
         public static void UpdateFromDto(this <#= PascalName #> item, Update<#= PascalName #>Dto dto)
         {
+            // TODO: Update these fields to match the DTO.
             <#= ServerPropertiesFromDto #>
         }
     }

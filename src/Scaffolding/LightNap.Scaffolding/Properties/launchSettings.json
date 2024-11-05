@@ -2,7 +2,7 @@
   "profiles": {
     "LightNap.Scaffolding": {
       "commandName": "Project",
-      "commandLineArgs": "LightNap.Core.Data.Entities.ProductCatalog --src-path \"C:\\Users\\edkai\\source\\repos\\SharpLogic\\LightNap\\src\""
+      "commandLineArgs": "TestEntity --src-path \"../../../../..\""
     }
   }
 }
