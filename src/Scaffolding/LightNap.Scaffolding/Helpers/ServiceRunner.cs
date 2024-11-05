@@ -82,13 +82,17 @@ namespace LightNap.Scaffolding.Helpers
                 new("Server/SearchDto.cs.txt", $"{parameters.CoreProjectPath}/{templateParameters.PascalNamePlural}/Dto/Request/Search{type.Name}Dto.cs", parameters.CoreProjectFilePath),
                 new("Server/Service.cs.txt", $"{parameters.CoreProjectPath}/{templateParameters.PascalNamePlural}/Services/{type.Name}Service.cs", parameters.CoreProjectFilePath),
                 new("Server/UpdateDto.cs.txt", $"{parameters.CoreProjectPath}/{templateParameters.PascalNamePlural}/Dto/Request/Update{type.Name}Dto.cs", parameters.CoreProjectFilePath),
-                new("Server/Controller.cs.txt", $"{parameters.WebApiProjectPath}/Controllers/{templateParameters.PascalNamePlural}Controller.cs", parameters.WebApiProjectFilePath),
+                new("Server/Controller.cs.txt", $"{parameters.WebApiProjectPath}/Controllers/{templateParameters.PascalName}Controller.cs", parameters.WebApiProjectFilePath),
 
                 new("Client/routes.ts.txt", $"{parameters.ClientAppPath}/{templateParameters.KebabNamePlural}/components/pages/routes.ts"),
                 new("Client/index.component.html.txt", $"{parameters.ClientAppPath}/{templateParameters.KebabNamePlural}/components/pages/index/index.component.html"),
                 new("Client/index.component.ts.txt", $"{parameters.ClientAppPath}/{templateParameters.KebabNamePlural}/components/pages/index/index.component.ts"),
                 new("Client/get.component.html.txt", $"{parameters.ClientAppPath}/{templateParameters.KebabNamePlural}/components/pages/get/get.component.html"),
                 new("Client/get.component.ts.txt", $"{parameters.ClientAppPath}/{templateParameters.KebabNamePlural}/components/pages/get/get.component.ts"),
+                new("Client/create.component.html.txt", $"{parameters.ClientAppPath}/{templateParameters.KebabNamePlural}/components/pages/create/create.component.html"),
+                new("Client/create.component.ts.txt", $"{parameters.ClientAppPath}/{templateParameters.KebabNamePlural}/components/pages/create/create.component.ts"),
+                new("Client/edit.component.html.txt", $"{parameters.ClientAppPath}/{templateParameters.KebabNamePlural}/components/pages/edit/edit.component.html"),
+                new("Client/edit.component.ts.txt", $"{parameters.ClientAppPath}/{templateParameters.KebabNamePlural}/components/pages/edit/edit.component.ts"),
                 new("Client/create-request.ts.txt", $"{parameters.ClientAppPath}/{templateParameters.KebabNamePlural}/models/request/create-{templateParameters.KebabName}-request.ts"),
                 new("Client/search-request.ts.txt", $"{parameters.ClientAppPath}/{templateParameters.KebabNamePlural}/models/request/search-{templateParameters.KebabNamePlural}-request.ts"),
                 new("Client/update-request.ts.txt", $"{parameters.ClientAppPath}/{templateParameters.KebabNamePlural}/models/request/update-{templateParameters.KebabName}-request.ts"),
@@ -121,9 +125,25 @@ namespace LightNap.Scaffolding.Helpers
 
                 Console.WriteLine($"Generated {template.OutputFile}");
             }
+
+            Console.WriteLine(
+@$"Scaffolding completed successfully. Please see TODO comments in generated code to complete integration.
+
+{parameters.CoreProjectName}:
+- Update client and server DTO properties in {templateParameters.PascalNamePlural}/Dto to only those you want included.
+- Update extension method mappers between DTOs and the entity in Extensions/{type.Name}Extensions.cs.
+
+{parameters.WebApiProjectName}:
+- Update the authorization for methods in Controllers/{templateParameters.PascalNamePlural}Controller.cs based on access preferences.
+- Register Web API controller parameter dependency in Extensions/ApplicationServiceExtensions.cs.
+
+{parameters.AngularProjectName}:
+- Update the models in {templateParameters.KebabNamePlural}/models to match the updated server DTOs.
+- Update authorization for the routes in {templateParameters.KebabNamePlural}/components/pages/routes.ts.
+- Add {templateParameters.KebabNamePlural} routes to the root route collection in routing/routes.ts.");
         }
 
-        static public bool ValidateParameters(ServiceParameters parameters)
+        public static bool ValidateParameters(ServiceParameters parameters)
         {
             if (string.IsNullOrEmpty(parameters.SourcePath))
             {

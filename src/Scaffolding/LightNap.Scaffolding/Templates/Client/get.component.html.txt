@@ -1,11 +1,11 @@
-<p-card header="<#= PascalNamePlural #>">
+<p-card header="Get">
   <api-response [apiResponse]="<#= CamelName #>$" errorMessage="Error loading" loadingMessage="Loading...">
     <ng-template #success let-<#= CamelName #>>
-      <div><a [routerLink]="['..']">Up to all</a></div>
-      <div>{{ <#= CamelName #> | json }}</div>
-      <div>
-        <p-button label="Delete" icon="pi pi-trash" (onClick)="deleteClicked()" />
+      <div class="flex gap-1 mb-1">
+        <p-button [routerLink]="['..']" icon="pi pi-arrow-up" label="Up to all" />
+        <p-button [routerLink]="['..', id, 'edit']" icon="pi pi-pencil" label="Edit" />
       </div>
+      <pre>{{ <#= CamelName #> | json }}</pre>
     </ng-template>
   </api-response>
 </p-card>

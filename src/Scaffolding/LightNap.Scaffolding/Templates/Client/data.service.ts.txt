@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { API_URL_ROOT, ApiResponse, PagedResponse } from "@core";
 import { Create<#= PascalName #>Request } from "../models/request/create-<#= KebabName #>-request";
-import { Search<#= PascalName #>sRequest } from "../models/request/search-<#= KebabNamePlural #>-request";
+import { Search<#= PascalNamePlural #>Request } from "../models/request/search-<#= KebabNamePlural #>-request";
 import { Update<#= PascalName #>Request } from "../models/request/update-<#= KebabName #>-request";
 import { <#= PascalName #> } from "../models/response/<#= KebabName #>";
 

@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LightNap.WebApi.Controllers
 {
-    /// <summary>
-    /// Controller for handling publicly accessible data.
-    /// </summary>
+    // TODO: Update authorization for methods via the Authorize attribute at the controller or method level.
+    // Also register this controller's dependencies in the AddApplicationServices method of Extensions/ApplicationServiceExtensions.cs:
+    //
+    // services.AddScoped<I<#= PascalName #>Service, <#= PascalName #>Service>();
+    //
     [ApiController]
     [Route("api/[controller]")]
     public class <#= PascalName #>Controller(I<#= PascalName #>Service <#= CamelNamePlural #>Service) : ControllerBase
