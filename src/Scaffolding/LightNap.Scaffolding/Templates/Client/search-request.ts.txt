@@ -1,0 +1,4 @@
+import { PaginationRequest } from "@core";
+export interface Search<#= PascalNamePlural #>Request extends PaginationRequest {
+  <#= ClientOptionalPropertiesList #>
+}

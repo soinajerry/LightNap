@@ -1,0 +1,6 @@
+import { AppRoute } from "@routing";
+
+export const Routes: AppRoute[] = [
+  { path: "", loadComponent: () => import("./index/index.component").then(m => m.IndexComponent) },
+  { path: ":id", loadComponent: () => import("./get/get.component").then(m => m.GetComponent) },
+];

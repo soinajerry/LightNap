@@ -13,7 +13,7 @@ namespace LightNap.WebApi.Controllers
     [Route("api/[controller]")]
     public class <#= PascalName #>Controller(I<#= PascalName #>Service <#= CamelNamePlural #>Service) : ControllerBase
     {
-        [HttpGet]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(ApiResponseDto<<#= PascalName #>Dto>), 200)]
         public async Task<ActionResult<ApiResponseDto<<#= PascalName #>Dto>>> Get<#= PascalName #>(<#= ServerIdType #> id)
         {

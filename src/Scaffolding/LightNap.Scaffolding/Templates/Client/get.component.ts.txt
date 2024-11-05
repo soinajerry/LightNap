@@ -1,0 +1,40 @@
+import { CommonModule } from "@angular/common";
+import { Component, inject, Input, OnInit } from "@angular/core";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
+import { ApiResponse, ApiResponseComponent, ToastService } from "@core";
+import { ButtonModule } from "primeng/button";
+import { CardModule } from "primeng/card";
+import { Observable } from "rxjs";
+import { <#= PascalName #> } from "src/app/<#= KebabNamePlural #>/models/response/<#= KebabName #>";
+import { <#= PascalName #>Service } from "src/app/<#= KebabNamePlural #>/services/<#= KebabName #>.service";
+
+@Component({
+  standalone: true,
+  templateUrl: "./get.component.html",
+  imports: [CommonModule, CardModule, RouterLink, ApiResponseComponent, ButtonModule],
+})
+export class GetComponent implements OnInit {
+  #<#= CamelName #>Service = inject(<#= PascalName #>Service);
+  #router = inject(Router);
+  #activeRoute = inject(ActivatedRoute);
+  #toast = inject(ToastService);
+
+  @Input() id: number;
+  <#= CamelName #>$ = new Observable<ApiResponse<<#= PascalName #>>>();
+
+  ngOnInit() {
+    this.<#= CamelName #>$ = this.#<#= CamelName #>Service.get<#= PascalName #>(this.id);
+  }
+
+  deleteClicked() {
+    this.#<#= CamelName #>Service.delete<#= PascalName #>(this.id).subscribe(response => {
+      if (!response.result) {
+        alert(`Failed to delete: ${response.errorMessages.join(", ")}`);
+        return;
+      }
+
+      this.#toast.success("Deleted successfully");
+      this.#router.navigate(["."], { relativeTo: this.#activeRoute.parent });
+    });
+  }
+}

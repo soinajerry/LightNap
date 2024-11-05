@@ -13,38 +13,42 @@ namespace LightNap.Scaffolding.Helpers
         public required string KebabNamePlural { get; set; }
         public required string ServerIdType { get; set; }
         public required string ServerPropertiesList { get; set; }
+        public required string ServerOptionalPropertiesList { get; set; }
         public required string ServerPropertiesToDto { get; set; }
         public required string ServerPropertiesFromDto { get; set; }
         public required string ClientIdType { get; set; }
         public required string ClientPropertiesList { get; set; }
+        public required string ClientOptionalPropertiesList { get; set; }
 
         [SetsRequiredMembers]
         public TemplateParameters(string pascalName, List<PropertyDetails> propertiesDetails)
         {
-            PascalName = pascalName;
-            PascalNamePlural = pascalName.Pluralize();
-            CamelName = pascalName.Camelize();
-            CamelNamePlural = CamelName.Pluralize();
-            KebabName = pascalName.Kebaberize();
-            KebabNamePlural = KebabName.Pluralize();
+            this.PascalName = pascalName;
+            this.PascalNamePlural = pascalName.Pluralize();
+            this.CamelName = pascalName.Camelize();
+            this.CamelNamePlural = this.CamelName.Pluralize();
+            this.KebabName = pascalName.Kebaberize();
+            this.KebabNamePlural = this.KebabName.Pluralize();
 
             // Take a guess that the shortest property ending with "id" is the id property.
             PropertyDetails? idProperty = propertiesDetails.Where(p => p.Name.EndsWith("id", StringComparison.OrdinalIgnoreCase)).OrderBy(id => id.Name.Length).FirstOrDefault();
             if (idProperty != null)
             {
-                ServerIdType = GetServerTypeString(idProperty.Type);
-                ClientIdType = GetClientTypeString(idProperty.Type);
+                this.ServerIdType = this.GetServerTypeString(idProperty.Type);
+                this.ClientIdType = this.GetClientTypeString(idProperty.Type);
             }
             else
             {
-                ServerIdType = "string";
-                ClientIdType = "string";
+                this.ServerIdType = "string";
+                this.ClientIdType = "string";
             }
 
-            ServerPropertiesList = string.Join("\n\t\t", propertiesDetails.Where(p => p != idProperty).Select(p => $"public {GetServerTypeString(p.Type)} {p.Name} {{ get; set; }}"));
-            ServerPropertiesToDto = string.Join("\n\t\t\t", propertiesDetails.Where(p => p != idProperty).Select(p => $"dto.{p.Name} = item.{p.Name};"));
-            ServerPropertiesFromDto = string.Join("\n\t\t\t", propertiesDetails.Where(p => p != idProperty).Select(p => $"item.{p.Name} = dto.{p.Name};"));
-            ClientPropertiesList = string.Join("\n\t\t", propertiesDetails.Where(p => p != idProperty).Select(p => $"{p.Name.Camelize()}: {GetClientTypeString(p.Type)};"));
+            this.ServerPropertiesList = string.Join("\n\t\t", propertiesDetails.Where(p => p != idProperty).Select(p => $"public {this.GetServerTypeString(p.Type)} {p.Name} {{ get; set; }}"));
+            this.ServerOptionalPropertiesList = string.Join("\n\t\t", propertiesDetails.Where(p => p != idProperty).Select(p => $"public {this.GetServerTypeString(p.Type)}? {p.Name} {{ get; set; }}"));
+            this.ServerPropertiesToDto = string.Join("\n\t\t\t", propertiesDetails.Where(p => p != idProperty).Select(p => $"dto.{p.Name} = item.{p.Name};"));
+            this.ServerPropertiesFromDto = string.Join("\n\t\t\t", propertiesDetails.Where(p => p != idProperty).Select(p => $"item.{p.Name} = dto.{p.Name};"));
+            this.ClientPropertiesList = string.Join("\n\t", propertiesDetails.Where(p => p != idProperty).Select(p => $"{p.Name.Camelize()}: {this.GetClientTypeString(p.Type)};"));
+            this.ClientOptionalPropertiesList = string.Join("\n\t", propertiesDetails.Where(p => p != idProperty).Select(p => $"{p.Name.Camelize()}?: {this.GetClientTypeString(p.Type)};"));
         }
 
         private string GetServerTypeString(Type type)
@@ -61,7 +65,7 @@ namespace LightNap.Scaffolding.Helpers
 
         private string GetClientTypeString(Type type)
         {
-            if (type == typeof(int) || type == typeof(long)) { return "int"; }
+            if (type == typeof(int) || type == typeof(long)) { return "number"; }
             return "string";
         }
     }

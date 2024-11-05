@@ -4,6 +4,6 @@ namespace LightNap.Core.<#= PascalNamePlural #>.Request.Dto
 {
     public class Search<#= PascalNamePlural #>Dto : PaginationRequestDtoBase
     {
-        <#= ServerPropertiesList #>
+        <#= ServerOptionalPropertiesList #>
     }
 }

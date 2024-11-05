@@ -24,6 +24,7 @@ rootCommand.SetHandler((className, srcPath) =>
 {
     string coreProjectName = "LightNap.Core";
     string webApiProjectName = "LightNap.WebApi";
+    string angularProjectName = "lightnap-ng";
 
     if (string.IsNullOrEmpty(srcPath))
     {
@@ -33,6 +34,7 @@ rootCommand.SetHandler((className, srcPath) =>
 
     string webApiProjectPath = Path.Combine(srcPath, webApiProjectName, $"{webApiProjectName}.csproj");
     string coreProjectPath = Path.Combine(srcPath, coreProjectName, $"{coreProjectName}.csproj");
+    string clientAppPath = Path.Combine(srcPath, angularProjectName, "src/app");
     Console.WriteLine($"Building project at: {coreProjectPath}");
     MSBuildLocator.RegisterDefaults();
     if (!ProjectHelper.BuildProject(coreProjectPath))
@@ -97,14 +99,26 @@ rootCommand.SetHandler((className, srcPath) =>
 
     var templateItems = new List<TemplateItem>
     {
-        new("Server/CreateDtoTemplate.cs.txt", $"{coreProjectName}/{templateParameters.PascalNamePlural}/Dto/Request/Create{type.Name}Dto.cs", coreProjectPath),
-        new("Server/DtoTemplate.cs.txt", $"{coreProjectName}/{templateParameters.PascalNamePlural}/Dto/Response/{type.Name}Dto.cs", coreProjectPath),
-        new("Server/ExtensionsTemplate.cs.txt", $"{coreProjectName}/{templateParameters.PascalNamePlural}/Extensions/{type.Name}Extensions.cs", coreProjectPath),
-        new("Server/InterfaceTemplate.cs.txt", $"{coreProjectName}/{templateParameters.PascalNamePlural}/Interfaces/I{type.Name}Service.cs", coreProjectPath),
-        new("Server/SearchDtoTemplate.cs.txt", $"{coreProjectName}/{templateParameters.PascalNamePlural}/Dto/Request/Search{type.Name}Dto.cs", coreProjectPath),
-        new("Server/ServiceTemplate.cs.txt", $"{coreProjectName}/{templateParameters.PascalNamePlural}/Services/{type.Name}Service.cs", coreProjectPath),
-        new("Server/UpdateDtoTemplate.cs.txt", $"{coreProjectName}/{templateParameters.PascalNamePlural}/Dto/Request/Update{type.Name}Dto.cs", coreProjectPath),
-        new("Server/ControllerTemplate.cs.txt", $"{webApiProjectName}/Controllers/{templateParameters.PascalNamePlural}Controller.cs", webApiProjectPath),
+        new("Server/CreateDto.cs.txt", $"{coreProjectName}/{templateParameters.PascalNamePlural}/Dto/Request/Create{type.Name}Dto.cs", coreProjectPath),
+        new("Server/Dto.cs.txt", $"{coreProjectName}/{templateParameters.PascalNamePlural}/Dto/Response/{type.Name}Dto.cs", coreProjectPath),
+        new("Server/Extensions.cs.txt", $"{coreProjectName}/{templateParameters.PascalNamePlural}/Extensions/{type.Name}Extensions.cs", coreProjectPath),
+        new("Server/Interface.cs.txt", $"{coreProjectName}/{templateParameters.PascalNamePlural}/Interfaces/I{type.Name}Service.cs", coreProjectPath),
+        new("Server/SearchDto.cs.txt", $"{coreProjectName}/{templateParameters.PascalNamePlural}/Dto/Request/Search{type.Name}Dto.cs", coreProjectPath),
+        new("Server/Service.cs.txt", $"{coreProjectName}/{templateParameters.PascalNamePlural}/Services/{type.Name}Service.cs", coreProjectPath),
+        new("Server/UpdateDto.cs.txt", $"{coreProjectName}/{templateParameters.PascalNamePlural}/Dto/Request/Update{type.Name}Dto.cs", coreProjectPath),
+        new("Server/Controller.cs.txt", $"{webApiProjectName}/Controllers/{templateParameters.PascalNamePlural}Controller.cs", webApiProjectPath),
+
+        new("Client/routes.ts.txt", $"{clientAppPath}/{templateParameters.KebabNamePlural}/components/pages/routes.ts"),
+        new("Client/index.component.html.txt", $"{clientAppPath}/{templateParameters.KebabNamePlural}/components/pages/index/index.component.html"),
+        new("Client/index.component.ts.txt", $"{clientAppPath}/{templateParameters.KebabNamePlural}/components/pages/index/index.component.ts"),
+        new("Client/get.component.html.txt", $"{clientAppPath}/{templateParameters.KebabNamePlural}/components/pages/get/get.component.html"),
+        new("Client/get.component.ts.txt", $"{clientAppPath}/{templateParameters.KebabNamePlural}/components/pages/get/get.component.ts"),
+        new("Client/create-request.ts.txt", $"{clientAppPath}/{templateParameters.KebabNamePlural}/models/request/create-{templateParameters.KebabName}-request.ts"),
+        new("Client/search-request.ts.txt", $"{clientAppPath}/{templateParameters.KebabNamePlural}/models/request/search-{templateParameters.KebabNamePlural}-request.ts"),
+        new("Client/update-request.ts.txt", $"{clientAppPath}/{templateParameters.KebabNamePlural}/models/request/update-{templateParameters.KebabName}-request.ts"),
+        new("Client/response.ts.txt", $"{clientAppPath}/{templateParameters.KebabNamePlural}/models/response/{templateParameters.KebabName}.ts"),
+        new("Client/data.service.ts.txt", $"{clientAppPath}/{templateParameters.KebabNamePlural}/services/data.service.ts"),
+        new("Client/service.ts.txt", $"{clientAppPath}/{templateParameters.KebabNamePlural}/services/{templateParameters.KebabName}.service.ts"),
     };
 
     foreach (var template in templateItems)
