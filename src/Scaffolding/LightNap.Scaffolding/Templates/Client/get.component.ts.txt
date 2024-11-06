@@ -5,8 +5,8 @@ import { ApiResponse, ApiResponseComponent, ConfirmPopupComponent } from "@core"
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { Observable } from "rxjs";
-import { <#= PascalName #> } from "src/app/test-entities/models/response/<#= KebabName #>";
-import { <#= PascalName #>Service } from "src/app/test-entities/services/<#= KebabName #>.service";
+import { <#= PascalName #> } from "src/app/<#= KebabNamePlural #>/models/response/<#= KebabName #>";
+import { <#= PascalName #>Service } from "src/app/<#= KebabNamePlural #>/services/<#= KebabName #>.service";
 
 @Component({
   standalone: true,
