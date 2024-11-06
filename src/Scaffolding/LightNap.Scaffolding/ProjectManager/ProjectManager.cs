@@ -1,13 +1,19 @@
 ﻿using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
+using Microsoft.Build.Locator;
 using Microsoft.Build.Logging;
 
-namespace LightNap.Scaffolding.Helpers
+namespace LightNap.Scaffolding.ProjectManager
 {
-    internal class ProjectHelper
+    public class ProjectManager : IProjectManager
     {
-        public static string? BuildProject(string projectPath)
+        public ProjectManager()
+        {
+            MSBuildLocator.RegisterDefaults();
+        }
+
+        public ProjectBuildResult BuildProject(string projectPath)
         {
             Console.WriteLine($"Attempting to build project at: {projectPath}");
 
@@ -28,15 +34,19 @@ namespace LightNap.Scaffolding.Helpers
                 {
                     Console.WriteLine($"{item.Key}: {item.Value.ResultCode}");
                 }
-                return null;
+                return new ProjectBuildResult() { Success = false };
             }
 
             var outputPath = project.GetPropertyValue("OutputPath");
             var outputFileName = project.GetPropertyValue("AssemblyName") + ".dll";
-            return Path.Combine(project.DirectoryPath, outputPath, outputFileName);
+            return new ProjectBuildResult()
+            {
+                OutputAssemblyPath = Path.Combine(project.DirectoryPath, outputPath, outputFileName),
+                Success = true
+            };
         }
 
-        public static void AddFileToProject(string projectPath, string filePath)
+        public void AddFileToProject(string projectPath, string filePath)
         {
             var projectCollection = new ProjectCollection();
             var project = projectCollection.LoadProject(projectPath);

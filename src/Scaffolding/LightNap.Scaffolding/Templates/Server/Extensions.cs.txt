@@ -1,8 +1,8 @@
 ﻿using LightNap.Core.Data.Entities;
-using LightNap.Core.<#= PascalNamePlural #>.Request.Dto;
-using LightNap.Core.<#= PascalNamePlural #>.Response.Dto;
+using LightNap.Core.<#= NameForNamespace #>.Request.Dto;
+using LightNap.Core.<#= NameForNamespace #>.Response.Dto;
 
-namespace LightNap.Core.<#= PascalNamePlural #>.Extensions
+namespace LightNap.Core.<#= NameForNamespace #>.Extensions
 {
     public static class <#= PascalName #>Extensions
     {

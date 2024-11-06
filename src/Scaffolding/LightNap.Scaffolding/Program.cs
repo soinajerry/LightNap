@@ -1,8 +1,8 @@
-﻿using LightNap.Scaffolding.Helpers;
-using Microsoft.Build.Locator;
+﻿using LightNap.Scaffolding.ProjectManager;
+using LightNap.Scaffolding.ServiceRunner;
+using LightNap.Scaffolding.TemplateManager;
 using System.CommandLine;
 using System.CommandLine.Parsing;
-using System.Reflection;
 
 Argument<string> classNameArgument =
     new("className",
@@ -40,9 +40,9 @@ var rootCommand = new RootCommand()
 
 rootCommand.SetHandler((className, namespaceValue, srcPath, coreProjectName, webApiProjectName, angularProjectName) =>
 {
-    ServiceRunner runner = new ServiceRunner();
+    ServiceRunner runner = new(new ProjectManager(), new TemplateManager(), new AssemblyManager());
     runner.Run(new ServiceParameters($"{namespaceValue}.{className}", srcPath, coreProjectName, webApiProjectName, angularProjectName));
-}, 
+},
 classNameArgument, namespaceOption, srcPathOption, coreProjectNameOption, webApiProjectNameOption, angularProjectNameOption);
 
 return await rootCommand.InvokeAsync(args);

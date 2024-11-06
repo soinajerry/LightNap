@@ -1,12 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace LightNap.Scaffolding.Helpers
+namespace LightNap.Scaffolding.TemplateManager
 {
     [method: SetsRequiredMembers]
-    internal class TemplateItem(string templateFile, string outputFile, string? projectPath = null)
+    public class TemplateItem(string templateFile, string outputFile, string? addToProjectPath = null)
     {
         public required string TemplateFile { get; set; } = templateFile;
         public required string OutputFile { get; set; } = outputFile;
-        public string? ProjectPath { get; set; } = projectPath;
+        public string? AddToProjectPath { get; set; } = addToProjectPath;
     }
 }

@@ -1,8 +1,8 @@
 ﻿using LightNap.Core.Api;
-using LightNap.Core.<#= PascalNamePlural #>.Request.Dto;
-using LightNap.Core.<#= PascalNamePlural #>.Response.Dto;
+using LightNap.Core.<#= NameForNamespace #>.Request.Dto;
+using LightNap.Core.<#= NameForNamespace #>.Response.Dto;
 
-namespace LightNap.Core.<#= PascalNamePlural #>.Interfaces
+namespace LightNap.Core.<#= NameForNamespace #>.Interfaces
 {
     public interface I<#= PascalName #>Service
     {

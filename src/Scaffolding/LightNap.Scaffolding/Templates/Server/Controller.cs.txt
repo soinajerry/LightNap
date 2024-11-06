@@ -1,7 +1,7 @@
 ﻿using LightNap.Core.Api;
-using LightNap.Core.<#= PascalNamePlural #>.Interfaces;
-using LightNap.Core.<#= PascalNamePlural #>.Request.Dto;
-using LightNap.Core.<#= PascalNamePlural #>.Response.Dto;
+using LightNap.Core.<#= NameForNamespace #>.Interfaces;
+using LightNap.Core.<#= NameForNamespace #>.Request.Dto;
+using LightNap.Core.<#= NameForNamespace #>.Response.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LightNap.WebApi.Controllers

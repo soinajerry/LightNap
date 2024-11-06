@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace LightNap.Scaffolding.Helpers
+namespace LightNap.Scaffolding.ServiceRunner
 {
-    internal class ServiceParameters
+    public class ServiceParameters
     {
         public required string ClassName { get; set; }
         public required string SourcePath { get; set; }

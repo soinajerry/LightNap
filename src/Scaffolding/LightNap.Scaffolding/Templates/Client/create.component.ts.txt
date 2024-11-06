@@ -33,8 +33,16 @@ export class CreateComponent {
 
   createClicked() {
     this.errors = [];
-    const create<#= PascalName #> = JSON.parse(this.form.value.json) as Create<#= PascalName #>Request;
-    this.#<#= CamelName #>Service.create<#= PascalName #>(create<#= PascalName #>).subscribe(response => {
+
+    let request: Create<#= PascalName #>Request;
+    try {
+      request = <Create<#= PascalName #>Request>JSON.parse(this.form.value.json);
+    } catch (e) {
+      this.errors = ["The JSON is invalid."];
+      return;
+    }
+
+    this.#<#= CamelName #>Service.create<#= PascalName #>(request).subscribe(response => {
       if (!response.result) {
         this.errors = response.errorMessages;
         return;

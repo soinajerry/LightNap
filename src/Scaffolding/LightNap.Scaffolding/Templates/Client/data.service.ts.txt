@@ -11,7 +11,7 @@ import { <#= PascalName #> } from "../models/response/<#= KebabName #>";
 })
 export class DataService {
   #http = inject(HttpClient);
-  #apiUrlRoot = `${inject(API_URL_ROOT)}<#= PascalName #>/`;
+  #apiUrlRoot = `${inject(API_URL_ROOT)}<#= PascalNamePlural #>/`;
 
   get<#= PascalName #>(id: <#= ClientIdType #>) {
     return this.#http.get<ApiResponse<<#= PascalName #>>>(`${this.#apiUrlRoot}${id}`);

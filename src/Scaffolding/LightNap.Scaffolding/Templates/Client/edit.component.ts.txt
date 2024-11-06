@@ -46,9 +46,15 @@ export class EditComponent implements OnInit {
   saveClicked() {
     this.errors = [];
 
-    const updateRequest = JSON.parse(this.form.value.json) as Update<#= PascalName #>Request;
+    let request: Update<#= PascalName #>Request;
+    try {
+      request = <Update<#= PascalName #>Request>JSON.parse(this.form.value.json);
+    } catch (e) {
+      this.errors = ["The JSON is invalid."];
+      return;
+    }
 
-    this.#<#= CamelName #>Service.update<#= PascalName #>(this.id, updateRequest).subscribe(response => {
+    this.#<#= CamelName #>Service.update<#= PascalName #>(this.id, request).subscribe(response => {
       if (!response.result) {
         this.errors = response.errorMessages;
         return;

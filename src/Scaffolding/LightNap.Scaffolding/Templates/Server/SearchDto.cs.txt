@@ -1,6 +1,6 @@
 ﻿using LightNap.Core.Api;
 
-namespace LightNap.Core.<#= PascalNamePlural #>.Request.Dto
+namespace LightNap.Core.<#= NameForNamespace #>.Request.Dto
 {
     public class Search<#= PascalNamePlural #>Dto : PaginationRequestDtoBase
     {

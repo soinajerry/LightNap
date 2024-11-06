@@ -1,4 +1,4 @@
-﻿namespace LightNap.Core.<#= PascalNamePlural #>.Request.Dto
+﻿namespace LightNap.Core.<#= NameForNamespace #>.Request.Dto
 {
     public class Create<#= PascalName #>Dto
     {
