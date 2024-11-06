@@ -28,10 +28,10 @@ export class HttpErrorApiResponse<T> implements ApiResponse<T> {
   /**
    * Constructs an instance of `HttpErrorApiResponse`.
    *
-   * @param error - The HTTP error response received from the API.
+   * @param response - The HTTP error response received from the API.
    */
-  constructor(error: HttpErrorResponse) {
-    switch (error.status) {
+  constructor(response: HttpErrorResponse) {
+    switch (response.status) {
       case 0:
         this.errorMessages = ["We were unable to connect to the service."];
         break;
@@ -42,7 +42,15 @@ export class HttpErrorApiResponse<T> implements ApiResponse<T> {
     }
 
     if (!environment.production) {
-      this.errorMessages.push(`DEBUG: ${JSON.stringify(error)}`);
+      if (response.error?.errors) {
+        if (Array.isArray(response.error.errors)) {
+          this.errorMessages = response.error.errors.map(error => `DEBUG: ${JSON.stringify(error)}`);
+        } else {
+          this.errorMessages = Object.values(response.error.errors);
+        }
+      }
+
+      this.errorMessages.push(`DEBUG (Full response): ${JSON.stringify(response)}`);
     }
   }
 }
