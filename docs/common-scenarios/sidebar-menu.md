@@ -2,7 +2,7 @@
 title: Updating the Sidebar Menu
 layout: home
 parent: Common Scenarios
-nav_order: 400
+nav_order: 500
 ---
 
 The contents of the sidebar menu are managed in the `MenuService` at `app/layout/services/menu.service.ts`.

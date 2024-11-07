@@ -2,7 +2,7 @@
 title: Working With Angular Routes
 layout: home
 parent: Common Scenarios
-nav_order: 300
+nav_order: 400
 ---
 
 LightNap relies on Angular's built-in routing support with some extensions and abstractions designed to make application routing more convenient and scalable for developers.

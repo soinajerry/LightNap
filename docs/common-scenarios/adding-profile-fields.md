@@ -2,7 +2,7 @@
 title: Adding Profile Fields
 layout: home
 parent: Common Scenarios
-nav_order: 200
+nav_order: 300
 ---
 
 The default LightNap profile isn't very interesting. It just has some default fields and timestamps. Let's take a look at how it can be extended to have new fields for first and last names.
