@@ -1,0 +1,49 @@
+using LightNap.Scaffolding.TemplateManager;
+using System.Text.RegularExpressions;
+
+namespace LightNap.Scaffolding.Tests
+{
+    [TestClass]
+    public class TemplateProcessorTests
+    {
+        [TestMethod]
+        public void ProcessTemplate_ShouldReplacePlaceholdersWithValues()
+        {
+            // Arrange
+            var templateContent =
+                @"namespace LightNap.Core.<#= NameForNamespace #>.Response.Dto
+                {
+                    public class <#= PascalName #>Dto
+                    {
+                        // TODO: Finalize which fields to include when returning this item.
+                        public <#= ServerIdType #> Id { get; set; }
+                        <#= ServerPropertiesList #>
+                    }
+                }";
+            var templateParameters = new TemplateParameters("TestClassDetails",
+                [
+                    new(typeof(int), "Id"),
+                    new(typeof(string), "TestString"),
+                    new(typeof(DateTime), "TestDateTime")
+                ]);
+
+            // Act
+            var result = TemplateProcessor.ProcessTemplate(templateContent, templateParameters);
+
+            // Assert
+            var expected =
+                @"namespace LightNap.Core.TestClassDetails_.Response.Dto
+                {
+                    public class TestClassDetailsDto
+                    {
+                        // TODO: Finalize which fields to include when returning this item.
+                        public int Id { get; set; }
+                        public string TestString { get; set; }
+                        public DateTime TestDateTime { get; set; }
+                    }
+                }";
+
+            Assert.AreEqual(Regex.Replace(@"\s+", " ", expected), Regex.Replace(@"\s+", " ", result));
+        }
+    }
+}

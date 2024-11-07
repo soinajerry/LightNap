@@ -1,6 +1,6 @@
 ﻿namespace LightNap.Scaffolding.TemplateManager
 {
-    internal static class TemplateProcessor
+    public static class TemplateProcessor
     {
         public static string ProcessTemplate(string templateContent, TemplateParameters templateParameters)
         {
