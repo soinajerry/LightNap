@@ -51,7 +51,8 @@ namespace LightNap.Scaffolding.ProjectManager
             var projectCollection = new ProjectCollection();
             var project = projectCollection.LoadProject(projectPath);
 
-            project.AddItem("Compile", filePath);
+            var relativeFilePath = Path.GetRelativePath(Path.GetDirectoryName(projectPath)!, filePath);
+            project.AddItem("Compile", relativeFilePath);
 
             project.Save();
         }
