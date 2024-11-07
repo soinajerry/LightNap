@@ -11,6 +11,8 @@ using LightNap.Core.Profile.Services;
 using LightNap.Core.Public.Interfaces;
 using LightNap.Core.Public.Services;
 using LightNap.Core.Services;
+using LightNap.Core.TestEntities.Interfaces;
+using LightNap.Core.TestEntities.Services;
 using LightNap.DataProviders.Sqlite.Extensions;
 using LightNap.DataProviders.SqlServer.Extensions;
 using LightNap.WebApi.Configuration;
@@ -43,6 +45,7 @@ namespace LightNap.WebApi.Extensions
             services.AddScoped<IAdministratorService, AdministratorService>();
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IPublicService, PublicService>();
+            services.AddScoped<ITestEntityService, TestEntityService>();
 
             return services;
         }

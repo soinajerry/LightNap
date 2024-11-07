@@ -1,4 +1,4 @@
-﻿namespace LightNap.Core.<#= NameForNamespace #>.Response.Dto
+﻿namespace <#= CoreNamespace #>.<#= NameForNamespace #>.Response.Dto
 {
     public class <#= PascalName #>Dto
     {

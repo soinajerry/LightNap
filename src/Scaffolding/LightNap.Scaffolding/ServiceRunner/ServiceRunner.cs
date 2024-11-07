@@ -34,7 +34,7 @@ namespace LightNap.Scaffolding.ServiceRunner
             Console.WriteLine($"Public properties of {type.Name}:");
 
             List<TypePropertyDetails> propertiesDetails = TypeHelper.GetPropertyDetails(type);
-            TemplateParameters templateParameters = new(type.Name, propertiesDetails);
+            TemplateParameters templateParameters = new(type.Name, propertiesDetails, parameters);
 
             string pascalName = templateParameters.Replacements["PascalName"];
             string pascalNamePlural = templateParameters.Replacements["PascalNamePlural"];

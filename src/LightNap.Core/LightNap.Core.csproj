@@ -19,4 +19,13 @@
     <Folder Include="User\Dto\" />
     <Folder Include="User\Models\" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="C:\Users\edkai\source\repos\SharpLogic\LightNap\src\LightNap.Core/TestEntities/Dto/Request/CreateTestEntityDto.cs" />
+    <Compile Include="C:\Users\edkai\source\repos\SharpLogic\LightNap\src\LightNap.Core/TestEntities/Dto/Request/SearchTestEntityDto.cs" />
+    <Compile Include="C:\Users\edkai\source\repos\SharpLogic\LightNap\src\LightNap.Core/TestEntities/Dto/Request/UpdateTestEntityDto.cs" />
+    <Compile Include="C:\Users\edkai\source\repos\SharpLogic\LightNap\src\LightNap.Core/TestEntities/Dto/Response/TestEntityDto.cs" />
+    <Compile Include="C:\Users\edkai\source\repos\SharpLogic\LightNap\src\LightNap.Core/TestEntities/Extensions/TestEntityExtensions.cs" />
+    <Compile Include="C:\Users\edkai\source\repos\SharpLogic\LightNap\src\LightNap.Core/TestEntities/Interfaces/ITestEntityService.cs" />
+    <Compile Include="C:\Users\edkai\source\repos\SharpLogic\LightNap\src\LightNap.Core/TestEntities/Services/TestEntityService.cs" />
+  </ItemGroup>
 </Project>

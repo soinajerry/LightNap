@@ -1,4 +1,5 @@
 using LightNap.Scaffolding.AssemblyManager;
+using LightNap.Scaffolding.ServiceRunner;
 using LightNap.Scaffolding.TemplateManager;
 
 namespace LightNap.Scaffolding.Tests
@@ -17,9 +18,10 @@ namespace LightNap.Scaffolding.Tests
                 new(typeof(int), "TestInt"),
                 new(typeof(string), "TestString")
             };
+            var serviceParameters = new ServiceParameters("TestClass", "./", "LightNap.Core", "", "");
 
             // Act
-            var templateParameters = new TemplateParameters(pascalName, propertiesDetails);
+            var templateParameters = new TemplateParameters(pascalName, propertiesDetails, serviceParameters);
 
             // Assert
             Assert.AreEqual("TestClass", templateParameters.Replacements["PascalName"]);

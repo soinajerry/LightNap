@@ -1,5 +1,6 @@
 ﻿using Humanizer;
 using LightNap.Scaffolding.AssemblyManager;
+using LightNap.Scaffolding.ServiceRunner;
 using System.Diagnostics.CodeAnalysis;
 
 namespace LightNap.Scaffolding.TemplateManager
@@ -10,7 +11,7 @@ namespace LightNap.Scaffolding.TemplateManager
         public IReadOnlyDictionary<string, string> Replacements => this._replacements.AsReadOnly();
 
         [SetsRequiredMembers]
-        public TemplateParameters(string pascalName, List<TypePropertyDetails> propertiesDetails)
+        public TemplateParameters(string pascalName, List<TypePropertyDetails> propertiesDetails, ServiceParameters serviceParameters)
         {
             this._replacements.Add("PascalName", pascalName);
             this._replacements.Add("PascalNamePlural", pascalName.Pluralize());
@@ -38,6 +39,9 @@ namespace LightNap.Scaffolding.TemplateManager
             this._replacements.Add("ServerPropertiesFromDto", string.Join("\n\t\t\t", propertiesDetails.Where(p => p != idProperty).Select(p => $"item.{p.Name} = dto.{p.Name};")));
             this._replacements.Add("ClientPropertiesList", string.Join("\n\t", propertiesDetails.Where(p => p != idProperty).Select(p => $"{p.CamelName}: {p.ClientTypeString};")));
             this._replacements.Add("ClientOptionalPropertiesList", string.Join("\n\t", propertiesDetails.Where(p => p != idProperty).Select(p => $"{p.CamelName}?: {p.ClientTypeString};")));
+
+            this._replacements.Add("CoreNamespace", serviceParameters.CoreProjectName);
+            this._replacements.Add("WebApiNamespace", serviceParameters.WebApiProjectName);
         }
     }
 }

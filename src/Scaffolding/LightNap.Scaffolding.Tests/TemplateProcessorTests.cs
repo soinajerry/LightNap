@@ -1,3 +1,4 @@
+using LightNap.Scaffolding.ServiceRunner;
 using LightNap.Scaffolding.TemplateManager;
 using System.Text.RegularExpressions;
 
@@ -11,7 +12,7 @@ namespace LightNap.Scaffolding.Tests
         {
             // Arrange
             var templateContent =
-                @"namespace LightNap.Core.<#= NameForNamespace #>.Response.Dto
+                @"namespace <#= CoreNamespace #>.<#= NameForNamespace #>.Response.Dto
                 {
                     public class <#= PascalName #>Dto
                     {
@@ -25,7 +26,8 @@ namespace LightNap.Scaffolding.Tests
                     new(typeof(int), "Id"),
                     new(typeof(string), "TestString"),
                     new(typeof(DateTime), "TestDateTime")
-                ]);
+                ],
+                new ServiceParameters("", "./", "LightNap.Core", "", ""));
 
             // Act
             var result = TemplateProcessor.ProcessTemplate(templateContent, templateParameters);

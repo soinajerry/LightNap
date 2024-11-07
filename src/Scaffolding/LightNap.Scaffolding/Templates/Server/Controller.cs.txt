@@ -1,10 +1,10 @@
-﻿using LightNap.Core.Api;
-using LightNap.Core.<#= NameForNamespace #>.Interfaces;
-using LightNap.Core.<#= NameForNamespace #>.Request.Dto;
-using LightNap.Core.<#= NameForNamespace #>.Response.Dto;
+﻿using <#= CoreNamespace #>.Api;
+using <#= CoreNamespace #>.<#= NameForNamespace #>.Interfaces;
+using <#= CoreNamespace #>.<#= NameForNamespace #>.Request.Dto;
+using <#= CoreNamespace #>.<#= NameForNamespace #>.Response.Dto;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LightNap.WebApi.Controllers
+namespace <#= WebApiNamespace #>.Controllers
 {
     // TODO: Update authorization for methods via the Authorize attribute at the controller or method level.
     // Also register this controller's dependencies in the AddApplicationServices method of Extensions/ApplicationServiceExtensions.cs:
@@ -13,7 +13,7 @@ namespace LightNap.WebApi.Controllers
     //
     [ApiController]
     [Route("api/[controller]")]
-    public class <#= PascalName #>Controller(I<#= PascalName #>Service <#= CamelNamePlural #>Service) : ControllerBase
+    public class <#= PascalNamePlural #>Controller(I<#= PascalName #>Service <#= CamelNamePlural #>Service) : ControllerBase
     {
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ApiResponseDto<<#= PascalName #>Dto>), 200)]

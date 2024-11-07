@@ -1,13 +1,13 @@
-﻿using LightNap.Core.Api;
-using LightNap.Core.Data;
-using LightNap.Core.Data.Entities;
-using LightNap.Core.<#= NameForNamespace #>.Extensions;
-using LightNap.Core.<#= NameForNamespace #>.Interfaces;
-using LightNap.Core.<#= NameForNamespace #>.Request.Dto;
-using LightNap.Core.<#= NameForNamespace #>.Response.Dto;
+﻿using <#= CoreNamespace #>.Api;
+using <#= CoreNamespace #>.Data;
+using <#= CoreNamespace #>.Data.Entities;
+using <#= CoreNamespace #>.<#= NameForNamespace #>.Extensions;
+using <#= CoreNamespace #>.<#= NameForNamespace #>.Interfaces;
+using <#= CoreNamespace #>.<#= NameForNamespace #>.Request.Dto;
+using <#= CoreNamespace #>.<#= NameForNamespace #>.Response.Dto;
 using Microsoft.EntityFrameworkCore;
 
-namespace LightNap.Core.<#= NameForNamespace #>.Services
+namespace <#= CoreNamespace #>.<#= NameForNamespace #>.Services
 {
     public class <#= PascalName #>Service(ApplicationDbContext db) : I<#= PascalName #>Service
     {
