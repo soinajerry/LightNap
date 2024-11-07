@@ -1,7 +1,16 @@
 ﻿namespace LightNap.Scaffolding.AssemblyManager
 {
+
+    /// <summary>
+    /// Provides helper methods for working with types.
+    /// </summary>
     public static class TypeHelper
     {
+        /// <summary>
+        /// Gets the property details of a given type.
+        /// </summary>
+        /// <param name="type">The type to get property details from.</param>
+        /// <returns>A list of property details.</returns>
         public static List<TypePropertyDetails> GetPropertyDetails(Type type)
         {
             List<TypePropertyDetails> propertiesDetails = [];

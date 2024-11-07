@@ -6,13 +6,25 @@ using Microsoft.Build.Logging;
 
 namespace LightNap.Scaffolding.ProjectManager
 {
+    /// <summary>
+    /// Manages project operations such as building and adding files to the project.
+    /// </summary>
     public class ProjectManager : IProjectManager
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProjectManager"/> class.
+        /// Registers the default MSBuild instance.
+        /// </summary>
         public ProjectManager()
         {
             MSBuildLocator.RegisterDefaults();
         }
 
+        /// <summary>
+        /// Builds the project at the specified path.
+        /// </summary>
+        /// <param name="projectPath">The path to the project file.</param>
+        /// <returns>A <see cref="ProjectBuildResult"/> indicating the result of the build.</returns>
         public ProjectBuildResult BuildProject(string projectPath)
         {
             Console.WriteLine($"Attempting to build project at: {projectPath}");
@@ -46,6 +58,11 @@ namespace LightNap.Scaffolding.ProjectManager
             };
         }
 
+        /// <summary>
+        /// Adds a file to the project at the specified path.
+        /// </summary>
+        /// <param name="projectPath">The path to the project file.</param>
+        /// <param name="filePath">The path to the file to add.</param>
         public void AddFileToProject(string projectPath, string filePath)
         {
             var projectCollection = new ProjectCollection();

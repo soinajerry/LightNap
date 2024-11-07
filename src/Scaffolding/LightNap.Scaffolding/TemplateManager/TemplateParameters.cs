@@ -5,11 +5,23 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace LightNap.Scaffolding.TemplateManager
 {
+    /// <summary>
+    /// Manages template parameters and their replacements.
+    /// </summary>
     public class TemplateParameters
     {
-        private Dictionary<string, string> _replacements = [];
+        private readonly Dictionary<string, string> _replacements = [];
+        /// <summary>
+        /// Gets the dictionary of replacements.
+        /// </summary>
         public IReadOnlyDictionary<string, string> Replacements => this._replacements.AsReadOnly();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TemplateParameters"/> class.
+        /// </summary>
+        /// <param name="pascalName">The Pascal case name.</param>
+        /// <param name="propertiesDetails">The list of property details.</param>
+        /// <param name="serviceParameters">The service parameters.</param>
         [SetsRequiredMembers]
         public TemplateParameters(string pascalName, List<TypePropertyDetails> propertiesDetails, ServiceParameters serviceParameters)
         {
@@ -32,7 +44,6 @@ namespace LightNap.Scaffolding.TemplateManager
             this._replacements.Add("ServerIdType", idProperty?.ServerTypeString ?? "string");
 
             // This was the point where I realized I would someday need to use a real template processor. But today would not be that day.
-
             this._replacements.Add("ServerPropertiesList", string.Join("\n\t\t", propertiesDetails.Where(p => p != idProperty).Select(p => $"public {p.ServerTypeString} {p.Name} {{ get; set; }}")));
             this._replacements.Add("ServerOptionalPropertiesList", string.Join("\n\t\t", propertiesDetails.Where(p => p != idProperty).Select(p => $"public {p.ServerTypeString}? {p.Name} {{ get; set; }}")));
             this._replacements.Add("ServerPropertiesToDto", string.Join("\n\t\t\t", propertiesDetails.Where(p => p != idProperty).Select(p => $"dto.{p.Name} = item.{p.Name};")));

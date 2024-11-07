@@ -8,7 +8,7 @@ namespace LightNap.Scaffolding.Tests
         public class TestClass
         {
             public int Id { get; set; }
-            public string Name { get; set; }
+            public string Name { get; set; } = "Test";
             public DateTime CreatedDate { get; set; }
             public Guid UniqueId { get; set; }
             public decimal Amount { get; set; }
@@ -16,7 +16,7 @@ namespace LightNap.Scaffolding.Tests
             public DateTime? NullableDateTime { get; set; }
             public Guid? NullableGuid { get; set; }
             public decimal? NullableDecimal { get; set; }
-            public List<string> IgnoredProperty { get; set; }
+            public List<string> IgnoredProperty { get; set; } = [];
         }
 
         [TestMethod]

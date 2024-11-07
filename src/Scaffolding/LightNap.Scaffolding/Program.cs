@@ -1,4 +1,5 @@
-﻿using LightNap.Scaffolding.ProjectManager;
+﻿using LightNap.Scaffolding.AssemblyManager;
+using LightNap.Scaffolding.ProjectManager;
 using LightNap.Scaffolding.ServiceRunner;
 using LightNap.Scaffolding.TemplateManager;
 using System.CommandLine;
