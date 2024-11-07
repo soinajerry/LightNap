@@ -11,8 +11,6 @@ namespace LightNap.Core.Data
     /// </summary>
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
-        public DbSet<TestEntity> TestEntities { get; set; } = null!;
-
         /// <summary>
         /// Gets or sets the refresh tokens DbSet.
         /// </summary>

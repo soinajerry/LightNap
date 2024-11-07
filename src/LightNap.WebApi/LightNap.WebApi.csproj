@@ -24,7 +24,4 @@
     <ProjectReference Include="..\LightNap.DataProviders.Sqlite\LightNap.DataProviders.Sqlite.csproj" />
     <ProjectReference Include="..\LightNap.DataProviders.SqlServer\LightNap.DataProviders.SqlServer.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="C:\Users\edkai\source\repos\SharpLogic\LightNap\src\LightNap.WebApi/Controllers/TestEntitiesController.cs" />
-  </ItemGroup>
 </Project>

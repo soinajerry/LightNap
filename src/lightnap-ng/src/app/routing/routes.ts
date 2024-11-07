@@ -7,7 +7,6 @@ import { AppLayoutComponent } from "../layout/components/layouts/app-layout/app-
 import { Routes as ProfileRoutes } from "../profile/components/pages/routes";
 import { Routes as PublicRoutes } from "../public/components/pages/routes";
 import { Routes as UserRoutes } from "../user/components/pages/routes";
-import { Routes as TestEntityRoutes } from "../test-entities/components/pages/routes";
 import { AppRoute } from "./models/app-route";
 
 export const Routes: AppRoute[] = [
@@ -19,7 +18,6 @@ export const Routes: AppRoute[] = [
     children: [
       { path: "home", data: { breadcrumb: "Home" }, children: UserRoutes },
       { path: "profile", data: { breadcrumb: "Profile" }, children: ProfileRoutes },
-      { path: "test-entities", children: TestEntityRoutes }
     ],
   },
   {
